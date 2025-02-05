@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.screens.LandingPage
 import com.bitbybit.scholarzone.screens.LoginPage
+import com.bitbybit.scholarzone.screens.SignupPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +23,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(Routes.LoginPage) {
                     LoginPage(nc)
+                }
+                composable(Routes.SignupPage) {
+                    SignupPage(nc)
                 }
             })
         }

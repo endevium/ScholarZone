@@ -208,7 +208,7 @@ fun LoginPage(nav: NavController) {
                         )
                     }
 
-                    TextButton(onClick = {}) {
+                    TextButton(onClick = { nav.navigate(Routes.SignupPage) }) {
                         Text(text = "Don't have an account? Sign up instead",
                             fontWeight = FontWeight.Light,
                             fontFamily = InterFontFamily,

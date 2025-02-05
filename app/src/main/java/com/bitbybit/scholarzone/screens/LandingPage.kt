@@ -90,7 +90,7 @@ fun LandingPage(nav: NavController) {
                     )
                 }
 
-                Button(onClick = {},
+                Button(onClick = { nav.navigate(Routes.SignupPage) },
                     modifier = Modifier.height(60.dp).width(315.dp),
                     shape = RoundedCornerShape(15.dp),
                     elevation = ButtonDefaults.buttonElevation(4.dp),
