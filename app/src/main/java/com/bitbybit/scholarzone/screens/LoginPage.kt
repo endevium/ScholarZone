@@ -1,5 +1,7 @@
 package com.bitbybit.scholarzone.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -33,12 +36,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,14 +55,24 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.api.APIService
+import com.bitbybit.scholarzone.api.ApplicantResponse
+import com.bitbybit.scholarzone.api.Login
+import com.bitbybit.scholarzone.api.RetrofitClient
+import com.bitbybit.scholarzone.api.saveToken
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import com.bitbybit.scholarzone.ui.theme.PoppinsFontFamily
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun LoginPage(nav: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Box {
         Image(
@@ -130,7 +148,7 @@ fun LoginPage(nav: NavController) {
                     Spacer(Modifier.height(25.dp))
 
                     Text(
-                        text = "E-mail Address",
+                        text = "Email Address",
                         fontSize = 16.sp,
                         color = colorResource(id = R.color.scholar_black),
                         fontWeight = FontWeight.Medium,
@@ -141,7 +159,8 @@ fun LoginPage(nav: NavController) {
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = { Text("ex: john.doe@example.com")},
+                        maxLines = 1,
+                        placeholder = { Text("john.doe@example.com")},
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -150,6 +169,10 @@ fun LoginPage(nav: NavController) {
                         },
                         modifier = Modifier.width(310.dp).height(55.dp),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Done
+                        ),
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
 
@@ -167,6 +190,7 @@ fun LoginPage(nav: NavController) {
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
+                        maxLines = 1,
                         placeholder = { Text("Enter your password")},
                         leadingIcon = {
                             Icon(
@@ -174,12 +198,24 @@ fun LoginPage(nav: NavController) {
                                 contentDescription = ""
                             )
                         },
+                        trailingIcon = {
+                            val visibilityIcon = if (passwordVisible) {
+                                painterResource(id = R.drawable.eye_visibility_off)
+                            } else {
+                                painterResource(id = R.drawable.eye_visibility)
+                            }
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Image(painter = visibilityIcon, contentDescription = "Toggle password visibility")
+                            }
+                        },
                         modifier = Modifier.width(310.dp).height(55.dp),
                         shape = RoundedCornerShape(15.dp),
-                        textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
+                        textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
 
-                    TextButton(onClick = {}) {
+                    TextButton(onClick = { nav.navigate(Routes.ForgotPassword)}) {
                         Text(text = "Forgot Password?",
                             fontWeight = FontWeight.Bold,
                             fontFamily = InterFontFamily,
@@ -192,7 +228,42 @@ fun LoginPage(nav: NavController) {
 
                     Spacer(Modifier.height(15.dp))
 
-                    Button(onClick = { },
+                    Button(onClick = {
+                        if (email.isNotEmpty() && password.isNotEmpty()) {
+                            val login = Login(
+                                email = email,
+                                password = password
+                            )
+
+                            val apiService = RetrofitClient.create(APIService::class.java)
+                            apiService.login("applicant-login", login).enqueue(object:
+                                Callback<ApplicantResponse> {
+                                override fun onResponse(
+                                    call: Call<ApplicantResponse>,
+                                    response: Response<ApplicantResponse>
+                                ) {
+                                    if (response.isSuccessful) {
+                                        Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                                        val loginResponse = response.body()
+                                        val token = loginResponse?.token
+
+                                        Log.d("SignUpDebug", "Response: ${response.body()}")
+                                        if (token != null) {
+                                            RetrofitClient.setToken(token)
+                                            saveToken(context, token)
+                                        }
+                                        nav.navigate(Routes.HomePage)
+                                    } else {
+                                        Toast.makeText(context, "An error occured", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<ApplicantResponse>, t: Throwable) {
+                                    Toast.makeText(context, "An error occured", Toast.LENGTH_SHORT).show()
+                                }
+                            })
+                        }
+                    },
                         modifier = Modifier.height(60.dp).width(315.dp),
                         shape = RoundedCornerShape(15.dp),
                         elevation = ButtonDefaults.buttonElevation(4.dp),
@@ -234,3 +305,4 @@ fun LoginPage(nav: NavController) {
 fun PreviewLogin() {
     LoginPage(rememberNavController())
 }
+

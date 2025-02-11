@@ -10,4 +10,5 @@
     <color name="scholar_blue">#2172AA</color>
     <color name="scholar_black">#333333</color>
     <color name="scholar_darker_blue">#0C5896</color>
+    <color name="scholar_light_gray">#CECECE</color>
 </resources>
