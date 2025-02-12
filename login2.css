@@ -1,0 +1,566 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+* {
+    text-decoration: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+header {
+    background-color: white;
+    width: 100%;
+    height: 100px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;
+}
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 30px; 
+    margin-top: 1%;
+}
+.open_menu{
+    display: none;
+    font-size: 20px;
+}
+.close_menu{
+    display: none;
+}
+.logo{
+    padding-left: 15%;
+}
+.logo a {
+    font-size: 40px;
+    font-weight: 600;
+    color: #2172AA;
+    display: flex;
+    align-items: center;
+}
+
+.logo a span {
+    font-weight: normal;
+    color: black;
+}
+
+.menudo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+}
+
+li a {
+    color: black;
+    font-size: 23px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.15s ease-in-out;
+}
+
+li a:hover {
+    color: #2172AA;
+    text-decoration: underline;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    margin-top: 1%;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #2172AA;
+    border-radius: 8px;
+    width: 150px;
+    text-align: center;
+}
+
+.log {
+    background: #2172AA;
+}
+
+.log a {
+    color: white;
+    font-size: 20px;
+}
+.log:hover{
+    background-color: white;
+}
+.log:hover a{
+    color: black;
+}
+
+.sign {
+    background: transparent;
+}
+
+.sign a {
+    color: black;
+    font-size: 20px;
+}
+
+.sign:hover {
+    background: #2172AA;
+    color: white;
+}
+
+.sign:hover a {
+    color: white;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 100px);
+}
+
+.malakingFPassword {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 5%;
+}
+
+.malakingFPassword h1 {
+    color: #2172AA;
+    font-weight: bold;
+    font-size: 70px;
+    margin-bottom: 30px;
+}
+.malakingFPassword p {
+    color: black;
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
+
+/* Progress Bar */
+.progress {
+    display: flex;
+    gap: 10px;
+    width: 50%;
+    margin-bottom: 20px;
+}
+
+.progress span {
+    height: 13px;
+    width: 100px;
+    border-radius: 5px;
+    background: lightgray;
+}
+
+.progress span.active {
+    background: #2172AA;
+}
+
+/* Form Styling */
+.input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input-container label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-bottom: 30px;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    background: #f2f2f2;
+    border-radius: 8px;
+    padding: 15px;
+    width: 60%;
+    height: 70px;
+    position: relative;
+    margin-bottom: 80px;
+}
+
+.input-box input {
+    border: none;
+    background: none;
+    padding-left: 35px;
+    padding: 8px 10px 5px 50px;
+    align-items: center;
+    width: 100%;
+    font-size: 18px;
+    outline: none;
+}
+
+.input-box i {
+    position: absolute;
+    left: 35px;
+    font-size: 20px;
+    color: gray;
+}
+
+.next-btn {
+    width: 60%;
+    background: #2172AA;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.next-btn a{
+    color: white;
+}
+
+.next-btn:hover {
+    background: #195b8a;
+}
+
+/* Sign Up Text */
+.signup-text {
+    font-size: 10px;
+    padding: 5px;
+}
+
+.signup-text a {
+    font-size: 20px;
+    color: #2172AA;
+}
+
+.signup-text a:hover {
+    text-decoration: underline;
+}
+
+.bgImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: url('image.svg') no-repeat center center/cover;
+    align-self: flex-end;
+}
+
+
+
+@media only screen and (max-width: 600px) {
+
+    body {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0; 
+    }
+
+    .header {
+        width: 100vw; 
+        max-width: 100%; 
+        text-align: center;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .logo {
+        text-align: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .menudo {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background: white;
+        width: 100%;
+        padding: 10px;
+    }
+    .menudo.show {
+        display: flex; 
+    }
+
+    .open_menu {
+        display: block;
+        text-align: center;
+        position: relative;
+        cursor: pointer; 
+        font-size: 30px;
+
+    }
+    .open_menu i{
+        font-size: 40px;
+    }
+
+    .nav-right {
+        display: none;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .malakingFPassword {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .malakingFPassword h1 {
+        font-size: 40px;
+        padding-bottom: 5px;
+    }
+
+    .malakingFPassword p {
+        font-size: 18px;
+        padding-top: 7px;
+        padding-bottom: 5px;
+    }
+    .progress{
+        padding-bottom : 5px;
+    }
+
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+    .login-container i{
+        padding-right: 20px;
+    }
+
+    .input-box {
+        width: 100%;
+        max-width: 350px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 10px 10px 10px 40px; 
+    }
+    .input-box input {
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+    .input-box i {
+        position: absolute;
+        font-size: 20px;
+        color: gray;
+        left: 40px;
+    }
+    .next-btn {
+        width: 80%;
+        align-self: center;
+    }
+    .signup-text p{
+        font-size: 10px;
+    }
+    .signup-text a{
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    .bgImage {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    body {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        text-align: center; 
+        margin: 0;
+        padding: 20px;
+        height: 100vh;
+    }
+    .header{
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        align-content: center;
+        text-align: center;
+        padding: 20px
+    }
+    .navbar {
+        display: flex;
+        gap: 20px; 
+    }
+    .nav-left{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .logo {
+        font-size: 24px;
+        padding: 0%;
+    }
+
+    .menudo{
+        display: none;
+        flex-direction: column;
+        align-items: center; 
+        position: fixed;
+        top: 60px;
+        left: 0;
+        background: white;
+        width: 70%;
+        height: calc(100vh - 80px);
+        padding: 20px;
+        z-index: 1000; 
+        background-color: #2172AA;
+    }
+    .menudo.show {
+        display: flex; 
+    }
+    .open_menu {
+        display: block;
+        text-align: center;
+        position: relative;
+        cursor: pointer; 
+        font-size: 30px;
+
+    }
+    .open_menu i{
+        font-size: 40px;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .malakingFPassword {
+        width: 100%;
+        max-width: 400px;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .malakingFPassword h1 {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .malakingFPassword p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+    }
+    .login-container i{
+        padding-right: 20px;
+    }
+
+    .input-box {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .input-box input{
+        padding: 10px 10px 10px 40px;
+        font-size: 16px;
+        width: 100%;
+
+    }
+    .input-box i {
+        position: absolute;
+        padding-left: 13%;
+        font-size: 20px;
+        color: gray;
+        left: -3px;
+    }
+    .forgot-password {
+        text-align: center;
+        width: 100%;
+    }
+
+    .login-btn {
+        width: 100%;
+        align-self: center;
+    }
+
+    .bgImage {
+        display: none;
+    }
+}

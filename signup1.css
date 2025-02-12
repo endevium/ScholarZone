@@ -1,0 +1,574 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+* {
+    text-decoration: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+header {
+    background-color: white;
+    width: 100%;
+    height: 100px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;
+}
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 30px; 
+    margin-top: 1%;
+}
+.open_menu{
+    display: none;
+    font-size: 20px;
+}
+.close_menu{
+    display: none;
+}
+.logo{
+    padding-left: 15%;
+}
+.logo a {
+    font-size: 40px;
+    font-weight: 600;
+    color: #2172AA;
+    display: flex;
+    align-items: center;
+}
+
+.logo a span {
+    font-weight: normal;
+    color: black;
+}
+
+.menudo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+}
+
+li a {
+    color: black;
+    font-size: 23px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.15s ease-in-out;
+}
+
+li a:hover {
+    color: #2172AA;
+    text-decoration: underline;
+}
+.nav-right {
+    display: flex;
+    gap: 15px;
+    margin-top: 1%;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #2172AA;
+    border-radius: 8px;
+    width: 150px;
+    text-align: center;
+}
+
+.log {
+    background: #2172AA;
+}
+
+.log a {
+    color: white;
+    font-size: 20px;
+}
+.log:hover{
+    background-color: white;
+}
+.log:hover a{
+    color: black;
+}
+
+.sign {
+    background: transparent;
+}
+
+.sign a {
+    color: black;
+    font-size: 20px;
+}
+
+.sign:hover {
+    background: #2172AA;
+    color: white;
+}
+
+.sign:hover a {
+    color: white;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%;
+    height: calc(100vh - 100px);
+    padding: 0 0;
+}
+
+.bgImage {
+    width: 100%;
+    height: 100%;
+    background: url('image2.svg') no-repeat center center/cover;
+    position: relative;
+}
+.imAge::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -50px;
+    width: 100px;
+    height: 100%;
+    background: white;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+
+.malakingSignUp {
+    width: 100%;
+    align-content: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.malakingSignUp h1 {
+    color: #2172AA;
+    font-weight: bold;
+    font-size: 70px;
+}
+
+.malakingSignUp p {
+    color: black;
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
+form{
+
+    padding: 0;
+}
+.user{
+    font-size: 20px;
+    font-weight: bold;
+}
+.email{
+    font-size: 20px;
+
+    font-weight: bold;
+}
+
+.pass{
+    font-size: 20px;
+
+    font-weight: bold;
+}
+.cpassword{
+    font-size: 20px;
+
+    font-weight: bold;
+}
+.input-box {
+    display: flex;
+    align-items: center;
+    background: #f2f2f2;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px 0;
+    width: 100%;
+    position: relative;
+}
+
+.input-box input {
+    border: none;
+    background: none;
+    padding: 8px 10px 5px 50px;
+    align-items: center;
+    outline: none;
+    width: 100%;
+    font-size: 20px;
+}
+.input-box i {
+    position: absolute;
+    left: 35px; 
+    font-size: 25px;
+    color: gray;
+}
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    width: 45%; 
+}
+
+.signup-btn {
+    align-self: flex-start;
+    width: 100%;
+    height: 5vh;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    background: #2172AA;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.signup-btn a{
+    color: white;
+    font-size: 20px;
+}
+.login-btn:hover {
+    background: #195b8a;
+}
+.login-text {
+    font-size: 15px;
+}
+
+.login-text a{
+    font-size: 20px;
+    color: #2172AA;
+}
+
+@media only screen and (max-width: 600px) {
+
+    body {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0; 
+    }
+
+    .header {
+        width: 100vw; 
+        max-width: 100%; 
+        text-align: center;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .logo {
+        text-align: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .menudo{
+        display: none;
+        flex-direction: column;
+        align-items: center; 
+        position: fixed;
+        top: 60px;
+        left: 0;
+        background: white;
+        width: 70%;
+        height: calc(100vh - 80px);
+        padding: 20px;
+        z-index: 1000; 
+        background-color: #2172AA;
+    }
+    .menudo.show {
+        display: flex; 
+    }
+    .open_menu {
+        display: block;
+        text-align: center;
+        position: relative;
+        cursor: pointer; 
+        font-size: 30px;
+
+    }
+    .open_menu i{
+        font-size: 40px;
+    }
+
+    .nav-right {
+        display: none;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .malakingSignUp {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .malakingSignUp h1 {
+        font-size: 40px;
+        padding-bottom: 5px;
+    }
+
+    .malakingSignUp p {
+        font-size: 18px;
+        padding-top: 7px;
+        padding-bottom: 5px;
+    }
+    .progress{
+        padding-bottom : 5px;
+    }
+
+    .signup-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+    .signup-container i{
+        padding-right: 20px;
+    }
+
+    .input-box {
+        width: 100%;
+        max-width: 350px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 10px 10px 10px 40px; 
+    }
+    .input-box input {
+        width: 100%;
+        width: 80%;
+        display: flex;
+        padding: 10px 10px 10px 40px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        left: 20px;
+    }
+    .input-box i {
+        position: absolute;
+        left: 10px; 
+        font-size: 20px;
+        color: gray;
+        padding: 10px 10px 10px 40px;
+    }
+    .signup-btn {
+        width: 80%;
+        align-self: center;
+    }
+    .login-text p{
+        font-size: 10px;
+    }
+    .login-text a{
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    .bgImage {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    
+    body {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        text-align: center; 
+        margin: 0;
+        padding: 20px;
+        height: 100vh;
+    }
+    .header{
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        align-content: center;
+        text-align: center;
+        padding: 20px
+    }
+    .navbar {
+        display: flex;
+        gap: 20px; 
+    }
+    .nav-left{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .logo {
+        font-size: 24px;
+        padding: 0%;
+    }
+
+    .menudo{
+        display: none;
+        flex-direction: column;
+        align-items: center; 
+        position: fixed;
+        top: 60px;
+        left: 0;
+        background: white;
+        width: 70%;
+        height: calc(100vh - 80px);
+        padding: 20px;
+        z-index: 1000; 
+        background-color: #2172AA;
+    }
+    .menudo.show {
+        display: flex; 
+    }
+    .open_menu {
+        display: block;
+        text-align: center;
+        position: relative;
+        cursor: pointer; 
+        font-size: 30px;
+
+    }
+    .open_menu i{
+        font-size: 40px;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .malakingSignUp {
+        width: 100%;
+        max-width: 400px;
+        padding: 30px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .malakingSignUp h1 {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .malakingSignUp p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    .signup-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+    }
+    .signup-container i{
+        padding-right: 20px;
+    }
+
+    .input-box {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .input-box input{
+        padding: 10px 10px 10px 40px;
+        font-size: 16px;
+        text-align: center;
+        padding-left: 5%;
+        width: 100%;
+
+    }
+    .input-box i {
+        position: absolute;
+        padding-left: 13%;
+        font-size: 20px;
+        color: gray;
+        left: -3px;
+    }
+
+    .signup-btn {
+        width: 100%;
+        align-self: center;
+    }
+
+    .bgImage {
+        display: none;
+    }
+}
