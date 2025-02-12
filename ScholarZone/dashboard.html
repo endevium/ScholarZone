@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    
+    <div class="menu-toggle">☰</div>
+
+    <div class="sidebar">
+        <div class="logo">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item active">
+            <a href="dashboard.html" class="nav-link">
+                <img src="pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="create.html" class="nav-link">
+                <img src="pictures/create_icon.png" alt="Create" class="nav-icon">
+                Create
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="manage.html" class="nav-link">
+                <img src="pictures/manage_icon.png" alt="Manage" class="nav-icon">
+                Manage
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="review.html" class="nav-link">
+                <img src="pictures/review_icon.png" alt="Review" class="nav-icon">
+                Review
+            </a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <img src="pictures/search_icon.png" alt="Search" class="nav-icon">
+            <input type="text" class="search-box" placeholder="Start typing">
+            <div class="user-profile">
+                <div class="username-container">
+                    <span>@janedoe69</span>
+                    <img src="pictures/dropbox_icon.png" alt="Dropdown" class="dropbox-icon">
+                    <img src="pictures/avatar-icon.png" alt="User" class="avatar-icon">
+                </div>
+            </div>
+        </div>
+
+        <h1 class="overview-title">
+            <img src="pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+            Overview
+        </h1>
+
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-number">
+                    <img src="pictures/tao_icon.png" alt="User" class="user-icon">
+                    147
+                </div>
+                <div class="stat-label">Total respondents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="pictures/black_icon.png" alt="User" class="user-icon">
+                    91
+                </div>
+                <div class="stat-label">Pending reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="pictures/form_icon.png" alt="User" class="user-icon">
+                    300
+                </div>
+                <div class="stat-label">Total application forms</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">Review Progress & Performance</div>
+                <div class="chart-container">
+                    <div class="legend-container">
+                        <div class="legend-item">
+                            <div class="legend-color blue"></div>
+                            <span>Pending</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color gray"></div>
+                            <span>Completed</span>
+                        </div>
+                    </div>
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Average review time</div>
+                <div class="bar-chart-container">
+                    <canvas id="timeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="dashboard.js"></script>
+</body> 
+</html> 

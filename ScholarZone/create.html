@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Create</title>
+    <link rel="stylesheet" href="create.css">
+</head>
+<body>
+    
+    <div class="menu-toggle">☰</div>
+
+    <div class="sidebar">
+        <div class="logo">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="dashboard.html" class="nav-link">
+                <img src="pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="create.html" class="nav-link">
+                <img src="pictures/create_icon.png" alt="Create" class="nav-icon">
+                Create
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="manage.html" class="nav-link">
+                <img src="pictures/manage_icon.png" alt="Manage" class="nav-icon">
+                Manage
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="review.html" class="nav-link">
+                <img src="pictures/review_icon.png" alt="Review" class="nav-icon">
+                Review
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <img src="pictures/search_icon.png" alt="Search" class="nav-icon">
+            <input type="text" class="search-box" placeholder="Start typing">
+            <div class="user-profile">
+                <div class="username-container">
+                    <span>@janedoe69</span>
+                    <img src="pictures/dropbox_icon.png" alt="Dropdown" class="dropbox-icon">
+                    <img src="pictures/avatar-icon.png" alt="User" class="avatar-icon">
+                </div>
+            </div>
+        </div>
+
+        <div class="create-title">
+            <div class="header">
+                <img src="pictures/create_icon.png" alt="Create" class="nav-icon">
+                <h1>Create</h1>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+        </div>
+
+        <form class="create-form">
+            <div class="form-group">
+                <label for="formName">Application Form Name</label>
+                <input type="text" id="formName" placeholder="Create application form" required>
+            </div>
+
+            <div class="form-group">
+                <label for="formDescription">Application Form Description</label>
+                <textarea id="formDescription" placeholder="Describe your application form" rows="6" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="formDuration">Scholarship Duration</label>
+                <input type="text" id="formDuration" value="Valid for 4 years" readonly>
+            </div>
+
+            <div class="form-group2">
+                <label>Application Form Image</label>
+                <div class="upload-box" id="uploadbox">
+                    <img src="pictures/cloud_icon.png" alt="Upload" class="upload-icon">
+                    <p>Drop your files here or upload</p>
+                </div>
+            </div>
+
+            <div class="form-group2">
+                <label for="category">Scholarship Category</label>
+                <select id="category" required>
+                    <option value="grants">Grants</option>
+                    <option value="undergrad">Undergraduate</option>
+                    <option value="graduate">Graduate</option>
+                </select>
+            </div>
+
+            <div class="form-group2">
+                <label for="availSlot">Available Slots</label>
+                <input type="number" id="availSlot" placeholder="100" readonly>
+            </div>
+
+            <div class="form-group2">
+                <label for="deadline">Deadline</label>
+                <input type="date" id="deadline" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-next">Next</button>
+                <button type="button" class="btn-reset">Reset</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
