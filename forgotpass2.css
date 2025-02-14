@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
 * {
     text-decoration: none;
     box-sizing: border-box;
@@ -18,7 +19,6 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* NAVIGATION BAR */
 header {
     background-color: white;
     width: 100%;
@@ -135,120 +135,88 @@ button {
     color: white;
 }
 
-/* end of nav bar */
-
 .container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
     height: calc(120vh - 100px);
 }
 
-
-.malakingSignUp {
+.malakingFPassword {
     width: 100%;
-    height: 100%;
-    align-content: start;
     display: flex;
-    background: url('image2.svg') no-repeat center center/cover;
     flex-direction: column;
     justify-content: center;
+    padding-left: 5%;
+    background: url('image.svg') no-repeat center center/cover;
 }
 
-.rightSide {
-    margin-left: 50rem;
-}
-
-.malakingSignUp h1 {
+.malakingFPassword h1 {
     color: #2172AA;
     font-weight: bold;
-    font-size: 40px;
-    height: 10vh;
-    margin-bottom: 5px;
-    text-align: left;
+    font-size: 50px;
+    width: 75vh;
+    margin-bottom: 30px;
 }
-.malakingSignUp i{
-    font-size: 40px;
-    color: #2172AA;
-    cursor: pointer;
-    margin-bottom: 10px;
+.malakingFPassword p {
+    color: black;
+    font-size: 23px;
+    margin-bottom: 25px;
 }
 
-form {
-    width: 100%;
+
+/* Progress Bar */
+.progress {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-.name-container {
-    display: flex;
-    justify-content: space-between;
+    gap: 10px;
     width: 50%;
-    gap: 10px; 
+    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
-.name-container .input-container {
-    width: 48%; 
+.progress span {
+    height: 13px;
+    width: 100px;
+    border-radius: 5px;
+    background: lightgray;
 }
-.signup-container {
+
+.progress span.active {
+    background: #2172AA;
+}
+.input-box {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-    width: 50%;
-}
-
-.input-container {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-    width: 50%;
-}
-
-.input-container label {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-input, select {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
+    align-items: center;
+    background: #f2f2f2;
     border-radius: 8px;
-    border: 1px solid #ccc;
-    background: #f2f2f2;
+    padding: 10px;
+    margin: 10px 0;
+    width: 25.81rem;
+    position: relative;
 }
-
-#birthday {
-    background: #f2f2f2 url('calendar-icon.png') no-repeat right 15px center;
-    background-size: 20px;
+.input-box input {
+    border: none;
+    background: none;
+    padding: 10px 40px 10px 40px;
+    max-width: 413px;
+    width: 100%;
+    font-size: 18px;
+    outline: none;
+}
+.input-box i {
+    position: absolute;
+    font-size: 20px;
+    color: gray;
+}
+.input-box .ri-eye-line {
+    right: 15px;
     cursor: pointer;
 }
 
-#birthday, #gender {
-    width: 50%; 
-    max-width: 300px; 
-}
-
-
-#gender {
-    appearance: none;
-    background: #f2f2f2 url('arrow-down-long-line.png') no-repeat right 15px center;
-    background-size: 15px;
-    padding-right: 35px;
-    cursor: pointer;
-}
-
-#phone {
-    background: #f2f2f2;
-    width: 60%;
-}
-
-.continue-btn {
-    width: 50%;
-    margin-top: 20px;
+.next-btn {
+    max-width: 413px;
+    width: 100%;
+    height: 7.5vh;
+    margin-top: 30px;
     background: #2172AA;
     color: white;
     font-size: 18px;
@@ -260,21 +228,26 @@ input, select {
     transition: background 0.3s;
 }
 
-.continue-btn:hover {
+.next-btn:hover {
     background: #195b8a;
 }
 
-.login-text {
-    font-size: 16px;
-    margin-top: 10px;
-    text-align: center;
+/* Sign Up Text */
+.signup-text {
+    font-size: 10px;
+    padding: 5px;
 }
 
-.login-text a {
+.signup-text a {
+    font-size: 20px;
     color: #2172AA;
-    font-weight: bold;
-    text-decoration: none;
 }
+
+.signup-text a:hover {
+    text-decoration: underline;
+}
+
+
 
 @media only screen and (max-width: 600px) {
 
@@ -284,7 +257,10 @@ input, select {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center; 
+        text-align: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0; 
     }
 
     .header {
@@ -311,7 +287,7 @@ input, select {
     .logo {
         text-align: center;
         justify-content: center;
-        padding: 20px;
+        padding: 5px;
     }
 
     .menudo {
@@ -388,7 +364,7 @@ input, select {
         width: 100%;
     }
 
-    .malakingSignUp {
+    .malakingFPassword {
         width: 100%;
         padding: 20px;
         display: flex;
@@ -396,25 +372,23 @@ input, select {
         align-items: center;
         justify-content: center;
         text-align: center;
-        background: white;
-    }
-    .malakingSignUp i{
-        position: absolute;
-        left: 25px; 
-        top: 85px; 
-        font-size: 30px; 
-        cursor: pointer;
     }
 
-    .malakingSignUp h1 {
+    .malakingFPassword h1 {
         font-size: 40px;
-        text-align: center;
+        padding-bottom: 5px;
+    }
+
+    .malakingFPassword p {
+        font-size: 18px;
+        padding-top: 7px;
+        padding-bottom: 5px;
     }
     .progress{
         padding-bottom : 5px;
     }
 
-    .name-container {
+    .login-container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -423,14 +397,8 @@ input, select {
         width: 100%;
         max-width: 400px;
     }
-    .input-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        width: 100%;
-        max-width: 400px;
+    .login-container i{
+        padding-right: 20px;
     }
 
     .input-box {
@@ -443,45 +411,34 @@ input, select {
     }
     .input-box input {
         width: 100%;
-        display: flex;
-        padding: 10px 10px 10px 40px;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        left: 20px;
+        border: none;
+        outline: none;
+        font-size: 16px;
     }
     .input-box i {
         position: absolute;
-        left: 30px; 
         font-size: 20px;
         color: gray;
-        padding: 10px 10px 10px 40px;
+        left: 40px;
     }
-    .continue-btn {
+    .next-btn {
         width: 80%;
         align-self: center;
     }
-
-    .rightSide {
-        margin-left: 0;
+    .signup-text p{
+        font-size: 10px;
+    }
+    .signup-text a{
+        font-size: 20px;
+        margin-top: 10px;
     }
 
-    .rightSide h1 {
-        margin-bottom: -10px;
-    }
-
-    .rightSide input {
-        margin-bottom: -10px;
-        width: 200px;
-    }
-
-    .login-text {
-        margin-left: 19%;
+    .bgImage {
+        display: none;
     }
 }
 
 @media only screen and (min-width: 600px) and (max-width: 1024px) {
-    
     body {
         overflow: hidden;
         display: flex;
@@ -511,6 +468,9 @@ input, select {
         align-items: center;
         justify-content: center;
         width: 100%;
+    }
+    .nav-right {
+        display: none;
     }
     
     .logo {
@@ -577,55 +537,88 @@ input, select {
     .nav-right {
         display: none;
     }
+
     .container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        align-content: center;
         justify-content: center;
         text-align: center;
         width: 100%;
-        height:100vh;
+        height: 100%;
     }
 
-    .malakingSignUp {
+    .malakingFPassword {
         width: 100%;
-        padding: 20px;
+        max-width: 400px;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        position: relative;
-        background: white;
     }
-    .malakingSignUp i{
+
+    .malakingFPassword h1 {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .malakingFPassword p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+    }
+    .login-container i{
+        padding-right: 20px;
+    }
+
+    .input-box {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .input-box input{
+        padding: 10px 10px 10px 40px;
+        font-size: 16px;
+        width: 100%;
+
+    }
+    .input-box i {
         position: absolute;
-        top: 20px; 
-        left: 20px; 
-        font-size: 30px; 
+        padding-left: 7%;
+        font-size: 20px;
+        color: gray;
+        left: -3px;
+    }
+    .input-box .ri-eye-line {
+        right: -175px;
         cursor: pointer;
     }
-    .rightSide {
-        margin-left: 0rem;
-    }
 
-    .input-container,
-    .name-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    .forgot-password {
         text-align: center;
         width: 100%;
     }
 
-    .continue-btn {
-        width: 75%;
+    .login-btn {
+        width: 100%;
         align-self: center;
     }
 
-    .login-text {
-        margin-left: 26%;
+    .bgImage {
+        display: none;
     }
-
 }

@@ -141,7 +141,7 @@ button {
 .container {
     display: flex;
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(120vh - 100px);
 }
 
 .malakingSignUp {
@@ -170,6 +170,7 @@ button {
     color: #2172AA;
     cursor: pointer;
     margin-bottom: 10px;
+    margin-right: 31rem;
 }
 
 
@@ -236,6 +237,8 @@ button {
     cursor: pointer;
     transition: background 0.3s;
 }
+
+
 .signup-btn a{
     color: white;
     font-size: 20px;
@@ -383,8 +386,8 @@ button {
 
     .malakingSignUp i{
         position: absolute;
-        left: 30px; 
-        top: 65px; 
+        left: 55px; 
+        top: 85px; 
         font-size: 30px;
         cursor: pointer;
     }
@@ -436,10 +439,6 @@ button {
     }
     .login-text p{
         font-size: 10px;
-    }
-    .login-text a{
-        font-size: 20px;
-        margin-top: 10px;
     }
 
     .bgImage {

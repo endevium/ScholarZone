@@ -328,11 +328,8 @@ button {
         display: flex; 
     }
 
-    #menu-toggle {
-        display: block;
-    }
-
     .open_menu {
+        display: block;
         text-align: center;
         position: relative;
         cursor: pointer; 
@@ -465,29 +462,53 @@ button {
         padding: 0%;
     }
 
-    .menudo{
+    .menudo {
         display: none;
         flex-direction: column;
-        align-items: center; 
+        align-items: center;
         position: fixed;
-        top: 100px;
+        top: 70px;
         left: 0;
-        background: white;
-        width: 70%;
-        height: calc(100vh - 80px);
+        width: 100%;
+        height: calc(120vh - 100px);
+        background: #2172AA; 
+        box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.2);
         padding: 20px;
-        z-index: 1000; 
+        z-index: 1000;
     }
+
     .menudo.show {
-        display: flex; 
+        display: flex;
+    }
+
+    .menudo li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .menudo li a {
+        font-size: 18px;
+        font-weight: bold;
+        color: white; 
+        text-transform: uppercase;
+        transition: 0.3s ease-in-out;
+    }
+
+    .menudo li a:hover {
+        color: black; 
+    }
+    .menu-login, .menu-signup {
+        display: block;
+        margin-top: 20px;
     }
     .open_menu {
         display: block;
         text-align: center;
         position: relative;
+        align-content: flex-start;
         cursor: pointer; 
         font-size: 30px;
-
+        z-index: 1000;
     }
     .open_menu i{
         font-size: 40px;
@@ -495,6 +516,10 @@ button {
 
     .menu-login, .menu-signup {
         display: block;
+        border: #195b8a;
+    }
+    .nav-right {
+        display: none;
     }
 
     .container {

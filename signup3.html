@@ -14,11 +14,11 @@
                 <label class="open_menu" id="menu-toggle"><i class="ri-menu-line"></i></label>
                 <div class="logo"><a href="#"><b>Scholar</b><span>Zone</span></a></div>
                 <ul class="menudo" id="menu">
-                    <li><a href="#"> Home </a></li>
-                    <li><a href="#"> Student </a></li>
-                    <li><a href="#"> Reviewer </a></li>
-                    <li><a href="#" class="menu-login"> Log in </a></li>
-                    <li><a href="#" class="menu-signup"> Sign up </a></li>
+                    <li><a href="landing.html"> Home </a></li>
+                    <li><a href="landing.html"> Student </a></li>
+                    <li><a href="landing.html"> Reviewer </a></li>
+                    <li><a href="login.html" class="menu-login"> Log in </a></li>
+                    <li><a href="signup1.html" class="menu-signup"> Sign up </a></li>
                     <label class="close_menu"><i class="ri-close-line"></i></label>
                 </ul>
             </div>
@@ -32,35 +32,39 @@
     <div class="container">
         <div class="bgImage"></div>
         <div class="malakingSignUp">
-            <i class="ri-arrow-left-circle-fill back-button" onclick="goBack()"></i>
-            <h1>Continue Signing Up</h1>
-            <form action="#" method="POST">
+            
+            <div class="rightSide">
+                <i class="ri-arrow-left-circle-fill back-button" onclick="goBack()"></i>
+                <h1>Continue Signing Up</h1>
+                <form id="signUpForm">
                 <label class="cname"><strong>Company Name</strong> </label>
                 <div class="signup-container">
                     <div class="input-box">
-                        <input type="text" placeholder="Enter username" required>
+                        <input type="text" placeholder="Enter company name" id="company" required>
                     </div>
                 
                     <label class="add"><strong>Address</strong></label>
                     <div class="input-box">
-                        <input type="text" placeholder="Create e-mail address" required>
+                        <input type="text" placeholder="Enter full address" id="address" required>
                     </div>
 
                     <label class="rpc"><strong>Region, Province, City</strong></label>
                     <div class="input-box">
-                        <input type="text" placeholder="Enter password" required>
+                        <input type="text" placeholder="Enter region, province, city" id="rpc" required>
                     </div>
 
                     <label class="bsb"><strong>Barangay, Street, Building</strong></label>
                     <div class="input-box">
-                        <input type="text" placeholder="Enter password" required>
+                        <input type="text" placeholder="Enter barangay, street, building" id="bsb" required>
                     </div>
                 
-                
-                    <button type="submit" class="signup-btn" onclick="goToLogin()">Continue</button>
+                    <button type="submit" class="signup-btn">Continue</button>
+                    <p id="errorMessage" style="color: red; display: none;"></p>
+
                 </div>
                 <p class="login-text"> Already have an account?  <a href="login.html">Log in</a> instead</p>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -77,6 +81,51 @@
         document.getElementById("menu-toggle").addEventListener("click", function () {
             document.getElementById("menu").classList.toggle("show");
         });
+
+        document.getElementById("signUpForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            let username = localStorage.getItem("username");
+            let email = localStorage.getItem("email");
+            let password = localStorage.getItem("password");
+            let firstname = localStorage.getItem("firstname");
+            let lastname = localStorage.getItem("lastname");
+            let gender = localStorage.getItem("gender");
+            let birthdate = localStorage.getItem("birthdate");
+            let phone_number = localStorage.getItem("contact");
+            let company = document.getElementById("company").value;
+            let full_address = document.getElementById("address").value;
+            let rpc = document.getElementById("rpc").value;
+            let bsb = document.getElementById("bsb").value;
+            let errorMessage = document.getElementById("errorMessage");
+
+            try {
+                let response = await fetch("https://scorpion-workable-panda.ngrok-free.app/ScholarZone/index.php?route=reviewers", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, email, password, firstname, lastname, gender, birthdate, phone_number, company, full_address, rpc, bsb })
+                });
+
+                let data = await response.json();
+                console.log(data)
+
+                if (data.status === 201) {
+                    localStorage.setItem("token", data.token);
+
+                    // Redirect to dashboard
+                    window.location.href = "dashboard.html";
+                } else {
+                    errorMessage.textContent = data.message;
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                errorMessage.textContent = "An error occurred. Please try again.";
+                errorMessage.style.display = "block";
+            }
+        });
+
     </script>
 
 
