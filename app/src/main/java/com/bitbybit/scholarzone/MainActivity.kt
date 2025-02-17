@@ -1,5 +1,7 @@
 package com.bitbybit.scholarzone
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,11 +12,15 @@ import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.objects.ForgotPasswordViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.objects.SignUpViewModel
+import com.bitbybit.scholarzone.screens.DashboardPage
 import com.bitbybit.scholarzone.screens.ForgotPassword
 import com.bitbybit.scholarzone.screens.ForgotPasswordTwo
 import com.bitbybit.scholarzone.screens.HomePage
 import com.bitbybit.scholarzone.screens.LandingPage
 import com.bitbybit.scholarzone.screens.LoginPage
+import com.bitbybit.scholarzone.screens.MainPage
+import com.bitbybit.scholarzone.screens.NotificationPage
+import com.bitbybit.scholarzone.screens.ProfilePage
 import com.bitbybit.scholarzone.screens.SignUpPageThree
 import com.bitbybit.scholarzone.screens.SignUpPageTwo
 import com.bitbybit.scholarzone.screens.SignupPage
@@ -26,8 +32,11 @@ class MainActivity : ComponentActivity() {
             val nc = rememberNavController()
             val signUpViewModel: SignUpViewModel = viewModel()
             val forgotViewModel: ForgotPasswordViewModel = viewModel()
+            val sharedPref: SharedPreferences = applicationContext.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+            val token: String? = sharedPref.getString("token", null)
+            val startDestination = if (token.isNullOrEmpty()) Routes.LandingPage else Routes.MainPage
 
-            NavHost(navController = nc, startDestination = Routes.LandingPage, builder = {
+            NavHost(navController = nc, startDestination = startDestination, builder = {
                 composable(Routes.LandingPage) {
                     LandingPage(nc)
                 }
@@ -43,8 +52,8 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.SignupPageThree) {
                     SignUpPageThree(nc, signUpViewModel)
                 }
-                composable(Routes.HomePage) {
-                    HomePage(nc)
+                composable(Routes.MainPage) {
+                    MainPage()
                 }
                 composable(Routes.ForgotPassword) {
                     ForgotPassword(nc, forgotViewModel)

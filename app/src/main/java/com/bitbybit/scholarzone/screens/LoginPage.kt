@@ -252,7 +252,7 @@ fun LoginPage(nav: NavController) {
                                             RetrofitClient.setToken(token)
                                             saveToken(context, token)
                                         }
-                                        nav.navigate(Routes.HomePage)
+                                        nav.navigate(Routes.MainPage)
                                     } else {
                                         Toast.makeText(context, "An error occured", Toast.LENGTH_SHORT).show()
                                     }

@@ -349,7 +349,7 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                                         }
 
                                         Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
-                                        nav.navigate(Routes.HomePage)
+                                        nav.navigate(Routes.MainPage)
                                     } else {
                                         val errorBody = response.errorBody()?.string()
                                         Toast.makeText(context, "Error: $errorBody", Toast.LENGTH_LONG).show()
