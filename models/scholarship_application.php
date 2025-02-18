@@ -7,6 +7,7 @@ class ScholarshipApplication {
     public $id;
     public $reviewer_id;
     public $application_name;
+    public $company;
     public $application_description;
     public $duration;
     public $application_image;
@@ -19,13 +20,13 @@ class ScholarshipApplication {
     }
 
     public function create() {
-        $query = "INSERT INTO " . $this->table . " (reviewer_id, application_name, application_description, duration, application_image, category, slots, deadline)
-                  VALUES (:reviewer_id, :application_name, :application_description, :duration, :application_image, :category, :slots, :deadline)";
+        $query = "INSERT INTO " . $this->table . " (reviewer_id, application_name, company, application_description, duration, application_image, category, slots, deadline)
+                  VALUES (:reviewer_id, :application_name, :company, :application_description, :duration, :application_image, :category, :slots, :deadline)";
         $stmt = $this->db->prepare($query);
 
-        // Bind values
         $stmt->bindParam(':reviewer_id', $this->reviewer_id);
         $stmt->bindParam(':application_name', $this->application_name);
+        $stmt->bindParam(':company', $this->company);
         $stmt->bindParam(':application_description', $this->application_description);
         $stmt->bindParam(':duration', $this->duration);
         $stmt->bindParam(':application_image', $this->application_image);
@@ -60,6 +61,7 @@ class ScholarshipApplication {
     public function update() {
         $query = "UPDATE " . $this->table . " SET 
                   application_name = :application_name, 
+                  company = :company;
                   application_description = :application_description, 
                   duration = :duration, 
                   application_image = :application_image, 
@@ -73,6 +75,7 @@ class ScholarshipApplication {
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':reviewer_id', $this->reviewer_id);
         $stmt->bindParam(':application_name', $this->application_name);
+        $stmt->bindParam(':company', $this->company);
         $stmt->bindParam(':application_description', $this->application_description);
         $stmt->bindParam(':duration', $this->duration);
         $stmt->bindParam(':application_image', $this->application_image);

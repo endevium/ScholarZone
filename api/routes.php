@@ -10,6 +10,11 @@ $applicantController = new ApplicantController($db);
 $scholarshipApplicationController = new ScholarshipApplicationController($db);
 $reviewerController = new ReviewerController($db);
 
+/*
+    APPLICANT & REVIEWER
+    POST METHODS
+*/
+
 // Applicant Sign Up
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['route']) && $_GET['route'] === 'applicants') {
     $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
@@ -172,6 +177,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['route']) && $_GET['rou
     exit;
 }
 
+/* 
+    APPLICANT & REVIEWER
+    GET METHODS
+*/
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['route']) && $_GET['route'] === 'applicants') {
+    $id = $_GET['id'] ?? null;
+
+    if (!$id) {
+        echo json_encode([
+            "status" => 400,
+            "message" => "Applicant ID is required."
+        ]);
+        exit;
+    }
+
+    $response = $applicantController->getApplicantById($id);
+    http_response_code($response['status']);
+    echo json_encode($response);
+    exit;
+}
 
 /*
     SCHOLARSHIP APPLICATION ROUTES
@@ -201,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['route']) && $_GET['rou
         exit;
     }
 
-    if (empty($input['application_name']) || empty($input['application_description']) || empty($input['duration']) || empty($input['category']) || empty($input['slots']) || empty($input['deadline'])) {
+    if (empty($input['application_name']) || empty($input['company']) || empty($input['application_description']) || empty($input['duration']) || empty($input['category']) || empty($input['slots']) || empty($input['deadline'])) {
         echo json_encode([
             "status" => 400,
             "message" => "Missing required fields."
@@ -282,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['route']) && $_GET['rout
         exit;
     }
 
-    if (empty($input['id']) || empty($input['application_name']) || empty($input['application_description']) || empty($input['duration']) || empty($input['category']) || empty($input['slots']) || empty($input['deadline'])) {
+    if (empty($input['id']) || empty($input['application_name']) || empty($input['company']) || empty($input['application_description']) || empty($input['duration']) || empty($input['category']) || empty($input['slots']) || empty($input['deadline'])) {
         echo json_encode([
             "status" => 400,
             "message" => "Missing required fields."
@@ -335,6 +361,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['route']) && $_GET['r
     echo json_encode($response);
     exit;
 }
+
+
+/*
+
+*/
 
 echo json_encode([
     "status" => 404,

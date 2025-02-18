@@ -82,7 +82,23 @@ class ApplicantController {
             ];
         }
     }
+    public function getApplicantById($id) {
+        $applicant = new Applicant($this->db);
+        $result = $applicant->getById($id);
 
+        if ($result) {
+            return [
+                "status" => 200,
+                "data" => $result
+            ];
+        } else {
+            return [
+                "status" => 404,
+                "message" => "Applicant not found"
+            ];
+        }
+
+    }
     public function storeToken($applicantId, $token) {
         $query = "INSERT INTO applicant_tokens (applicant_id, token) VALUES (:applicant_id, :token)";
         $stmt = $this->db->prepare($query);

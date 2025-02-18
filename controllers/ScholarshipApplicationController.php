@@ -17,6 +17,7 @@ class ScholarshipApplicationController {
             $application = new ScholarshipApplication($this->db);
             $application->reviewer_id = $reviewerId;
             $application->application_name = $data['application_name'];
+            $application->company = $data['company'];
             $application->application_description = $data['application_description'];
             $application->duration = $data['duration'];
             $application->application_image = isset($data['application_image']) ? $data['application_image'] : '';
@@ -96,6 +97,7 @@ class ScholarshipApplicationController {
             $application->id = $data['id'];
             $application->reviewer_id = $reviewerId;
             $application->application_name = $data['application_name'];
+            $application->application_name = $data['company'];
             $application->application_description = $data['application_description'];
             $application->duration = $data['duration'];
             $application->application_image = isset($data['application_image']) ? $data['application_image'] : '';
