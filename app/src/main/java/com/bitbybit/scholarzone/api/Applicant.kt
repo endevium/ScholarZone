@@ -11,7 +11,6 @@ data class Applicant(
     val phone_number: Int,
     val school: String,
     val program: String,
-    val full_address: String,
     val rpc: String,
     val bsb: String
 )

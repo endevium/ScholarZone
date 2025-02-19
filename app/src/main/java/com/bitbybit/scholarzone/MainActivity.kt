@@ -53,7 +53,8 @@ class MainActivity : ComponentActivity() {
                     SignUpPageThree(nc, signUpViewModel)
                 }
                 composable(Routes.MainPage) {
-                    MainPage()
+                    val nestedNavController = rememberNavController()
+                    MainPage(nestedNavController, nc)
                 }
                 composable(Routes.ForgotPassword) {
                     ForgotPassword(nc, forgotViewModel)

@@ -2,6 +2,7 @@ package com.bitbybit.scholarzone.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,19 +59,32 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.api.APIService
+import com.bitbybit.scholarzone.api.RetrofitClient
+import com.bitbybit.scholarzone.api.ScholarshipApplication
+import com.bitbybit.scholarzone.api.ScholarshipResponse
 import com.bitbybit.scholarzone.objects.BottomNavigationItem
 import com.bitbybit.scholarzone.objects.Routes
+import com.bitbybit.scholarzone.objects.ScholarshipApplicationViewModel
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 @Composable
-fun HomePage(nav: NavController) {
+fun HomePage(
+    nav: NavController,
+    viewModel: ScholarshipApplicationViewModel = viewModel()
+) {
+    val scholarships = viewModel.scholarships
     var search by remember { mutableStateOf("") }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
@@ -141,7 +156,7 @@ fun HomePage(nav: NavController) {
                                         .clip(RoundedCornerShape(20.dp))
                                 )
                                 Text(
-                                    text = "Scholarship Name",
+                                    text = "Hawak Kamay Scholarship",
                                     fontSize = 18.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Bold,
@@ -171,7 +186,7 @@ fun HomePage(nav: NavController) {
                                         .clip(shape)
                                 )
                                 Text(
-                                    text = "Scholarship Name",
+                                    text = "Guanzon Grant",
                                     fontSize = 18.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Bold,
@@ -201,7 +216,7 @@ fun HomePage(nav: NavController) {
                                         .clip(shape)
                                 )
                                 Text(
-                                    text = "Scholarship Name",
+                                    text = "SM Scholarship",
                                     fontSize = 18.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Bold,
@@ -291,173 +306,10 @@ fun HomePage(nav: NavController) {
                     }
                 }
 
-
-                // SCHOLARSHIP CARD
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(200.dp)
-                            .offset(x = 18.dp, y = 130.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
-                    ) {
-                        Row {
-                            Box(Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-                                .width(125.dp).fillMaxHeight()) {
-                                Image(painter = painterResource(R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)).fillMaxHeight()
-                                    )
-                            }
-
-                            Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
-                                Text(
-                                    "Scholarship Name",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Company",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Category: Undergraduate",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Duration: 4 years",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Deadline: 4 days",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Spacer(Modifier.height(25.dp))
-                                Button(
-                                    onClick = { nav.navigate(Routes.ScholarshipApplicationPage) },
-                                    shape = RoundedCornerShape(15.dp),
-                                    modifier = Modifier.height(35.dp).width(90.dp)
-                                        .offset(x = 105.dp)
-                                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.White,
-                                    )
-                                ) {
-                                    Text("Apply",
-                                        fontSize = 12.sp,
-                                        fontFamily = InterFontFamily,
-                                        fontWeight = FontWeight.Normal,
-                                        color = colorResource(R.color.scholar_blue)
-                                    )
-                                }
-                            }
-                        }
+                items(scholarships) { scholarship ->
+                    Box(Modifier.offset(y = 100.dp)) {
+                        ScholarshipCard(nav, scholarship)
                     }
-
-                    Spacer(Modifier.height(12.dp))
-                }
-
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(200.dp)
-                            .offset(x = 18.dp, y = 130.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
-                    ) {
-                        Row {
-                            Box(Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-                                .width(125.dp).fillMaxHeight()) {
-                                Image(painter = painterResource(R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)).fillMaxHeight()
-                                )
-                            }
-
-                            Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
-                                Text(
-                                    "Scholarship Name",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Company",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Category: Undergraduate",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Duration: 4 years",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Deadline: 4 days",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Spacer(Modifier.height(25.dp))
-                                Button(
-                                    onClick = { nav.navigate(Routes.ScholarshipApplicationPage) },
-                                    shape = RoundedCornerShape(15.dp),
-                                    modifier = Modifier.height(35.dp).width(90.dp)
-                                        .offset(x = 105.dp)
-                                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.White,
-                                    )
-                                ) {
-                                    Text("Apply",
-                                        fontSize = 12.sp,
-                                        fontFamily = InterFontFamily,
-                                        fontWeight = FontWeight.Normal,
-                                        color = colorResource(R.color.scholar_blue)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
                     Spacer(Modifier.height(12.dp))
                 }
 
@@ -466,6 +318,99 @@ fun HomePage(nav: NavController) {
                 }
             }
 
+        }
+    }
+}
+
+@Composable
+fun ScholarshipCard(nav: NavController, scholarship: ScholarshipApplication) {
+    Box(
+        modifier = Modifier
+            .width(350.dp)
+            .height(200.dp)
+            .offset(x = 18.dp, y = 20.dp)
+            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
+    ) {
+        Row {
+            Box(
+                Modifier
+                    .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
+                    .width(125.dp)
+                    .fillMaxHeight()
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.scholarship),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            Column(Modifier.padding(15.dp)) {
+                Text(
+                    scholarship.application_name,
+                    fontSize = 14.sp,
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
+
+                Text(
+                    scholarship.company,
+                    fontSize = 14.sp,
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Light,
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
+
+                Text(
+                    "Category: ${scholarship.category}",
+                    fontSize = 14.sp,
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Light,
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
+
+                Text(
+                    "Duration: ${scholarship.duration}",
+                    fontSize = 14.sp,
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Light,
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
+
+                Text(
+                    "Deadline: ${scholarship.deadline}",
+                    fontSize = 14.sp,
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Light,
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
+
+                Spacer(Modifier.height(10.dp))
+                Button(
+                    onClick = { nav.navigate(
+                        "scholarshipApplicationPage/${scholarship.id}/${scholarship.application_name}/${scholarship.company}/${scholarship.application_description}/${scholarship.duration}/${scholarship.category}/${scholarship.slots}/${scholarship.deadline}"
+                    ) },
+                    shape = RoundedCornerShape(15.dp),
+                    modifier = Modifier
+                        .height(35.dp)
+                        .width(90.dp)
+                        .offset(x = 105.dp, y = 10.dp)
+                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                ) {
+                    Text(
+                        "Apply",
+                        fontSize = 12.sp,
+                        fontFamily = InterFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(R.color.scholar_blue)
+                    )
+                }
+
+                Spacer(Modifier.height(12.dp))
+            }
         }
     }
 }

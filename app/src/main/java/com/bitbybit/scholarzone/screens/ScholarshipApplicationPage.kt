@@ -43,6 +43,16 @@ import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 
 @Composable
 fun ScholarshipApplicationPage(nav: NavController) {
+    val backStackEntry = nav.currentBackStackEntry
+    val id = backStackEntry?.arguments?.getString("id")?.toInt() ?: 0
+    val application_name = backStackEntry?.arguments?.getString("application_name") ?: ""
+    val company = backStackEntry?.arguments?.getString("company") ?: ""
+    val application_description = backStackEntry?.arguments?.getString("application_description") ?: ""
+    val duration = backStackEntry?.arguments?.getString("duration") ?: ""
+    val category = backStackEntry?.arguments?.getString("category") ?: ""
+    val slots = backStackEntry?.arguments?.getString("slots")?.toInt() ?: 0
+    val deadline = backStackEntry?.arguments?.getString("deadline") ?: ""
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.White)) {
@@ -82,7 +92,7 @@ fun ScholarshipApplicationPage(nav: NavController) {
                     .background(Color.White)
             ) {
                 Text(
-                    "Scholarship Name",
+                    application_name,
                     fontFamily = InterFontFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
@@ -94,7 +104,7 @@ fun ScholarshipApplicationPage(nav: NavController) {
                 )
 
                 Text(
-                    "Company",
+                    company,
                     fontFamily = InterFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
@@ -106,7 +116,7 @@ fun ScholarshipApplicationPage(nav: NavController) {
                 )
 
                 Text(
-                    "Category: Undergraduate",
+                    "Category: $category",
                     fontFamily = InterFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
@@ -118,7 +128,7 @@ fun ScholarshipApplicationPage(nav: NavController) {
                 )
 
                 Text(
-                    "Duration: 4 years",
+                    "Duration: $duration",
                     fontFamily = InterFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
@@ -130,19 +140,7 @@ fun ScholarshipApplicationPage(nav: NavController) {
                 )
 
                 Text(
-                    "Applicants: N/A",
-                    fontFamily = InterFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    modifier = Modifier.offset(
-                        x = 25.dp,
-                        y = 25.dp
-                    )
-                        .padding(bottom = 5.dp)
-                )
-
-                Text(
-                    "Available Slots: 500",
+                    "Available Slots: $slots",
                     fontFamily = InterFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
@@ -160,7 +158,7 @@ fun ScholarshipApplicationPage(nav: NavController) {
                 ) {
                     item {
                         Text(
-                            "Eligible applicants can receive up to a 75% discount on tuition and miscellaneous fees. A significant feature of this scholarship is its accessibility, as there is no maintaining grade requirement, making it ideal for students committed to their education regardless of academic standing. The scholarship remains valid until the recipient completes their chosen program, provided they adhere to the guidelines set by their school.",
+                            application_description,
                             fontFamily = InterFontFamily,
                             fontWeight = FontWeight.Normal,
                             fontSize = 16.sp,
@@ -174,7 +172,7 @@ fun ScholarshipApplicationPage(nav: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Deadline: 4 days",
+                        "Deadline: $deadline",
                         fontSize = 16.sp,
                         fontFamily = InterFontFamily,
                         fontWeight = FontWeight.Normal,
@@ -182,10 +180,10 @@ fun ScholarshipApplicationPage(nav: NavController) {
                     )
 
                     Button(
-                        onClick = { nav.navigate(Routes.ApplicationFormPage) },
+                        onClick = { nav.navigate("applicationFormPage/$id/$application_name/$company/$application_description/$duration/$category/$slots/$deadline") },
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.height(35.dp).width(95.dp)
-                            .offset(x = 125.dp)
+                            .offset(x = 85.dp)
                             .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,

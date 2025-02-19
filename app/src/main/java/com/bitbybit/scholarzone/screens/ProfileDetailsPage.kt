@@ -19,9 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,11 +34,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.objects.ProfileViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 
 @Composable
 fun ProfileDetailsPage(nav: NavController) {
+    val context = LocalContext.current
+    val viewModel: ProfileViewModel = remember { ProfileViewModel(context) }
+    val applicant = viewModel.applicant.value
+
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Column(
         ) {
@@ -84,7 +91,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("John",
+                            Text(applicant?.firstname ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -122,7 +129,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("Doe",
+                            Text(applicant?.lastname ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -160,7 +167,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("Male",
+                            Text(applicant?.gender ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -198,7 +205,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("2005-06-09",
+                            Text(applicant?.birthdate ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -236,7 +243,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("09123456789",
+                            Text(applicant?.phone_number.toString() ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -274,7 +281,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("PHINMA UPang",
+                            Text(applicant?.school ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -312,7 +319,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("Information Technology",
+                            Text(applicant?.program ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -350,7 +357,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("NCR, Manila, Marikina",
+                            Text(applicant?.rpc ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -388,7 +395,7 @@ fun ProfileDetailsPage(nav: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()) {
                             // NAME
-                            Text("Bari, National Road, 391",
+                            Text(applicant?.bsb ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,

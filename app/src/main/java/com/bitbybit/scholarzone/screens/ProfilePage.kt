@@ -25,9 +25,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,11 +40,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.api.clearToken
+import com.bitbybit.scholarzone.objects.ProfileViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 
 @Composable
-fun ProfilePage(nav: NavController) {
+fun ProfilePage(nav: NavController, rootNav: NavController) {
+    val context = LocalContext.current
+    val viewModel: ProfileViewModel = remember { ProfileViewModel(context) }
+    val applicant = viewModel.applicant.value
+
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -85,7 +93,7 @@ fun ProfilePage(nav: NavController) {
             }
 
             Text(
-                "Username",
+                applicant?.username ?: "Loading...",
                 fontSize = 18.sp,
                 modifier = Modifier.offset(y = 24.dp)
                     .padding(bottom = 5.dp)
@@ -96,7 +104,7 @@ fun ProfilePage(nav: NavController) {
             )
 
             Text(
-                "john.doe@example.com",
+                applicant?.email ?: "Loading...",
                 fontSize = 18.sp,
                 modifier = Modifier.offset(y = 24.dp)
                     .padding(bottom = 45.dp)
@@ -178,6 +186,10 @@ fun ProfilePage(nav: NavController) {
 
             Button(
                 onClick = {
+                    rootNav.navigate(Routes.LandingPage) {
+                        popUpTo(Routes.LandingPage) { inclusive = true } // Clears back stack
+                    }
+                    clearToken(context)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -216,5 +228,5 @@ fun ProfilePage(nav: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewProfile() {
-    ProfilePage(rememberNavController())
+    ProfilePage(rememberNavController(), rememberNavController())
 }

@@ -19,9 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,11 +33,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.objects.ProfileViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 
 @Composable
 fun AccountDetailsPage(nav: NavController) {
+    val context = LocalContext.current
+    val viewModel: ProfileViewModel = remember { ProfileViewModel(context) }
+    val applicant = viewModel.applicant.value
+
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Column {
             Row(
@@ -95,7 +102,7 @@ fun AccountDetailsPage(nav: NavController) {
                         ) {
                             // NAME
                             Text(
-                                "johndoe69",
+                                applicant?.username ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,
@@ -142,7 +149,7 @@ fun AccountDetailsPage(nav: NavController) {
                         ) {
                             // NAME
                             Text(
-                                "john.doe@email.com",
+                                applicant?.email ?: "Loading...",
                                 fontSize = 18.sp,
                                 fontFamily = InterFontFamily,
                                 fontWeight = FontWeight.Normal,

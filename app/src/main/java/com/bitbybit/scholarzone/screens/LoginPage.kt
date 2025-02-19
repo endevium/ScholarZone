@@ -59,6 +59,7 @@ import com.bitbybit.scholarzone.api.APIService
 import com.bitbybit.scholarzone.api.ApplicantResponse
 import com.bitbybit.scholarzone.api.Login
 import com.bitbybit.scholarzone.api.RetrofitClient
+import com.bitbybit.scholarzone.api.saveId
 import com.bitbybit.scholarzone.api.saveToken
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
@@ -236,7 +237,7 @@ fun LoginPage(nav: NavController) {
                             )
 
                             val apiService = RetrofitClient.create(APIService::class.java)
-                            apiService.login("applicant-login", login).enqueue(object:
+                            apiService.login(login).enqueue(object:
                                 Callback<ApplicantResponse> {
                                 override fun onResponse(
                                     call: Call<ApplicantResponse>,
@@ -246,11 +247,16 @@ fun LoginPage(nav: NavController) {
                                         Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
                                         val loginResponse = response.body()
                                         val token = loginResponse?.token
+                                        val id = loginResponse?.id
 
                                         Log.d("SignUpDebug", "Response: ${response.body()}")
                                         if (token != null) {
                                             RetrofitClient.setToken(token)
                                             saveToken(context, token)
+                                        }
+
+                                        if (id != null) {
+                                            saveId(context, id)
                                         }
                                         nav.navigate(Routes.MainPage)
                                     } else {

@@ -187,34 +187,6 @@ fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
 
                 item {
                     Text(
-                        text = "Full Address",
-                        fontSize = 14.sp,
-                        color = colorResource(id = R.color.scholar_black),
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = InterFontFamily,
-                        modifier = Modifier
-                            .padding(bottom = 10.dp)
-                            .padding(start = 10.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = fullAddress,
-                        onValueChange = { fullAddress = it },
-                        placeholder = { Text("Enter full address")},
-                        modifier = Modifier
-                            .width(330.dp)
-                            .height(55.dp)
-                            .padding(start = 10.dp),
-                        shape = RoundedCornerShape(15.dp),
-                        maxLines = 1,
-                        textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
-                    )
-
-                    Spacer(Modifier.height(10.dp))
-                }
-
-                item {
-                    Text(
                         text = "Region, Province, City",
                         fontSize = 14.sp,
                         color = colorResource(id = R.color.scholar_black),
@@ -304,9 +276,6 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                     program.isEmpty() -> {
                         Toast.makeText(context, "Program is required", Toast.LENGTH_SHORT).show()
                     }
-                    fullAddress.isEmpty() -> {
-                        Toast.makeText(context, "Full address is required", Toast.LENGTH_SHORT).show()
-                    }
                     rpc.isEmpty() -> {
                         Toast.makeText(context, "Region, province, city are required", Toast.LENGTH_SHORT).show()
                     }
@@ -325,7 +294,6 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                             phone_number = viewModel.phoneNumber,
                             school = school,
                             program = program,
-                            full_address = fullAddress,
                             rpc = rpc,
                             bsb = bsb
                         )
@@ -333,7 +301,7 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                         val gson = Gson()
                         Log.d("REQUEST_BODY", gson.toJson(applicant))
 
-                        apiService.register("applicants", applicant).enqueue(object: Callback<ApplicantResponse> {
+                        apiService.register(applicant).enqueue(object: Callback<ApplicantResponse> {
                                 override fun onResponse(
                                     call: Call<ApplicantResponse>,
                                     response: Response<ApplicantResponse>

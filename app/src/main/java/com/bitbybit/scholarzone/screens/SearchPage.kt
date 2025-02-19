@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -52,12 +53,13 @@ import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
-import kotlin.math.sin
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bitbybit.scholarzone.objects.SearchViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchPage(nav: NavController) {
+fun SearchPage(nav: NavController, viewModel: SearchViewModel = viewModel()) {
     var search by remember { mutableStateOf("") }
+    val searchResults = viewModel.searchResults
 
     Box(Modifier.background(Color.White).fillMaxSize()) {
         Column {
@@ -112,8 +114,11 @@ fun SearchPage(nav: NavController) {
                     )
                 }
 
-                TextButton(onClick = {}) {
-                    Text("Search",
+                TextButton(onClick = {
+                    viewModel.searchScholarships(search)
+                }) {
+                    Text(
+                        "Search",
                         fontSize = 16.sp,
                         color = colorResource(R.color.scholar_blue),
                         fontFamily = InterFontFamily,
@@ -123,7 +128,8 @@ fun SearchPage(nav: NavController) {
                 }
             }
 
-            Text("Search Results",
+            Text(
+                "Search Results",
                 fontSize = 21.sp,
                 modifier = Modifier.offset(x = 18.dp, y = 30.dp),
                 fontFamily = InterFontFamily,
@@ -131,94 +137,20 @@ fun SearchPage(nav: NavController) {
             )
 
             LazyColumn(
-                modifier = Modifier.fillMaxHeight()
-                    .offset(x = 18.dp, y = 45.dp)
+                modifier = Modifier.fillMaxHeight().offset(y = 20.dp)
             ) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(200.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
-                    ) {
-                        Row {
-                            Box(Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-                                .width(125.dp).fillMaxHeight()) {
-                                Image(painter = painterResource(R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)).fillMaxHeight()
-                                )
-                            }
-
-                            Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
-                                Text(
-                                    "Scholarship Name",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Company",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Category: Undergraduate",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Duration: 4 years",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Deadline: 4 days",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Spacer(Modifier.height(25.dp))
-                                Button(
-                                    onClick = { nav.navigate(Routes.ScholarshipApplicationPage) },
-                                    shape = RoundedCornerShape(15.dp),
-                                    modifier = Modifier.height(35.dp).width(90.dp)
-                                        .offset(x = 105.dp)
-                                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.White,
-                                    )
-                                ) {                                    Text("Apply",
-                                        fontSize = 12.sp,
-                                        fontFamily = InterFontFamily,
-                                        fontWeight = FontWeight.Normal,
-                                        color = colorResource(R.color.scholar_blue)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
+                items(searchResults) { scholarship ->
+                    ScholarshipCard(nav, scholarship)
                     Spacer(Modifier.height(12.dp))
                 }
             }
+
+            Spacer(Modifier.height(150.dp))
         }
     }
 }
+
+
 
 @Composable
 @Preview(showBackground = true)

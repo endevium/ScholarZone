@@ -8,17 +8,34 @@ interface APIService {
 
     // Applicants Login
     @Headers("Content-type: application/json")
-    @POST("index.php")
+    @POST("api/applicant-login")
     fun login(
-        @Query("route") route: String = "applicant-login",
         @Body login: Login
     ): Call<ApplicantResponse>
 
     // Applicants Signup
     @Headers("Content-type: application/json")
-    @POST("index.php")
+    @POST("api/applicants")
     fun register(
-        @Query("route") route: String = "applicants",
         @Body applicant: Applicant
     ): Call<ApplicantResponse>
+
+    // Applicant Info
+    @GET("api/applicants")
+    fun getApplicant(
+        @Query("id") id: Int
+    ): Call<AccountResponse>
+
+    @GET("api/scholarships")
+    fun getScholarships(): Call<ScholarshipResponse>
+
+    @GET("api/search-scholarships")
+    fun searchScholarship(
+        @Query("search") search: String
+    ): Call<SearchResponse>
+
+    @GET("api/questions")
+    fun getQuestions(
+        @Query("scholarship_application_id") scholarship_application_id: Int
+    ): Call<QuestionResponse>
 }

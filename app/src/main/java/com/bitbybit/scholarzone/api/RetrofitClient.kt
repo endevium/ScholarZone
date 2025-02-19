@@ -7,7 +7,7 @@ import okhttp3.Request
 
 object RetrofitClient {
     // API URL
-    private const val BASE_URL = "https://scorpion-workable-panda.ngrok-free.app/ScholarZone/"
+    private const val BASE_URL = "https://active-fox-exactly.ngrok-free.app/ScholarZone/"
 
     private var authToken: String? = null
 

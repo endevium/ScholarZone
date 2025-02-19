@@ -27,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,7 +40,7 @@ import com.bitbybit.scholarzone.objects.Routes.EditEmailPage
 import com.bitbybit.scholarzone.objects.Routes.PersonalDetailsPage
 
 @Composable
-fun MainPage() {
+fun MainPage(nestedNav: NavHostController, rootNav: NavController) {
     val nav = rememberNavController()
 
     val items = listOf(
@@ -72,7 +74,7 @@ fun MainPage() {
         mutableIntStateOf(0)
     }
 
-    val navBackStackEntry by nav.currentBackStackEntryAsState()
+    val navBackStackEntry by nestedNav.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val hideBottomNavRoutes = listOf(
@@ -105,7 +107,7 @@ fun MainPage() {
                             selected = selectedItemIndex == index,
                             onClick = {
                                 selectedItemIndex = index
-                                nav.navigate(item.titleData)
+                                nestedNav.navigate(item.titleData)
                             },
                             label = {
                                 Text(item.title)
@@ -135,18 +137,18 @@ fun MainPage() {
         }
     ) {
             innerPadding -> Box(modifier = Modifier.padding(innerPadding)) {
-        NavigationGraph(nav)
+        NavigationGraph(nestedNav, rootNav)
     }
     }
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController) {
+fun NavigationGraph(navController: NavHostController, rootNav: NavController) {
     NavHost(navController, startDestination = Routes.HomePage) {
         composable(Routes.HomePage) { HomePage(navController) }
         composable(Routes.DashboardPage) { DashboardPage(navController) }
         composable(Routes.NotificationPage) { NotificationPage(navController) }
-        composable(Routes.ProfilePage) { ProfilePage(navController) }
+        composable(Routes.ProfilePage) { ProfilePage(navController, rootNav) }
         composable(Routes.SearchPage) { SearchPage(navController)  }
         composable(Routes.ScholarshipApplicationPage) { ScholarshipApplicationPage(navController) }
         composable(Routes.ApplicationFormPage) { ApplicationFormPage(navController) }
