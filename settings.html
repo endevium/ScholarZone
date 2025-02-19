@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Create</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+    
+    <div class="menu-toggle">☰</div>
+
+    <div class="sidebar">
+        <img src="close-line.png" class="close1">
+        <div class="logo">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="dashboard.html" class="nav-link">
+                <img src="dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="create.html" class="nav-link">
+                <img src="create_icon.png" alt="Create" class="nav-icon">
+                Create
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">
+                <img src="manage_icon.png" alt="Manage" class="nav-icon">
+                Manage
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">
+                <img src="review_icon.png" alt="Review" class="nav-icon">
+                Review
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <input type="text" class="search-box" placeholder="Start typing">
+            <div class="user-profile">
+                <div class="username-container">
+                    <span class="gmail">@janedoe69</span>
+                    <img src="dropbox_icon.png" alt="Dropdown" class="dropbox-icon">
+                    <img src="avatar-icon.png" alt="User" class="avatar-icon">
+                </div>
+            </div>
+        </div>
+        <div class="create-title">
+            <div class="header1">
+                <img src="Setting_line.png" alt="Settings" class="nav-icon">
+                <h1>Account Settings</h1>
+            </div>
+        </div> 
+        <div class="profile-container">
+            <div class="profile-pic">
+                <img src="avatar-icon.png" alt="Pfp" class="avatar-big">
+            </div>
+            <div class="main-name">
+                <h1>Xavier D. Gomez</h1>
+                <p>xvaier099@gmail.com</p>
+            </div>
+        </div>
+
+        <div>
+            <button class="btn-editpfp">Edit Picture</button>
+        </div>
+        <div>
+            <button class="btn-accdet">
+                <img src="black_icon.png" alt="icon" class="person">
+                Account Details
+            </button>
+        </div>
+        
+        <div>
+            <button class="btn-persdet">
+                <img src="black_icon.png" alt="tao" class="tao">
+                Personal Details
+            </button>
+        </div>
+        <div>
+            <button class="btn-logout">
+                <img src="Sign_out_squre.png" alt="out" class="out">
+                Log Out
+            </button>
+        </div>
+    </div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+  const menuToggle = document.querySelector(".menu-toggle");
+  const sidebar = document.querySelector(".sidebar");
+  const closeIcon = document.querySelector(".sidebar .close");
+
+  // When menu toggle is clicked, move the sidebar inside it (if not already) and toggle visibility
+  menuToggle.addEventListener("click", function () {
+    if (!menuToggle.contains(sidebar)) {
+      menuToggle.appendChild(sidebar);
+    }
+    sidebar.classList.toggle("active");
+  });
+
+  // When the close icon is clicked, hide the sidebar
+  if (close1) {
+    closeIcon.addEventListener("click", function () {
+      sidebar.classList.remove("active");
+    });
+  }
+});
+
+    </script>
+</html>
