@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScholarZone Manage</title>
-    <link rel="stylesheet" href="manage3.css">
+    <title>ScholarZone Create</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="create2.css">
 </head>
 <body>
     <div class="sidebar" id="sidebar">
-        <img src="pictures/close-line.png" class="close1" id="close1">
         <div class="logo">
+            <img src="pictures/scholarzone-logo.png" class="close1" id="close1">
             <span class="logo-text">
                 <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
             </span>
@@ -20,13 +21,13 @@
                 Dashboard
             </a>
         </div>
-        <div class="nav-item">
+        <div class="nav-item active">
             <a href="create.html" class="nav-link">
                 <img src="pictures/create_icon.png" alt="Create" class="nav-icon">
                 Create
             </a>
         </div>
-        <div class="nav-item active">
+        <div class="nav-item">
             <a href="manage.html" class="nav-link">
                 <img src="pictures/manage_icon.png" alt="Manage" class="nav-icon">
                 Manage
@@ -64,26 +65,30 @@
         <div class="create-title">
             <div class="header">
                 <img src="pictures/create_icon.png" alt="Create" class="nav-icon">
-                <h1>Edit</h1>
+                <h1>Create</h1>
             </div>
         </div>
 
         <div class="align-content">
             <div class="back-button">
-                <i class="ri-arrow-left-circle-fill back-button" onclick=""></i>
+                <i class="ri-arrow-left-circle-fill back-button" id="back-button"></i>
             </div>
     
             <div class="progress-bar">
                 <div class="progress-step"></div>
                 <div class="progress-step active"></div>
             </div>
+
+            <div class="question-container">
+                Questions
+            </div>
     
-            <form id="edit-question-form" class="create-form">
+            <form id="question-form" class="create-form">
                 <div class="form-group">
-                    <input class="input-label" type="text" placeholder="Enter question here"></input>
-                    <input type="text" class="question-field" placeholder="Answer field" disabled>
+                    <input type="text" class="question-field" placeholder="What makes you a special candidate" disable>
+                    <img src="pictures/remove_btn.png" alt="Remove" class="remove-btn">
                 </div>
-    
+
                 <div class="add-question-container">
                     <i class="ri-add-circle-line add-button" onclick=""></i>
                     <p class="add-question-text">Add Question</p>
@@ -103,8 +108,8 @@
             const hoverProfile = document.getElementById("hover-profile");
             const menuToggle = document.getElementById("menu-toggle");
             const sidebar = document.getElementById("sidebar");
-            
-            const editQuestionForm = document.getElementById("edit-question-form");
+            const questionForm = document.getElementById("question-form");
+            const backButton = document.getElementById("back-button")
 
             avatarIcon.addEventListener("click", function (event) {
                 hoverProfile.classList.toggle("show");
@@ -120,7 +125,12 @@
                 sidebar.classList.remove("show");
             });
 
-            editQuestionForm.addEventListener("submit", async function () {
+            backButton.addEventListener("click", function () {
+                event.preventDefault();
+                window.location.href = "create.html";
+            });
+
+            questionForm.addEventListener("submit", async function () {
                 event.preventDefault();
                 window.location.href = "manage.html";
             });
