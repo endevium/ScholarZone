@@ -47,6 +47,13 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 40px;
+    gap: 10px;
+}
+
+.logo img {
+    display: block;
+    width: 28px;
+    height: 28px;
 }
 
 .logo-text {
@@ -251,12 +258,10 @@ body {
 .create-form {
     max-width: 800px;
     padding: 24px;
-    background: white;
-    border-radius: 12px;
 }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
 
 .form-group label {
@@ -278,6 +283,7 @@ body {
     font-size: 14px;
     color: #111827;
     font-family: 'Inter', sans-serif;
+    resize: none;
 }
 
 .form-group input:focus,
@@ -310,7 +316,7 @@ body {
 }
 
 .form-group2 {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .form-group2 label {
@@ -344,17 +350,22 @@ body {
 .form-actions {
     display: flex;
     gap: 16px;
-    margin-top: 32px;
 }
 
-.btn-next,
-.btn-reset {
-    padding: 16px 60px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 160px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.left-section, .right-section {
+    width: 100%;
+}
+
+.form-group, .form-group2 {
+    width: 100%;
 }
 
 .btn-next,
