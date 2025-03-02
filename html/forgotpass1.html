@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone - Forgot Password</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="../css/forgotpass1.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <label class="open_menu" id="menu-toggle"><i class="ri-menu-line"></i></label>
+                <div class="logo"><a href="landing.html"><b>Scholar</b><span>Zone</span></a></div>
+                <ul class="menudo" id="menu">
+                    <li><a href="landing.html"> Home </a></li>
+                    <li><a href="landing.html#feature-section"> Student </a></li>
+                    <li><a href="landing.html#review-section"> Reviewer </a></li>
+                    <li><a href="login.html" class="menu-login"> Log in </a></li>
+                    <li><a href="signup1.html" class="menu-signup"> Sign up </a></li>
+                    <label class="close_menu"><i class="ri-close-line"></i></label>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="log"><a href="login.html"> Log In </a></button>
+                <button class="sign"><a href="signup1.html"> Sign Up </a></button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="malakingFPassword">
+            <h1>Forgot password?</h1>
+
+            <div class="progress">
+                <span class="active"></span>
+                <span></span>
+            </div>
+
+            <p>Please enter your registered email address</p>
+
+            <form action="#" method="POST">
+                <div class="input-container">
+                    <label for="email"><b>Email Address</b></label>
+                    <div class="input-box">
+                        <i class="ri-mail-line"></i>
+                        <input type="email" id="email" name="email" placeholder="ex: john.doe@example.com" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="next-btn" onclick="goToLogin()">Continue</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        function goToLogin() {
+            window.location.href = "forgotpass2.html";
+        }
+    
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("menu").classList.toggle("show");
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <label class="open_menu" id="menu-toggle"><i class="ri-menu-line"></i></label>
+                <div class="logo"><a href="landing.html"><b>Scholar</b><span>Zone</span></a></div>
+                <ul class="menudo" id="menu">
+                    <li><a href="landing.html"> Home </a></li>
+                    <li><a href="landing.html#feature-section"> Student </a></li>
+                    <li><a href="landing.html#review-section"> Reviewer </a></li>
+                    <li><a href="login.html" class="menu-login"> Log in </a></li>
+                    <li><a href="signup1.html" class="menu-signup"> Sign up </a></li>
+                    <label class="close_menu"><i class="ri-close-line"></i></label>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="log"><a href="login.html"> Log In </a></button>
+                <button class="sign"><a href="signup1.html"> Sign Up </a></button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="malakingLogin">
+            <h1>Log in to your account</h1>
+            <p>Please sign in to continue</p>
+            <form id="loginForm">
+                <label class="user">Email</label>
+                <div class="login-container">
+                    <div class="input-box">
+                        <i class="ri-user-3-line"></i>
+                        <input type="email" id="email" placeholder="Enter email" required>
+                    </div>
+                
+                    <label class="pass">Password</label>
+                    <div class="input-box">
+                        <i class="ri-lock-password-line"></i>
+                        <input type="password" id="password" placeholder="Enter password" required>
+                        <i class="ri-eye-line" id="togglePassword"></i>
+                    </div>
+                
+                    <a href="forgotpass1.html" class="forgot-password">Forgot password?</a>
+                
+                    <button type="submit" id="submit" class="login-btn"> Log In </button>
+                    <p id="errorMessage" style="color: red; display: none;"></p>
+
+                </div>
+                <p class="signup-text">Don't have an account? <a href="signup1.html">Sign up</a></p>
+            </form>
+        </div>
+    </div>
+
+
+<script>
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("menu").classList.toggle("show");
+        });
+
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let errorMessage = document.getElementById("errorMessage");
+
+        try {
+            let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            let data = await response.json();
+
+            if (data.status === 200) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("id", data.id);
+
+                // Redirect to dashboard
+                window.location.href = "dashboard.html";
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            alert("Please check your internet connection");
+        }
+    });
+
+    // Toggle Password Visibility
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        let passwordField = document.getElementById("password");
+        passwordField.type = passwordField.type === "password" ? "text" : "password";
+    });
+</script>
+
+</body>
+</html>

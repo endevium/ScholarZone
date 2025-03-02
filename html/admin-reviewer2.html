@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Review</title>
+    <link rel="stylesheet" href="../css/admin-reviewer2.css">
+</head>
+<body>
+    <div class="sidebar">
+      <div class="logo">
+        <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+        <span class="logo-text">
+            <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+        </span>
+    </div>
+        <div class="nav-item">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+          <div class="menu-toggle">☰</div>
+            <img src="../pictures/search_icon.png" alt="Search" class="searchocon">
+            <input type="text" class="search-box" placeholder="Start typing">
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="#">Edit Profile Picture</a></li>
+                            <li><a href="#" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+          <h1 class="create-title">
+              <img src="../pictures/review_icon.png" alt="Dashboard" class="nav-icon">
+              Reviewers
+          </h1>
+           </div>
+
+        <div class="content">
+            <div class="back-button">
+                <img src="../pictures/backbtn-icon.png" id="back-button">
+            </div>
+
+            <div class="forming">
+            <div class="form-container">
+              <div class="form-group">
+                <label>First Name</label>
+                <div class="input-container">
+                  <input type="text" value="Jane" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>School / Company</label>
+                <div class="input-container">
+                  <input type="text" value="PHINMA UPang" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>Last Name</label>
+                <div class="input-container">
+                  <input type="text" value="Doe" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>Phone Number</label>
+                <div class="input-container">
+                  <input type="text" value="+639123456789" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>Birthdate</label>
+                <div class="input-container">
+                  <input type="text" value="10/27/2004" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>Region, Province, City</label>
+                <div class="input-container">
+                  <input type="text" value="NCR, Manila, Marikina City" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>Gender</label>
+                <div class="input-container">
+                  <input type="text" value="Male" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group ">
+                <label>Barangay, Street, Building</label>
+                <div class="input-container">
+                  <input type="text" value="Barangay V, Pantal St., Marikina buil" readonly>
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <button class="approved-btn">Approve</button>
+                <button class="rejected-btn">Reject</button>
+            </div>
+            </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mainContent = document.querySelector('.main-content');
+        const sidebar = document.querySelector('.sidebar');
+        const backBtn = document.querySelector('.back-button');
+        const formContainer = document.querySelector('.form-container');
+        const approvedBtn = document.querySelector('.approved-btn');
+        const rejectedBtn = document.querySelector('.rejected-btn');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        });
+
+        backBtn.addEventListener('click', () => {
+            window.history.back();
+        });
+
+        approvedBtn.addEventListener('click', () => {
+            alert('Reviewer approved!');
+        });
+
+        rejectedBtn.addEventListener('click', () => {
+            alert('Reviewer rejected!');
+        });
+    </script>
+</body>
+</html>
