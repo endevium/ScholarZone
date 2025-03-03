@@ -24,6 +24,8 @@ header {
     background-color: white;
     width: 100%;
     height: 100px;
+    position: relative;
+    z-index: 1000; /* Add z-index to ensure header is on top */
 }
 
 .navbar {
@@ -32,12 +34,15 @@ header {
     align-items: center;
     width: 100%;
     padding: 0 20px;
+    z-index: 1001; /* Add z-index to ensure navbar is on top */
 }
+
 .nav-left {
     display: flex;
     align-items: center;
     gap: 50px; 
     margin-top: 1%;
+    z-index: 1002; /* Add z-index to ensure nav items are on top */
 }
 .open_menu{
     display: none;
@@ -86,6 +91,7 @@ li a:hover {
     display: flex;
     gap: 15px;
     margin-top: 1%;
+    z-index: 1002;
 }
 
 button {
@@ -97,43 +103,53 @@ button {
     border-radius: 8px;
     width: 125px;
     text-align: center;
+    position: relative;
+}
+
+button a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1.5;
+}
+
+button.log {
+    background: #2172AA;
+}
+
+button.log a {
+    color: white;
+}
+
+button.log:hover {
+    background-color: white;
+}
+
+button.log:hover a {
+    color: black;
+}
+
+button.sign {
+    background: transparent;
+}
+
+button.sign a {
+    color: black;
+}
+
+button.sign:hover {
+    background: #2172AA;
+    color: white;
+}
+
+button.sign:hover a {
+    color: white;
 }
 
 .menu-login, .menu-signup {
     display: none;
-}
-
-.log {
-    background: #2172AA;
-}
-
-.log a {
-    color: white;
-    font-size: 17px;
-}
-.log:hover{
-    background-color: white;
-}
-.log:hover a{
-    color: black;
-}
-
-.sign {
-    background: transparent;
-}
-
-.sign a {
-    color: black;
-    font-size: 17px;
-}
-
-.sign:hover {
-    background: #2172AA;
-    color: white;
-}
-
-.sign:hover a {
-    color: white;
 }
 
 /* end of nav bar */
