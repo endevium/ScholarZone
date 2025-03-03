@@ -29,11 +29,19 @@
     font-family: 'Poppins', 'Inter', sans-serif;
 }
 
+header {
+    background-color: white;
+    width: 100%;
+    height: 100px;
+    position: relative;
+    z-index: 1000;
+}
+
 body {
     background-color: #f8fafc;
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
+    overflow-x: hidden;
 }
 
 .open_menu {
@@ -243,7 +251,7 @@ body {
     border-radius: 8px;
     padding: 8px 16px;
     width: 100%;
-    max-width: 300px; /* Control width */
+    max-width: 300px;
 }
 
 .create-title {
@@ -271,7 +279,7 @@ body {
 }
 
 .profile-pic img{
-    width: 100px; /* Adjust as needed */
+    width: 100px;
     height: auto;
 }
 
@@ -406,7 +414,6 @@ body {
     display: none;
 }
 
-/* Add a clear space around the header */
 h1 {
     font-size: 28px;
     color: #111827;
@@ -454,7 +461,7 @@ h1 {
 .form-group textarea,
 .form-group select {
     width: 100%;
-    max-width: 100%; /* Ensure no overflow */
+    max-width: 100%;
     padding: 10px 16px;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -493,71 +500,79 @@ h1 {
     margin-bottom: 12px;
 }
 
-.form-group2 {
-    margin-bottom: 24px;
+a {
+    display: inline-block;
+    width: fit-content;
 }
 
-.form-group2 label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #111827;
+a:hover {
+    text-decoration: none;
 }
 
-.form-group2 input,
-.form-group2 select {
+a button {
+    width: 100%;
+    height: 100%;
+}
+
+.btn-accdet, .btn-persdet {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 20px;
     width: 100%;
     max-width: 300px;
-    padding: 10px 16px;
-    border: 1px solid #e5e7eb;
+    height: 50px;
+    background-color: white;
+    color: #2172B4;
+    border: 1px solid #2172AA;
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #111827;
-}
-
-.form-group2 input:focus,
-.form-group2 select:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
-}
-
-.form-actions {
-    display: flex;
-    gap: 16px;
-    margin-top: 32px;
-}
-
-.btn-next,
-.btn-reset {
-    padding: 16px 60px;
-    border-radius: 8px;
-    font-weight: 600;
+    font-weight: 500;
+    font-size: medium;
     cursor: pointer;
     transition: all 0.2s;
+    margin-top: 20px;
+    margin-left: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-logout {
+    text-decoration: none;
+    padding: 10px 20px;
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    background-color: #2563eb;
+    color: #ffffff;
+    border: 2px solid #2563eb;
+    border-radius: 8px;
     font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    margin-top: 20px;
+    font-size: medium;
+    cursor: pointer;
 }
 
-.btn-next {
-    background: #2563eb;
-    color: white;
-    border: none;
+.btn-logout:hover {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
 }
 
-.btn-next:hover {
-    background-color: #1d4ed8;
+.btn-logout img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
-.btn-reset {
-    background-color: white;
-    color: #111827;
-    border: 1px solid #1d4ed8;
+.btn-accdet:hover, .btn-persdet:hover, .btn-logout:hover {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
 }
 
-.btn-reset:hover {
-    background-color: #f9fafb;
+.btn-accdet img, .btn-persdet img, .btn-logout img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
 @media only screen and (max-width: 600px) {
