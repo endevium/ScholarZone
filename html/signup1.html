@@ -33,45 +33,45 @@
         <div class="malakingSignUp">
             <div class="rightSide">
                 <h1>Create new account</h1>
-            <p>Start managing applications for free!</p>
+                <p>Start managing applications for free!</p>
 
-            <form id="firstSignUp">
-                <label class="user">Username</label>
-                <div class="signup-container">
-                    <div class="input-box">
-                        <i class="ri-user-3-line"></i>
-                        <input type="text" placeholder="johndoe69" id="username" required>
-                    </div>
-                
-                    <label class="email">Email</label>
-                    <div class="input-box">
-                        <i class="ri-mail-line"></i>
-                        <input type="email" placeholder="Create e-mail address" id="email" required>
-                    </div>
+                <form id="firstSignUp">
+                    <label class="user">Username</label>
+                    <div class="signup-container">
+                        <div class="input-box">
+                            <img src="/pictures/black_icon.png" alt="User Icon" class="icon">
+                            <input type="text" placeholder="johndoe69" id="username" required>
+                        </div>
 
-                    <label class="pass">Password</label>
-                    <div class="input-box">
-                        <i class="ri-lock-line"></i>
-                        <input type="password" placeholder="Enter password" id="password" required>
-                    </div>
+                        <label class="email">Email Address</label>
+                        <div class="input-box">
+                            <img src="/pictures/mail_icon.png" alt="Email Icon" class="icon">
+                            <input type="email" placeholder="Create e-mail address" id="email" required>
+                        </div>
 
-                    <label class="cpassword">Confirm Password</label>
-                    <div class="input-box">
-                        <i class="ri-lock-line"></i>
-                        <input type="password" placeholder="Enter password" id="cpassword" required>
+                        <label class="pass">Password</label>
+                        <div class="input-box">
+                            <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
+                            <input type="password" placeholder="Enter password" id="password" required>
+                            <img src="/pictures/show-icon.png" alt="Show Password Icon" id="toggleNewPassword" class="icon toggle-password">
+                        </div>
+
+                        <label class="cpassword">Confirm Password</label>
+                        <div class="input-box">
+                            <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
+                            <input type="password" placeholder="Enter password" id="confirm-password" required>
+                            <img src="/pictures/show-icon.png" alt="Show Password Icon" id="toggleConfirmPassword" class="icon toggle-password">
+                        </div>
+
+                        <button type="submit" class="signup-btn">Continue</button>
+                        <p id="errorMessage" style="color: red; display: none;"></p>
                     </div>
-                
-                
-                    <button type="submit" class="signup-btn" onclick="goToLogin()">Continue</button>
-                    <p id="errorMessage" style="color: red; display: none;"></p>
-                </div>
-                <p class="login-text"> Already have an account?  <a href="login.html">Log in</a> instead</p>
-                
-            </form>
+                    <p class="login-text"> Already have an account?  <a href="login.html">Log in</a> instead</p>
+                </form>
             </div>
         </div>
     </div>
-    
+
     <script>
         document.getElementById("firstSignUp").addEventListener("submit", async function (event) {
             let errorMessage = document.getElementById("errorMessage");
@@ -80,7 +80,7 @@
             let username = document.getElementById("username").value;
             let email = document.getElementById("email").value;
             let password = document.getElementById("password").value;
-            let confirmPassword = document.getElementById("cpassword").value;
+            let confirmPassword = document.getElementById("confirm-password").value;
 
             if (confirmPassword === password) {
                 localStorage.setItem("username", username);
@@ -91,11 +91,42 @@
                 alert("Passwords do not match");
             }
         });
+
         document.getElementById("menu-toggle").addEventListener("click", function () {
             document.getElementById("menu").classList.toggle("show");
         });
+
+        // Toggle New Password Visibility
+        document.getElementById("toggleNewPassword").addEventListener("click", function () {
+            let passwordField = document.getElementById("password");
+            let toggleIcon = document.getElementById("toggleNewPassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "/pictures/hide-icon.png";
+                toggleIcon.classList.add("hide-password");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "/pictures/show-icon.png";
+                toggleIcon.classList.remove("hide-password");
+            }
+        });
+
+        // Toggle Confirm Password Visibility
+        document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+            let passwordField = document.getElementById("confirm-password");
+            let toggleIcon = document.getElementById("toggleConfirmPassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "/pictures/hide-icon.png";
+                toggleIcon.classList.add("hide-password");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "/pictures/show-icon.png";
+                toggleIcon.classList.remove("hide-password");
+            }
+        });
     </script>
-
-
 </body>
 </html>
