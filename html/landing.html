@@ -13,7 +13,7 @@
         <nav class="navbar">
             <div class="nav-left">
                 <label class="open_menu" id="menu-toggle"><i class="ri-menu-line"></i></label>
-                <div class="logo"><a href="landing.html"><b>Scholar</b><span>Zone</span></a></div>
+                <div class="logo"><a href="#" id="logo-link"><b>Scholar</b><span>Zone</span></a></div>
                 <ul class="menudo" id="menu">
                     <li><a href="#landing-section"> Home </a></li>
                     <li><a href="#feature-section"> Student </a></li>
@@ -30,72 +30,97 @@
         </nav>
     </header>
         
-        <!-- Find and Manage Section -->
-        <main class="container">
-            <section class="landing-section" id="landing-section">
-                <div class="landing-content">
-                    <h1><span class="find">FIND AND MANAGE</span>
-                        <span class="scholarships">SCHOLARSHIPS</span><br> 
-                        <span class="today">TODAY!</span></h1>
-                    <a href="#" class="btn-find">Find Scholarships →</a>
-                    <a href="login.html" class="btn-manage">Manage Scholarships →</a>
-                </div>
-                <div class="landing-picture">
-                    <div class="landing-img"></div>
-                    <img src="../pictures/woman.png" alt="Student using app" />
-                </div>
-            </section>
-        </main>        
-
-        <!-- Features & Download Section -->
-        <section class="feature-section" id="feature-section">
-            <div class="feature-title">
-                <h1><span class="apply">Applying for</span> 
-                </span><span class="scholarships">scholarships</span>
-                <span class="easier"> has<br> never been easier!</span></h1>
+    <!-- Find and Manage Section -->
+    <main class="container">
+        <section class="landing-section" id="landing-section">
+            <div class="landing-content">
+                <h1><span class="find">FIND AND MANAGE</span>
+                    <span class="scholarships">SCHOLARSHIPS</span><br> 
+                    <span class="today">TODAY!</span></h1>
+                <a href="#" class="btn-find">Find Scholarships →</a>
+                <a href="login.html" class="btn-manage">Manage Scholarships →</a>
             </div>
-            <!-- Showcase & download Section -->
-            <div class="app-showcase">
-                <div class="phone-image">
-                    <img src="../pictures/mobile.png" alt="App Screenshot" class="mobile-picture"/>
-                </div>
-                <div class="description">
-                    <p>ScholarZone Mobile serves as a hub for applicants to find and apply for scholarships easier. You can explore scholarship opportunities tailored to your qualifications, program, and fields of interests.</p>
-                    <div class="download-buttons">
-                        <a href="download.html" class="download-btn-PlayStore">Click here to download →</a>
-                    </div>
-                </div>
+            <div class="landing-picture">
+                <div class="landing-img"></div>
+                <img src="../pictures/woman.png" alt="Student using app" />
             </div>
         </section>
+    </main>        
 
-            <!-- Dashboard Showcase -->
-            <section class="review-section" id="review-section">
-                <h2 class="review-title">
-                    <span class="Review">Review</span>
-                    <span class="scholarships">scholarship<br> applications</span>
-                    <span class="more"> more efficiently!</span>
-                </h2>
-            
-                <div class="review-content">
-                    <div class="review-text">
-                        <p>ScholarZone also serves as a hub for scholarship reviewers and organizations to review and manage scholarship applications. Now you can approve or decline applications easily!</p>
-                        <a href="login.html" class="get-started-btn">Get Started →</a>
-                    </div>
-
-                    <div class="dashboard-container">
-                        <div class="dashboard-img">
-                            <img src="../pictures/web.png" alt="Dashboard Screenshots" />
-                        </div>
-                    </div>
+    <!-- Features & Download Section -->
+    <section class="feature-section" id="feature-section">
+        <div class="feature-title">
+            <h1><span class="apply">Applying for</span> 
+            </span><span class="scholarships">scholarships</span>
+            <span class="easier"> has<br> never been easier!</span></h1>
+        </div>
+        <!-- Showcase & download Section -->
+        <div class="app-showcase">
+            <div class="phone-image">
+                <img src="../pictures/mobile.png" alt="App Screenshot" class="mobile-picture"/>
+            </div>
+            <div class="description">
+                <p>ScholarZone Mobile serves as a hub for applicants to find and apply for scholarships easier. You can explore scholarship opportunities tailored to your qualifications, program, and fields of interests.</p>
+                <div class="download-buttons">
+                    <a href="download.html" class="download-btn-PlayStore">Click here to download →</a>
                 </div>
-            </section>
-            
-            <!-- Footer -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Showcase -->
+    <section class="review-section" id="review-section">
+        <h2 class="review-title">
+            <span class="Review">Review</span>
+            <span class="scholarships">scholarship<br> applications</span>
+            <span class="more"> more efficiently!</span>
+        </h2>
+    
+        <div class="review-content">
+            <div class="review-text">
+                <p>ScholarZone also serves as a hub for scholarship reviewers and organizations to review and manage scholarship applications. Now you can approve or decline applications easily!</p>
+                <a href="login.html" class="get-started-btn">Get Started →</a>
+            </div>
+
+            <div class="dashboard-container">
+                <div class="dashboard-img">
+                    <img src="../pictures/web.png" alt="Dashboard Screenshots" />
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+
+    <!-- Up Arrow Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top"><img src="../pictures/up_arrow.png" alt="Up Arrow" /></button>
 
     <script>
         document.getElementById("menu-toggle").addEventListener("click", function () {
-                document.getElementById("menu").classList.toggle("show");
+            document.getElementById("menu").classList.toggle("show");
+        });
+
+        document.getElementById("logo-link").addEventListener("click", function (event) {
+            event.preventDefault();
+        });
+
+        // Scroll to Top Functionality
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add("show");
+            } else {
+                scrollToTopBtn.classList.remove("show");
+            }
+        });
+
+        scrollToTopBtn.addEventListener("click", function () {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
             });
+        });
     </script>
 </body>
 </html>
