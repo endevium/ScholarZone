@@ -43,9 +43,9 @@
                 
                     <label class="pass">Password</label>
                     <div class="input-box">
-                        <i class="ri-lock-password-line"></i>
+                        <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
                         <input type="password" id="password" placeholder="Enter password" required>
-                        <i class="ri-eye-line" id="togglePassword"></i>
+                        <img src="/pictures/show-icon.png" alt="Show Password Icon" id="togglePassword" class="icon toggle-password">
                     </div>
                 
                     <a href="forgotpass1.html" class="forgot-password">Forgot password?</a>
@@ -100,7 +100,17 @@
     // Toggle Password Visibility
     document.getElementById("togglePassword").addEventListener("click", function () {
         let passwordField = document.getElementById("password");
-        passwordField.type = passwordField.type === "password" ? "text" : "password";
+        let toggleIcon = document.getElementById("togglePassword");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.src = "/pictures/hide-icon.png";
+            toggleIcon.classList.add("hide-password");
+        } else {
+            passwordField.type = "password";
+            toggleIcon.src = "/pictures/show-icon.png";
+            toggleIcon.classList.remove("hide-password");
+        }
     });
 </script>
 
