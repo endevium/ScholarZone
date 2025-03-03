@@ -15,6 +15,8 @@ class ScholarshipApplicationViewModel: ViewModel() {
     var scholarships = mutableStateListOf<ScholarshipApplication>()
         private set
 
+    private var allScholarships = listOf<ScholarshipApplication>()
+
     init {
         fetchScholarships()
     }
@@ -28,7 +30,10 @@ class ScholarshipApplicationViewModel: ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     scholarships.clear()
-                    response.body()?.data?.let { scholarships.addAll(it) }
+                    response.body()?.data?.let {
+                        allScholarships = it
+                        scholarships.addAll(it)
+                    }
                     Log.d("Success", "Successfully fetched scholarships")
                 } else {
                     Log.d("Failure", "Failed to fetch scholarships")
@@ -40,5 +45,15 @@ class ScholarshipApplicationViewModel: ViewModel() {
                 Log.d("Failure", "${t.message}")
             }
         })
+    }
+
+    fun filterScholarshipsByCategory(category: String) {
+        scholarships.clear()
+        scholarships.addAll(allScholarships.filter { it.category == category })
+    }
+
+    fun loadAllScholarships() {
+        scholarships.clear()
+        scholarships.addAll(allScholarships)
     }
 }

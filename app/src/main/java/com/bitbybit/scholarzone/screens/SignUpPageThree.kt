@@ -44,6 +44,7 @@ import com.bitbybit.scholarzone.api.APIService
 import com.bitbybit.scholarzone.api.Applicant
 import com.bitbybit.scholarzone.api.ApplicantResponse
 import com.bitbybit.scholarzone.api.RetrofitClient
+import com.bitbybit.scholarzone.api.saveId
 import com.bitbybit.scholarzone.api.saveToken
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.objects.SignUpViewModel
@@ -309,11 +310,16 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                                     if (response.isSuccessful) {
                                         val signUpResponse = response.body()
                                         val token = signUpResponse?.token
+                                        val id = signUpResponse?.id
 
                                         Log.d("SignUpDebug", "Response: ${response.body()}")
                                         if (token != null) {
                                             RetrofitClient.setToken(token)
                                             saveToken(context, token)
+                                        }
+
+                                        if (id != null) {
+                                            saveId(context, id)
                                         }
 
                                         Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()

@@ -1,5 +1,7 @@
 package com.bitbybit.scholarzone.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -47,9 +50,17 @@ import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import com.bitbybit.scholarzone.ui.theme.PoppinsFontFamily
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bitbybit.scholarzone.api.APIService
+import com.bitbybit.scholarzone.api.Answer
+import com.bitbybit.scholarzone.api.RetrofitClient
+import com.bitbybit.scholarzone.api.SubmitApplication
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel = viewModel()) {
+    val context = LocalContext.current
     val backStackEntry = nav.currentBackStackEntry
     val id = backStackEntry?.arguments?.getString("scholarship_application_id")?.toInt() ?: 0
     val application_name = backStackEntry?.arguments?.getString("application_name") ?: ""
@@ -163,7 +174,54 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
         }
 
         Button(
-            onClick = { nav.navigate("scholarshipApplicationPage/$id/$application_name/$company/$application_description/$duration/$category/$slots/$deadline") },
+            onClick = {
+                val apiService = RetrofitClient.create(APIService::class.java)
+                val submitApplication = SubmitApplication(
+                    scholarship_application_id = id
+                )
+
+                val submitAllAnswers = {
+                    answers.forEach { (questionId, answer) ->
+                        val answer = Answer(
+                            question_id = questionId,
+                            answer = answer
+                        )
+
+                        apiService.submitAnswer(answer).enqueue(object: Callback<Void> {
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                if (response.isSuccessful) {
+                                    Log.d("Success", "Answer submitted successfully")
+                                } else {
+                                    Toast.makeText(context, "Failed to submit answer for question $questionId.", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        })
+                    }
+                }
+
+                submitAllAnswers()
+
+                apiService.submitApplication(submitApplication).enqueue(object: Callback<Void> {
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(context, "Application successfully submitted!", Toast.LENGTH_SHORT).show()
+                            nav.navigate("scholarshipApplicationPage/$id/$application_name/$company/$application_description/$duration/$category/$slots/$deadline")
+                        } else {
+                            Toast.makeText(context, "Failed to submit application.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+
+                      },
             modifier = Modifier
                 .height(90.dp)
                 .width(330.dp)

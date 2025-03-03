@@ -3,40 +3,39 @@ package com.bitbybit.scholarzone.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.objects.DashboardViewModel
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 
 @Composable
 fun DashboardPage(nav: NavController) {
+    val context = LocalContext.current
+    val viewModel = remember { DashboardViewModel(context) }
+
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Column {
             Text(
@@ -59,28 +58,7 @@ fun DashboardPage(nav: NavController) {
             LazyRow(Modifier.offset(x = 18.dp, y = 50.dp)) {
                 item {
                     Button(
-                        onClick = { },
-                        shape = RoundedCornerShape(15.dp),
-                        modifier = Modifier.height(35.dp).width(95.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
-                        )
-                    ) {
-                        Text("Grants",
-                            fontSize = 15.sp,
-                            fontFamily = InterFontFamily,
-                            fontWeight = FontWeight.Normal,
-                            color = colorResource(R.color.scholar_blue)
-                        )
-                    }
-
-                    Spacer(Modifier.width(12.dp))
-                }
-
-                item {
-                    Button(
-                        onClick = { },
+                        onClick = { viewModel.filterApplicationsByCategory("Undergraduate") },
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.height(35.dp).width(152.dp)
                             .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
@@ -101,7 +79,7 @@ fun DashboardPage(nav: NavController) {
 
                 item {
                     Button(
-                        onClick = { },
+                        onClick = { viewModel.filterApplicationsByCategory("Graduate") },
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.height(35.dp).width(112.dp)
                             .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
@@ -119,20 +97,18 @@ fun DashboardPage(nav: NavController) {
 
                     Spacer(Modifier.width(12.dp))
                 }
-            }
 
-            LazyRow(Modifier.offset(x = 18.dp, y = 75.dp)) {
                 item {
                     Button(
-                        onClick = { },
+                        onClick = { viewModel.filterApplicationsByCategory("STEM") },
                         shape = RoundedCornerShape(15.dp),
-                        modifier = Modifier.height(35.dp).width(105.dp)
+                        modifier = Modifier.height(35.dp).width(92.dp)
                             .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                         )
                     ) {
-                        Text("Applied",
+                        Text("STEM",
                             fontSize = 15.sp,
                             fontFamily = InterFontFamily,
                             fontWeight = FontWeight.Normal,
@@ -145,7 +121,136 @@ fun DashboardPage(nav: NavController) {
 
                 item {
                     Button(
-                        onClick = { },
+                        onClick = { viewModel.filterApplicationsByCategory("Arts") },
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.height(35.dp).width(92.dp)
+                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        Text("Arts",
+                            fontSize = 15.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource(R.color.scholar_blue)
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+                }
+
+                item {
+                    Button(
+                        onClick = { viewModel.filterApplicationsByCategory("Business") },
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.height(35.dp).width(112.dp)
+                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        Text("Business",
+                            fontSize = 15.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource(R.color.scholar_blue)
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+                }
+
+                item {
+                    Button(
+                        onClick = { viewModel.filterApplicationsByCategory("Education") },
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.height(35.dp).width(122.dp)
+                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        Text("Education",
+                            fontSize = 15.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource(R.color.scholar_blue)
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+                }
+
+                item {
+                    Button(
+                        onClick = { viewModel.filterApplicationsByCategory("Medicine") },
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.height(35.dp).width(112.dp)
+                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        Text("Medicine",
+                            fontSize = 15.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource(R.color.scholar_blue)
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+                }
+
+                item {
+                    Button(
+                        onClick = { viewModel.filterApplicationsByCategory("Law") },
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.height(35.dp).width(92.dp)
+                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        Text("Law",
+                            fontSize = 15.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource(R.color.scholar_blue)
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+                }
+            }
+
+            LazyRow(Modifier.padding(start = 18.dp, top = 75.dp))
+            {
+                item {
+                    Button(
+                        onClick = { viewModel.filterApplicationsByStatus("Pending") },
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.height(35.dp).width(105.dp)
+                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        Text("Pending",
+                            fontSize = 15.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource(R.color.scholar_blue)
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+                }
+
+                item {
+                    Button(
+                        onClick = { viewModel.filterApplicationsByStatus("Approved") },
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.height(35.dp).width(120.dp)
                             .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
@@ -166,7 +271,7 @@ fun DashboardPage(nav: NavController) {
 
                 item {
                     Button(
-                        onClick = { },
+                        onClick = { viewModel.filterApplicationsByStatus("Rejected") },
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.height(35.dp).width(112.dp)
                             .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
@@ -188,12 +293,12 @@ fun DashboardPage(nav: NavController) {
 
             Spacer(Modifier.height(15.dp))
             LazyColumn(Modifier.fillMaxHeight()) {
-                item {
+                items(viewModel.applications) { application ->
                     Box(
                         modifier = Modifier
                             .width(350.dp)
                             .height(200.dp)
-                            .offset(x = 18.dp, y = 95.dp)
+                            .offset(x = 18.dp, y = 10.dp)
                             .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
                     ) {
                         Row {
@@ -208,7 +313,7 @@ fun DashboardPage(nav: NavController) {
 
                             Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
                                 Text(
-                                    "Scholarship Name",
+                                    application.application_name,
                                     fontSize = 14.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Bold,
@@ -216,7 +321,7 @@ fun DashboardPage(nav: NavController) {
                                 )
 
                                 Text(
-                                    "Company",
+                                    application.company,
                                     fontSize = 14.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Light,
@@ -224,7 +329,7 @@ fun DashboardPage(nav: NavController) {
                                 )
 
                                 Text(
-                                    "Category: Undergraduate",
+                                    "Category: ${application.category}",
                                     fontSize = 14.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Light,
@@ -232,7 +337,7 @@ fun DashboardPage(nav: NavController) {
                                 )
 
                                 Text(
-                                    "Duration: 4 years",
+                                    "Duration: ${application.duration}",
                                     fontSize = 14.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Light,
@@ -240,7 +345,7 @@ fun DashboardPage(nav: NavController) {
                                 )
 
                                 Text(
-                                    "Deadline: 4 days",
+                                    "Deadline: ${application.deadline}",
                                     fontSize = 14.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Light,
@@ -258,259 +363,8 @@ fun DashboardPage(nav: NavController) {
                                         containerColor = Color.White,
                                     )
                                 ) {
-                                    Text("Applied",
-                                        fontSize = 12.sp,
-                                        fontFamily = InterFontFamily,
-                                        fontWeight = FontWeight.Normal,
-                                        color = colorResource(R.color.scholar_blue)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-                }
-
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(200.dp)
-                            .offset(x = 18.dp, y = 95.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
-                    ) {
-                        Row {
-                            Box(Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-                                .width(125.dp).fillMaxHeight()) {
-                                Image(painter = painterResource(R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)).fillMaxHeight()
-                                )
-                            }
-
-                            Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
-                                Text(
-                                    "Scholarship Name",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Company",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Category: Undergraduate",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Duration: 4 years",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Deadline: 4 days",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Spacer(Modifier.height(25.dp))
-                                Button(
-                                    onClick = { },
-                                    shape = RoundedCornerShape(15.dp),
-                                    modifier = Modifier.height(35.dp).width(110.dp)
-                                        .offset(x = 80.dp)
-                                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.White,
-                                    )
-                                ) {
-                                    Text("Approved",
-                                        fontSize = 12.sp,
-                                        fontFamily = InterFontFamily,
-                                        fontWeight = FontWeight.Normal,
-                                        color = colorResource(R.color.scholar_blue)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-                }
-
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(200.dp)
-                            .offset(x = 18.dp, y = 95.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
-                    ) {
-                        Row {
-                            Box(Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-                                .width(125.dp).fillMaxHeight()) {
-                                Image(painter = painterResource(R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)).fillMaxHeight()
-                                )
-                            }
-
-                            Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
-                                Text(
-                                    "Scholarship Name",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Company",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Category: Undergraduate",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Duration: 4 years",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Deadline: 4 days",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Spacer(Modifier.height(25.dp))
-                                Button(
-                                    onClick = { },
-                                    shape = RoundedCornerShape(15.dp),
-                                    modifier = Modifier.height(35.dp).width(110.dp)
-                                        .offset(x = 80.dp)
-                                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.White,
-                                    )
-                                ) {
-                                    Text("Rejected",
-                                        fontSize = 12.sp,
-                                        fontFamily = InterFontFamily,
-                                        fontWeight = FontWeight.Normal,
-                                        color = colorResource(R.color.scholar_blue)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-                }
-
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(200.dp)
-                            .offset(x = 18.dp, y = 95.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
-                    ) {
-                        Row {
-                            Box(Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-                                .width(125.dp).fillMaxHeight()) {
-                                Image(painter = painterResource(R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)).fillMaxHeight()
-                                )
-                            }
-
-                            Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
-                                Text(
-                                    "Scholarship Name",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Company",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Category: Undergraduate",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Duration: 4 years",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Deadline: 4 days",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Spacer(Modifier.height(25.dp))
-                                Button(
-                                    onClick = { },
-                                    shape = RoundedCornerShape(15.dp),
-                                    modifier = Modifier.height(35.dp).width(110.dp)
-                                        .offset(x = 80.dp)
-                                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.White,
-                                    )
-                                ) {
-                                    Text("Applied",
+                                    Text(
+                                        application.status,
                                         fontSize = 12.sp,
                                         fontFamily = InterFontFamily,
                                         fontWeight = FontWeight.Normal,

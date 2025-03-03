@@ -38,4 +38,22 @@ interface APIService {
     fun getQuestions(
         @Query("scholarship_application_id") scholarship_application_id: Int
     ): Call<QuestionResponse>
+
+    @Headers("Content-type: application/json")
+    @POST("api/submit-answer")
+    fun submitAnswer(
+        @Body answer: Answer
+    ): Call<Void>
+
+    @Headers("Content-type: application/json")
+    @POST("api/submit-application")
+    fun submitApplication(
+        @Body submitApplication: SubmitApplication
+    ): Call<Void>
+
+    @GET("api/applicant-applications")
+    fun getApplications(
+        @Query("applicant_id") id: Int
+    ): Call<ApplicationResponse>
+
 }

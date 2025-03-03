@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "404455938653",
+    "project_id": "scholarzone-d300c",
+    "storage_bucket": "scholarzone-d300c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404455938653:android:be11d427e48c0afdba0bb4",
+        "android_client_info": {
+          "package_name": "com.bitbybit.scholarzone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRhSnpyAxXSvYKtZSeWbWFWnmX5Gw4zuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

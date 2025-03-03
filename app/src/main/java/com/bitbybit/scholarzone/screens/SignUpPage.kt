@@ -168,6 +168,9 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
                             .height(55.dp)
                             .padding(start = 10.dp),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )

@@ -24,24 +24,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,32 +40,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
-import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.api.ScholarshipApplication
-import com.bitbybit.scholarzone.api.ScholarshipResponse
-import com.bitbybit.scholarzone.objects.BottomNavigationItem
-import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.objects.ScholarshipApplicationViewModel
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 
 @Composable
 fun HomePage(
@@ -99,7 +72,7 @@ fun HomePage(
             OutlinedTextField(
                 value = search,
                 onValueChange = { search = it },
-                placeholder = { Text("Start typing...")},
+                placeholder = { Text("Start typing...") },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -116,7 +89,7 @@ fun HomePage(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        nav.navigate(Routes.SearchPage)
+                        nav.navigate("searchPage")
                     }
                 ),
                 maxLines = 1,
@@ -243,28 +216,7 @@ fun HomePage(
                     LazyRow(Modifier.offset(x = 18.dp, y = 100.dp)) {
                         item {
                             Button(
-                                onClick = { },
-                                shape = RoundedCornerShape(15.dp),
-                                modifier = Modifier.height(35.dp).width(95.dp)
-                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color.White,
-                                )
-                            ) {
-                                Text("Grants",
-                                    fontSize = 15.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Normal,
-                                    color = colorResource(R.color.scholar_blue)
-                                )
-                            }
-
-                            Spacer(Modifier.width(12.dp))
-                        }
-
-                        item {
-                            Button(
-                                onClick = { },
+                                onClick = { viewModel.filterScholarshipsByCategory("Undergraduate") },
                                 shape = RoundedCornerShape(15.dp),
                                 modifier = Modifier.height(35.dp).width(152.dp)
                                     .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
@@ -285,7 +237,7 @@ fun HomePage(
 
                         item {
                             Button(
-                                onClick = { },
+                                onClick = { viewModel.filterScholarshipsByCategory("Graduate") },
                                 shape = RoundedCornerShape(15.dp),
                                 modifier = Modifier.height(35.dp).width(112.dp)
                                     .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
@@ -294,6 +246,132 @@ fun HomePage(
                                 )
                             ) {
                                 Text("Graduate",
+                                    fontSize = 15.sp,
+                                    fontFamily = InterFontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colorResource(R.color.scholar_blue)
+                                )
+                            }
+
+                            Spacer(Modifier.width(12.dp))
+                        }
+
+                        item {
+                            Button(
+                                onClick = { viewModel.filterScholarshipsByCategory("STEM") },
+                                shape = RoundedCornerShape(15.dp),
+                                modifier = Modifier.height(35.dp).width(92.dp)
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                )
+                            ) {
+                                Text("STEM",
+                                    fontSize = 15.sp,
+                                    fontFamily = InterFontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colorResource(R.color.scholar_blue)
+                                )
+                            }
+
+                            Spacer(Modifier.width(12.dp))
+                        }
+
+                        item {
+                            Button(
+                                onClick = { viewModel.filterScholarshipsByCategory("Arts") },
+                                shape = RoundedCornerShape(15.dp),
+                                modifier = Modifier.height(35.dp).width(92.dp)
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                )
+                            ) {
+                                Text("Arts",
+                                    fontSize = 15.sp,
+                                    fontFamily = InterFontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colorResource(R.color.scholar_blue)
+                                )
+                            }
+
+                            Spacer(Modifier.width(12.dp))
+                        }
+
+                        item {
+                            Button(
+                                onClick = { viewModel.filterScholarshipsByCategory("Business") },
+                                shape = RoundedCornerShape(15.dp),
+                                modifier = Modifier.height(35.dp).width(112.dp)
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                )
+                            ) {
+                                Text("Business",
+                                    fontSize = 15.sp,
+                                    fontFamily = InterFontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colorResource(R.color.scholar_blue)
+                                )
+                            }
+
+                            Spacer(Modifier.width(12.dp))
+                        }
+
+                        item {
+                            Button(
+                                onClick = { viewModel.filterScholarshipsByCategory("Education") },
+                                shape = RoundedCornerShape(15.dp),
+                                modifier = Modifier.height(35.dp).width(122.dp)
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                )
+                            ) {
+                                Text("Education",
+                                    fontSize = 15.sp,
+                                    fontFamily = InterFontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colorResource(R.color.scholar_blue)
+                                )
+                            }
+
+                            Spacer(Modifier.width(12.dp))
+                        }
+
+                        item {
+                            Button(
+                                onClick = { viewModel.filterScholarshipsByCategory("Medicine") },
+                                shape = RoundedCornerShape(15.dp),
+                                modifier = Modifier.height(35.dp).width(112.dp)
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                )
+                            ) {
+                                Text("Medicine",
+                                    fontSize = 15.sp,
+                                    fontFamily = InterFontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colorResource(R.color.scholar_blue)
+                                )
+                            }
+
+                            Spacer(Modifier.width(12.dp))
+                        }
+
+                        item {
+                            Button(
+                                onClick = { viewModel.filterScholarshipsByCategory("Graduate") },
+                                shape = RoundedCornerShape(15.dp),
+                                modifier = Modifier.height(35.dp).width(92.dp)
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                )
+                            ) {
+                                Text("Law",
                                     fontSize = 15.sp,
                                     fontFamily = InterFontFamily,
                                     fontWeight = FontWeight.Normal,
@@ -418,7 +496,5 @@ fun ScholarshipCard(nav: NavController, scholarship: ScholarshipApplication) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewHome() {
-    HomePage(rememberNavController())
+    HomePage(rememberNavController(), ScholarshipApplicationViewModel())
 }
-
-
