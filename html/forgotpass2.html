@@ -45,18 +45,18 @@
                 <div class="input-container">
                     <label for="new-password"><b>New Password</b></label>
                     <div class="input-box">
-                        <i class="ri-lock-password-line"></i>
+                        <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
                         <input type="password" id="new-password" name="new-password" placeholder="********" required>
-                        <i class="ri-eye-line toggle-password"></i>
+                        <img src="/pictures/show-icon.png" alt="Show Password Icon" id="toggleNewPassword" class="icon toggle-password">
                     </div>
                 </div>
 
                 <div class="input-container">
                     <label for="confirm-password"><b>Confirm Password</b></label>
                     <div class="input-box">
-                        <i class="ri-lock-password-line"></i>
+                        <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
                         <input type="password" id="confirm-password" name="confirm-password" placeholder="********" required>
-                        <i class="ri-eye-line toggle-password"></i>
+                        <img src="/pictures/show-icon.png" alt="Show Password Icon" id="toggleConfirmPassword" class="icon toggle-password">
                     </div>
                 </div>
 
@@ -69,6 +69,38 @@
     <script>
         document.getElementById("menu-toggle").addEventListener("click", function () {
             document.getElementById("menu").classList.toggle("show");
+        });
+
+        // Toggle New Password Visibility
+        document.getElementById("toggleNewPassword").addEventListener("click", function () {
+            let passwordField = document.getElementById("new-password");
+            let toggleIcon = document.getElementById("toggleNewPassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "/pictures/hide-icon.png";
+                toggleIcon.classList.add("hide-password");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "/pictures/show-icon.png";
+                toggleIcon.classList.remove("hide-password");
+            }
+        });
+
+        // Toggle Confirm Password Visibility
+        document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+            let passwordField = document.getElementById("confirm-password");
+            let toggleIcon = document.getElementById("toggleConfirmPassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "/pictures/hide-icon.png";
+                toggleIcon.classList.add("hide-password");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "/pictures/show-icon.png";
+                toggleIcon.classList.remove("hide-password");
+            }
         });
     </script>
 
