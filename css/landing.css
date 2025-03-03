@@ -26,17 +26,41 @@
 }
 
 body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
     color: #333;
-    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
 }
 
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    color: #2172AA;
+    margin: 0 0 10px 0;
+}
+
+p {
+    margin: 0 0 15px 0;
+}
+
+a {
+    color: #2172AA;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #195b8a;
+}
+/* NAV */
 header {
     background-color: white;
     width: 100%;
     height: 100px;
+    position: relative;
+    z-index: 1000;
 }
 
 .navbar {
@@ -45,14 +69,15 @@ header {
     align-items: center;
     width: 100%;
     padding: 0 20px;
-    text-decoration: none;
+    z-index: 1001;
 }
+
 .nav-left {
     display: flex;
     align-items: center;
     gap: 50px; 
     margin-top: 1%;
-    font-family: 'Poppins';
+    z-index: 1002;
 }
 .open_menu{
     display: none;
@@ -70,7 +95,6 @@ header {
     color: #2172AA;
     display: flex;
     align-items: center;
-    text-decoration: none;
 }
 
 .logo a span {
@@ -83,6 +107,20 @@ header {
     align-items: center;
     gap: 20px;
     list-style: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    color: #33363F;
+}
+
+.menudo li a {
+    color: #33363F;
+    text-decoration: none;
+}
+
+.menudo li a:hover {
+    color: #2172AA;
+    text-decoration: underline;
 }
 
 li a {
@@ -103,17 +141,6 @@ li a:hover {
     display: flex;
     gap: 15px;
     margin-top: 1%;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    border: 2px solid #2172AA;
-    border-radius: 8px;
-    width: 125px;
-    text-align: center;
 }
 
 .menu-login, .menu-signup {
@@ -154,6 +181,60 @@ button {
 }
 
 .sign:hover a {
+    color: white;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #2172AA;
+    border-radius: 8px;
+    width: 125px;
+    text-align: center;
+    position: relative;
+}
+
+button a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1.5;
+}
+
+button.log {
+    background: #2172AA;
+}
+
+button.log a {
+    color: white;
+}
+
+button.log:hover {
+    background-color: white;
+}
+
+button.log:hover a {
+    color: black;
+}
+
+button.sign {
+    background: transparent;
+}
+
+button.sign a {
+    color: black;
+}
+
+button.sign:hover {
+    background: #2172AA;
+    color: white;
+}
+
+button.sign:hover a {
     color: white;
 }
 
@@ -455,6 +536,39 @@ p {
     text-decoration: none;
     color: white;
  }
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: opacity 0.3s, visibility 0.3s;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-top:hover {
+    background-color: #2b6cb0;
+}
+
+.scroll-to-top i {
+    font-size: 24px;
+}
+
+.scroll-to-top img {
+    width: 60px;
+    height: 56px;
+}
 
 /* Mobile Navigation */
 @media (max-width: 600px) {
