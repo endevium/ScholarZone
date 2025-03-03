@@ -228,12 +228,30 @@ button {
     font-weight: bold;
 }
 
+.icon {
+    width: 20px;
+}
+
 .toggle-password {
     position: absolute;
     right: 15px;
     cursor: pointer;
     color: #555;
 }
+
+.toggle-password {
+    width: 20px;
+    height: 20px;
+}
+
+.hide-password {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+}
+
 .login-container {
     display: flex;
     flex-direction: column;
@@ -610,4 +628,3 @@ button {
 }
 
 
-    
