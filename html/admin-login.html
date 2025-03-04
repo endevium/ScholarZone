@@ -30,10 +30,10 @@
                 
                     <label class="pass">Password</label>
                     <div class="input-box">
-                        <i class="ri-lock-password-line"></i>
-                        <input type="password" id="password" placeholder="********" required>
-                        <i class="ri-eye-line" id="togglePassword"></i>
-                    </div>
+                        <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
+                        <input type="password" id="password" placeholder="Enter password" required>
+                        <img src="/pictures/show-icon.png" alt="Show Password Icon" id="togglePassword" class="icon toggle-password"> 
+                    </div> <!-- cinopy paste ko lang sa ginawa ko na login page itong eye icon na functional pero di siya gumagana dito TwT -->
                 
                     <button type="submit" id="submit" class="login-btn"> Log In </button>
                     <p id="errorMessage" style="color: red; display: none;"></p>
@@ -43,51 +43,63 @@
         </div>
     </div>
 
-
-<script>
-    document.getElementById("menu-toggle").addEventListener("click", function () {
-            document.getElementById("menu").classList.toggle("show");
-        });
-
-    document.getElementById("loginForm").addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        let email = document.getElementById("email").value;
-        let password = document.getElementById("password").value;
-        let errorMessage = document.getElementById("errorMessage");
-
-        try {
-            let response = await fetch("https://scorpion-workable-panda.ngrok-free.app/ScholarZone/index.php?route=reviewer-login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email, password })
+    <script>
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+                document.getElementById("menu").classList.toggle("show");
             });
-
-            let data = await response.json();
-
-            if (data.status === 200) {
-                localStorage.setItem("token", data.token);
-
-                // Redirect to dashboard
-                window.location.href = "dashboard.html";
-            } else {
-                errorMessage.textContent = data.message;
+    
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+    
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let errorMessage = document.getElementById("errorMessage");
+    
+            try {
+                let response = await fetch("https://scorpion-workable-panda.ngrok-free.app/ScholarZone/index.php?route=reviewer-login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+    
+                let data = await response.json();
+    
+                if (data.status === 200) {
+                    localStorage.setItem("token", data.token);
+    
+                    // Redirect to dashboard
+                    window.location.href = "dashboard.html";
+                } else {
+                    errorMessage.textContent = data.message;
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                errorMessage.textContent = "An error occurred. Please try again.";
                 errorMessage.style.display = "block";
             }
-        } catch (error) {
-            errorMessage.textContent = "An error occurred. Please try again.";
-            errorMessage.style.display = "block";
+        });
+    
+        // Toggle Password Visibility
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        let passwordField = document.getElementById("password");
+        let toggleIcon = document.getElementById("togglePassword");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.src = "/pictures/hide-icon.png";
+            toggleIcon.classList.add("hide-password"); 
+        } else {
+            passwordField.type = "password";
+            toggleIcon.src = "/pictures/show-icon.png";
+            toggleIcon.classList.remove("hide-password");
         }
     });
 
-    // Toggle Password Visibility
-    document.getElementById("togglePassword").addEventListener("click", function () {
-        let passwordField = document.getElementById("password");
-        passwordField.type = passwordField.type === "password" ? "text" : "password";
-    });
-</script>
-
+    document.getElementById("logo-link").addEventListener("click", function (event) {
+            event.preventDefault();
+        });
+    </script>
 </body>
 </html>
