@@ -13,13 +13,16 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,11 +31,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.api.Notification
+import com.bitbybit.scholarzone.objects.DashboardViewModel
+import com.bitbybit.scholarzone.objects.NotificationViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 
 @Composable
 fun NotificationPage(nav: NavController) {
+    val context = LocalContext.current
+    val viewModel = remember { NotificationViewModel(context) }
+
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Column {
             Row(Modifier
@@ -49,7 +58,7 @@ fun NotificationPage(nav: NavController) {
 
             LazyColumn {
                 // Notification Card
-                item {
+                items(viewModel.notifications) { notification ->
                     Column(
                         Modifier.fillMaxWidth()
                             .height(160.dp)
@@ -58,7 +67,7 @@ fun NotificationPage(nav: NavController) {
                     ) {
                         // Notification Name
                         Text(
-                            "Application Status",
+                            notification.title,
                             fontSize = 16.sp,
                             fontFamily = InterFontFamily,
                             fontWeight = FontWeight.Bold,
@@ -69,7 +78,7 @@ fun NotificationPage(nav: NavController) {
 
                         // Notification Description
                         Text(
-                            "Your application for Hawak Kamay was approved.",
+                            notification.body,
                             fontSize = 14.sp,
                             fontFamily = InterFontFamily,
                             fontWeight = FontWeight.Light,
@@ -98,10 +107,6 @@ fun NotificationPage(nav: NavController) {
                             )
                         }
                     }
-                }
-
-                item {
-                    Spacer(Modifier.height(100.dp))
                 }
             }
         }

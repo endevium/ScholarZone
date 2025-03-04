@@ -56,4 +56,9 @@ interface APIService {
         @Query("applicant_id") id: Int
     ): Call<ApplicationResponse>
 
+    @GET("api/notifications")
+    fun getNotifications(
+        @Query("applicant_id") id: Int
+    ): Call<NotificationResponse>
+
 }

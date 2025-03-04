@@ -30,7 +30,6 @@ class DashboardViewModel(context: Context): ViewModel() {
 
     private fun fetchApplications() {
         val apiService = RetrofitClient.create(APIService::class.java)
-        Log.e("API", "Fetching applications for ID: $id")
 
         apiService.getApplications(id).enqueue(object : Callback<ApplicationResponse> {
             override fun onResponse(call: Call<ApplicationResponse>, response: Response<ApplicationResponse>) {
