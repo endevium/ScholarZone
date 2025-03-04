@@ -130,9 +130,21 @@ header {
     left: 15px;
 }
 
-.input-box .ri-eye-line {
+.icon {
+    width: 20px;
+}
+
+.hide-password {
+    position: absolute;
     right: 15px;
     cursor: pointer;
+    width: 28px;
+    height: 28px;
+}
+
+.toggle-password {
+    width: 20px;
+    height: 20px;
 }
 
 .toggle-password {
@@ -140,7 +152,10 @@ header {
     right: 15px;
     cursor: pointer;
     color: #555;
+    width: 20px;
+    height: 20px;
 }
+
 .login-container {
     display: flex;
     flex-direction: column;
