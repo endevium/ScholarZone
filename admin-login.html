@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone - Admin Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="../css/admin-login.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <div class="logo"><a href="#"><b>Scholar</b><span>Zone</span></a></div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="malakingLogin">
+            <h1>Admin Login</h1>
+            <p>Please sign in to continue</p>
+            <form id="loginForm">
+                <label class="user">Email Address</label>
+                <div class="login-container">
+                    <div class="input-box">
+                        <i class="ri-user-3-line"></i>
+                        <input type="email" id="email" placeholder="johndoe69@example.com" required>
+                    </div>
+                
+                    <label class="pass">Password</label>
+                    <div class="input-box">
+                        <i class="ri-lock-password-line"></i>
+                        <input type="password" id="password" placeholder="********" required>
+                        <i class="ri-eye-line" id="togglePassword"></i>
+                    </div>
+                
+                    <button type="submit" id="submit" class="login-btn"> Log In </button>
+                    <p id="errorMessage" style="color: red; display: none;"></p>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+<script>
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("menu").classList.toggle("show");
+        });
+
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let errorMessage = document.getElementById("errorMessage");
+
+        try {
+            let response = await fetch("https://scorpion-workable-panda.ngrok-free.app/ScholarZone/index.php?route=reviewer-login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            let data = await response.json();
+
+            if (data.status === 200) {
+                localStorage.setItem("token", data.token);
+
+                // Redirect to dashboard
+                window.location.href = "dashboard.html";
+            } else {
+                errorMessage.textContent = data.message;
+                errorMessage.style.display = "block";
+            }
+        } catch (error) {
+            errorMessage.textContent = "An error occurred. Please try again.";
+            errorMessage.style.display = "block";
+        }
+    });
+
+    // Toggle Password Visibility
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        let passwordField = document.getElementById("password");
+        passwordField.type = passwordField.type === "password" ? "text" : "password";
+    });
+</script>
+
+</body>
+</html>

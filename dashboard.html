@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item active">
+            <a href="dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="create.html" class="nav-link">
+                <img src="../pictures/create_icon.png" alt="Create" class="nav-icon">
+                Create
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="manage.html" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Manage" class="nav-icon">
+                Manage
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="review.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Review
+            </a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle" id="menuToggle">☰</div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="settings.html">Edit Profile Picture</a></li>
+                            <li><a href="personal-details.html">Personal Details</a></li>
+                            <li><a href="account-details.html">Account Details</a></li>
+                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Overview
+            </h1>
+            </div>
+
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-number">
+                    <img src="../pictures/tao_icon.png" alt="User" class="user-icon">
+                    0
+                </div>
+                <div class="stat-label">Total respondents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="../pictures/black_icon.png" alt="User" class="user-icon">
+                    0
+                </div>
+                <div class="stat-label">Pending reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="../pictures/form_icon.png" alt="User" class="user-icon">
+                    0
+                </div>
+                <div class="stat-label">Total application forms</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">Average review time</div>
+                <div class="bar-chart-container">
+                    <canvas id="timeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const storedId = localStorage.getItem("id");
+        const closeBtn = document.getElementById("close1");
+        const menuToggle = document.getElementById("menuToggle");
+        const usernameElement = document.getElementById("username");
+        const avatarIcon = document.getElementById("avatar-icon");
+        const hoverProfile = document.getElementById("hover-profile");
+        const timeCtx = document.getElementById('timeChart').getContext('2d');
+
+        // counter
+        window.addEventListener('load', () => {
+            animateCount(document.getElementById('respondentsCount'), 147);
+            animateCount(document.getElementById('pendingCount'), 91);
+            animateCount(document.getElementById('formsCount'), 300);
+        });
+
+        // Mobile menu toggle pag binuksan sa mobile may lalabas na menu
+        avatarIcon.addEventListener("click", function (event) {
+            hoverProfile.classList.toggle("show");
+            event.stopPropagation();
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
+                hoverProfile.classList.remove("show");
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (menuToggle) {
+                menuToggle.addEventListener("click", function () {
+                    sidebar.classList.toggle("show");
+                });
+            } else {
+                console.error("Element with ID 'menuToggle' not found.");
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener("click", function () {
+                    sidebar.classList.remove("show");
+                });
+            } else {
+                console.error("Element with ID 'close' not found.");
+            }
+
+            console.log("Stored ID:", storedId);
+
+            if (!storedId) {
+                console.error("No ID found in localStorage.");
+                return;
+            }
+
+            try {
+                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers?id=${storedId}&ngrok-skip-browser-warning=true`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+
+                let rawText = await response.text();
+
+                let data;
+                try {
+                    data = JSON.parse(rawText); 
+                    console.log("Parsed API Response:", data);
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                    return;
+                }
+
+                if (data.status === 200) {
+                    const user = data.data;
+                    console.log("User Data:", user);
+
+                    if (usernameElement) {
+                        usernameElement.textContent = "@" + user.username;
+                    } else {
+                        console.error("Element with ID 'username' not found.");
+                    }
+                } else {
+                    console.error("API returned error:", data.message);
+                }
+                
+            } catch (error) {
+                console.error("Fetch Request Failed:", error);
+            }
+
+            // Bar Chart
+            new Chart(timeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Average Review Time (hours)',
+                        data: [4, 4, 2.5, 4, 2, 2.5],
+                        backgroundColor: '#2172AA',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 0.5
+                            },
+                            grid: {
+                                color: '#e5e7eb'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body> 
+</html> 
