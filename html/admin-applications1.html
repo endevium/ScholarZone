@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Review</title>
+    <link rel="stylesheet" href="../css/admin-applications1.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="#" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle">☰</div>
+            <div class="search-container">
+                <img src="../pictures/search_icon.png" alt="Search" class="search-icon">
+                <input type="text" class="search-box" placeholder="Start typing">
+            </div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="#">Edit Profile Picture</a></li>
+                            <li><a href="#" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/manage_icon.png" alt="Dashboard" class="nav-icon">
+                Applications
+            </h1>
+        </div>
+
+        <div class="align-content">
+            <div class="card-container">
+                <div class="scholarship-card">
+                    <img src="../pictures/scholarship_image.png" class="scholarship-image">
+                    <div class="scholarship-info">
+                        <p class="scholarship-id" style="display: none;">ID</p>
+                        <div class="name-and-options-container">
+                           <p class="scholarship-name"><b>Scholarship Name</b></p> 
+                           <i class="ri-more-fill" style="display: none;"></i>
+                        </div>
+                        
+                        <p class="scholarship-company">Company</p>
+                        <p class="category">Category: </p>
+                        <p class="duration">Duration: </p>
+                        <p class="deadline">Deadline: N/A</p>
+                        <div class="button-container">
+                            <button id="edit" class="card-button">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const reviewButtons = document.querySelectorAll(".review-button");
+            reviewButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    window.location.href = "admin-applications2.html";
+                });
+            });
+        });
+    </script>
+</body>
+</html>
