@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Dashboard</title>
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item active">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle">☰</div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="#">Edit Profile Picture</a></li>
+                            <li><a href="#" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="name">
+        <h1 class="overview-title">
+            <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+            Overview
+        </h1>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-number">
+                    <img src="../pictures/tao_icon.png" alt="User" class="user-icon">
+                    0
+                </div>
+                <div class="stat-label">Total users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="../pictures/black_icon.png" alt="User" class="user-icon">
+                    0
+                </div>
+                <div class="stat-label">Pending Reviewers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="../pictures/form_icon.png" alt="User" class="user-icon">
+                    0
+                </div>
+                <div class="stat-label">Pending Applications</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">Monthly Reviewer Signups</div>
+                <div class="bar-chart-container">
+                    <canvas id="timeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        const timeCtx = document.getElementById('timeChart').getContext('2d');
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            new Chart(timeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Reviewer Signups',
+                        data: [4, 4, 2.5, 4, 2, 2.5],
+                        backgroundColor: '#2172AA',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: '#e5e7eb'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+        
+    </script>
+</body> 
+</html> 

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Review</title>
+    <link rel="stylesheet" href="../css/admin-application2.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="#" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle">☰</div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="#">Edit Profile Picture</a></li>
+                            <li><a href="#" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/manage_icon.png" alt="Dashboard" class="nav-icon">
+                Applications
+            </h1>
+        </div>
+
+        <div class="back-button">
+            <img src="../pictures/back_btn.png" id="back-button" onclick="window.location.href='admin-applications1.html'">
+        </div>
+
+        <div class="align-content">
+            <div class="progress-bar">
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+            </div>
+        
+        <form id="scholarship-application-form" class="create-form">
+            <div class="form-container">
+                <div class="left-section">
+                    <div class="form-group">
+                        <label for="formName">Application Form Name</label>
+                        <input type="text" id="formName" placeholder="Create application form" required>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="formDescription">Application Form Description</label>
+                        <textarea id="formDescription" placeholder="Describe your application form" rows="6" required></textarea>
+                    </div>
+        
+                    <div class="form-group">
+                        <label>Application Form Image</label>
+                        <div class="upload-box" id="uploadbox">
+                            <img src="../pictures/cloud_icon.png" alt="Upload" class="upload-icon">
+                            <p>Drop your files here or upload</p>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="right-section">
+                    <div class="form-group2">
+                        <label for="formDuration">Scholarship Duration</label>
+                        <input type="text" id="formDuration" placeholder="Valid for 4 years" required>
+                    </div>
+        
+                    <div class="form-group2">
+                        <label for="category">Scholarship Category</label>
+                        <select id="category" required>
+                            <option value="grants">Grants</option>
+                            <option value="undergrad">Undergraduate</option>
+                            <option value="graduate">Graduate</option>
+                        </select>
+                    </div>
+        
+                    <div class="form-group2">
+                        <label for="availSlot">Available Slots</label>
+                        <input type="number" id="availSlot" placeholder="100" required>
+                    </div>
+        
+                    <div class="form-group2">
+                        <label for="deadline">Deadline</label>
+                        <input type="date" id="deadline" required>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-next" onclick="validateForm()">Next</button>
+                    <button type="reset" class="btn-reset">Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function validateForm() {
+        const form = document.getElementById('scholarship-application-form');
+        if (form.checkValidity()) {
+            window.location.href = 'admin-applications3.html';
+        } else {
+            form.reportValidity();
+        }
+    }
+</script>
+</body>
+</html>

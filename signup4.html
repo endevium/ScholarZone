@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone - SignUp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="../css/signup4.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <label class="open_menu" id="menu-toggle"><i class="ri-menu-line"></i></label>
+                <div class="logo"><a href="landing.html"><b>Scholar</b><span>Zone</span></a></div>
+                <ul class="menudo" id="menu">
+                    <li><a href="landing.html"> Home </a></li>
+                    <li><a href="landing.html#feature-section"> Student </a></li>
+                    <li><a href="landing.html#review-section"> Reviewer </a></li>
+                    <li><a href="login.html" class="menu-login"> Log in </a></li>
+                    <li><a href="signup1.html" class="menu-signup"> Sign up </a></li>
+                    <label class="close_menu"><i class="ri-close-line"></i></label>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="log"><a href="login.html"> Log In </a></button>
+                <button class="sign"><a href="signup1.html"> Sign Up </a></button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="bgImage"></div>
+        <div class="malakingSignUp">
+            
+            <div class="rightSide">
+                <i class="ri-arrow-left-circle-fill back-button" onclick="goBack()"></i>
+                <h1>Finish Signing Up</h1>
+                <form id="signUpForm">
+                <label class="cname"><strong>Company ID</strong> </label>
+                <div class="signup-container">
+                    <div class="input-box">
+                        <input type="file"  id="uploadBtn" required>
+                        <label for="uploadBtn">Upload File</label>
+                    </div>
+
+                    <label class="rpc"><strong>Certificate of Employment</strong></label>
+                    <div class="input-box">
+                        <input type="text" placeholder="Enter region, province, city" id="rpc" required>
+                    </div>
+
+                    <label class="bsb"><strong>Authorization Letter</strong></label>
+                    <div class="input-box">
+                        <input type="text" placeholder="Enter barangay, street, building" id="bsb" required>
+                    </div>
+                
+                    <button type="submit" class="signup-btn">Continue</button>
+                    <p id="errorMessage" style="color: red; display: none;"></p>
+
+                </div>
+                <p class="login-text"> Already have an account?  <a href="login.html">Log in</a> instead</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+    <script>
+        function goToLogin() {
+            window.location.href = "signup1.html";
+        }
+        function goBack() {
+            window.location.href = "signup2.html"; 
+        }
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("menu").classList.toggle("show");
+        });
+
+        document.getElementById("signUpForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            let username = localStorage.getItem("username");
+            let email = localStorage.getItem("email");
+            let password = localStorage.getItem("password");
+            let firstname = localStorage.getItem("firstname");
+            let lastname = localStorage.getItem("lastname");
+            let gender = localStorage.getItem("gender");
+            let birthdate = localStorage.getItem("birthdate");
+            let phone_number = localStorage.getItem("contact");
+            let company = document.getElementById("company").value;
+            let full_address = document.getElementById("address").value;
+            let rpc = document.getElementById("rpc").value;
+            let bsb = document.getElementById("bsb").value;
+            let errorMessage = document.getElementById("errorMessage");
+
+            try {
+                let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, email, password, firstname, lastname, gender, birthdate, phone_number, company, full_address, rpc, bsb })
+                });
+
+                let data = await response.json();
+                console.log(data)
+
+                if (data.status === 201) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("id", data.id);
+
+                    // Redirect to dashboard
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert(data.message)
+                }
+            } catch (error) {
+                alert("Please check your internet connection");
+            }
+        });
+
+    </script>
+
+
+</body>
+</html>

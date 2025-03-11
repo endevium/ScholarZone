@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone - SignUp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="../css/signup1.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <label class="open_menu" id="menu-toggle"><i class="ri-menu-line"></i></label>
+                <div class="logo"><a href="#" id="logo-link"><b>Scholar</b><span>Zone</span></a></div>
+                <ul class="menudo" id="menu">
+                    <li><a href="landing.html"> Home </a></li>
+                    <li><a href="landing.html#feature-section"> Student </a></li>
+                    <li><a href="landing.html#review-section"> Reviewer </a></li>
+                    <li><a href="login.html" class="menu-login"> Log in </a></li>
+                    <li><a href="signup1.html" class="menu-signup"> Sign up </a></li>
+                    <label class="close_menu"><i class="ri-close-line"></i></label>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="log"><a href="login.html"> Log In </a></button>
+                <button class="sign"><a href="signup1.html"> Sign Up </a></button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="malakingSignUp">
+            <div class="rightSide">
+                <h1>Create new account</h1>
+                <p>Start managing applications for free!</p>
+
+                <form id="firstSignUp">
+                    <label class="user">Username</label>
+                    <div class="signup-container">
+                        <div class="input-box">
+                            <img src="/pictures/black_icon.png" alt="User Icon" class="icon">
+                            <input type="text" placeholder="johndoe69" id="username" required>
+                        </div>
+
+                        <label class="email">Email Address</label>
+                        <div class="input-box">
+                            <img src="/pictures/mail_icon.png" alt="Email Icon" class="icon">
+                            <input type="email" placeholder="Create e-mail address" id="email" required>
+                        </div>
+
+                        <label class="pass">Password</label>
+                        <div class="input-box">
+                            <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
+                            <input type="password" placeholder="Enter password" id="password" required>
+                            <img src="/pictures/show-icon.png" alt="Show Password Icon" id="toggleNewPassword" class="icon toggle-password">
+                        </div>
+
+                        <label class="cpassword">Confirm Password</label>
+                        <div class="input-box">
+                            <img src="/pictures/lock_icon.png" alt="Lock Icon" class="icon">
+                            <input type="password" placeholder="Enter password" id="confirm-password" required>
+                            <img src="/pictures/show-icon.png" alt="Show Password Icon" id="toggleConfirmPassword" class="icon toggle-password">
+                        </div>
+
+                        <button type="submit" class="signup-btn">Continue</button>
+                        <p id="errorMessage" style="color: red; display: none;"></p>
+                    </div>
+                    <p class="login-text"> Already have an account?  <a href="login.html">Log in</a> instead</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("firstSignUp").addEventListener("submit", async function (event) {
+            let errorMessage = document.getElementById("errorMessage");
+            event.preventDefault();
+
+            let username = document.getElementById("username").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirm-password").value;
+
+            if (confirmPassword === password) {
+                localStorage.setItem("username", username);
+                localStorage.setItem("email", email);
+                localStorage.setItem("password", password);
+                window.location.href = "signup2.html";
+            } else {
+                alert("Passwords do not match");
+            }
+        });
+
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("menu").classList.toggle("show");
+        });
+
+        // Toggle New Password Visibility
+        document.getElementById("toggleNewPassword").addEventListener("click", function () {
+            let passwordField = document.getElementById("password");
+            let toggleIcon = document.getElementById("toggleNewPassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "/pictures/hide-icon.png";
+                toggleIcon.classList.add("hide-password");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "/pictures/show-icon.png";
+                toggleIcon.classList.remove("hide-password");
+            }
+        });
+
+        // Toggle Confirm Password Visibility
+        document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+            let passwordField = document.getElementById("confirm-password");
+            let toggleIcon = document.getElementById("toggleConfirmPassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "/pictures/hide-icon.png";
+                toggleIcon.classList.add("hide-password");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "/pictures/show-icon.png";
+                toggleIcon.classList.remove("hide-password");
+            }
+        });
+    </script>
+</body>
+</html>
