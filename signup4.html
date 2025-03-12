@@ -37,27 +37,40 @@
                 <i class="ri-arrow-left-circle-fill back-button" onclick="goBack()"></i>
                 <h1>Finish Signing Up</h1>
                 <form id="signUpForm">
-                <label class="cname"><strong>Company ID</strong> </label>
-                <div class="signup-container">
-                    <div class="input-box">
-                        <input type="file"  id="uploadBtn" required>
-                        <label for="uploadBtn">Upload File</label>
+                    <div class="signup-container">
+                        <label class="cname"><strong>Company ID</strong> </label>
+                        <div class="input-box">
+                        <label class="file-upload">
+                            <img src="../pictures/upload-2-line.png" alt="Upload">
+                            <span>Upload File</span>
+                            <input type="file" id="companyIDInput" required onchange="updateFileName(this)">
+                        </label>
+                        <span class="file-name">No file chosen</span>
+                        </div>
+                    
+                        <label class="rpc"><strong>Certificate of Employment</strong></label>
+                        <div class="input-box">
+                            <label class="file-upload">
+                                <img src="../pictures/upload-2-line.png" alt="Upload">
+                                <span>Upload File</span>
+                                <input type="file" id="companyIDInput" required onchange="updateFileName(this)">
+                            </label>
+                            <span class="file-name">No file chosen</span>
+                        </div>
+                    
+                        <label class="bsb"><strong>Authorization Letter</strong></label>
+                        <div class="input-box">
+                            <label class="file-upload">
+                                <img src="../pictures/upload-2-line.png" alt="Upload">
+                                <span>Upload File</span>
+                                <input type="file" id="companyIDInput" required onchange="updateFileName(this)">
+                            </label>
+                            <span class="file-name">No file chosen</span>
+                        </div>
+                    
+                        <button type="submit" class="signup-btn">Sign Up</button>
+                        <p id="errorMessage" style="color: red; display: none;"></p>
                     </div>
-
-                    <label class="rpc"><strong>Certificate of Employment</strong></label>
-                    <div class="input-box">
-                        <input type="text" placeholder="Enter region, province, city" id="rpc" required>
-                    </div>
-
-                    <label class="bsb"><strong>Authorization Letter</strong></label>
-                    <div class="input-box">
-                        <input type="text" placeholder="Enter barangay, street, building" id="bsb" required>
-                    </div>
-                
-                    <button type="submit" class="signup-btn">Continue</button>
-                    <p id="errorMessage" style="color: red; display: none;"></p>
-
-                </div>
                 <p class="login-text"> Already have an account?  <a href="login.html">Log in</a> instead</p>
                 </form>
             </div>
@@ -77,10 +90,10 @@
         document.getElementById("menu-toggle").addEventListener("click", function () {
             document.getElementById("menu").classList.toggle("show");
         });
-
+    
         document.getElementById("signUpForm").addEventListener("submit", async function (event) {
             event.preventDefault();
-
+    
             let username = localStorage.getItem("username");
             let email = localStorage.getItem("email");
             let password = localStorage.getItem("password");
@@ -94,23 +107,23 @@
             let rpc = document.getElementById("rpc").value;
             let bsb = document.getElementById("bsb").value;
             let errorMessage = document.getElementById("errorMessage");
-
+    
             try {
                 let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, email, password, firstname, lastname, gender, birthdate, phone_number, company, full_address, rpc, bsb })
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, email, password, firstname, lastname, gender, birthdate, phone_number, company, full_address, rpc, bsb })
                 });
-
+    
                 let data = await response.json();
                 console.log(data)
-
+    
                 if (data.status === 201) {
                     localStorage.setItem("token", data.token);
                     localStorage.setItem("id", data.id);
-
+    
                     // Redirect to dashboard
                     window.location.href = "dashboard.html";
                 } else {
@@ -120,7 +133,27 @@
                 alert("Please check your internet connection");
             }
         });
-
+    
+        // Image preview for file upload
+        document.querySelectorAll(".file-upload input").forEach(input => {
+            input.addEventListener("change", function () {
+                if (this.files && this.files[0]) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        let parent = input.parentElement;
+                        let imgElement = parent.querySelector("img");
+                        if (imgElement) {
+                            imgElement.src = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+        function updateFileName(input) {
+            let fileName = input.files.length > 0 ? input.files[0].name : "No file chosen";
+            input.parentElement.nextElementSibling.textContent = fileName;
+        }
     </script>
 
 
