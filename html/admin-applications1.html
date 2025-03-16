@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Unverified Scholarships</title>
+    <link rel="stylesheet" href="../css/admin-applications1.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="#" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle">☰</div>
+            <div class="search-container">
+                <img src="../pictures/search_icon.png" alt="Search" class="search-icon">
+                <input type="text" class="search-box" id="search-box" placeholder="Start typing">
+            </div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@admin</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="#">Edit Profile Picture</a></li>
+                            <li><a href="#" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/manage_icon.png" alt="Dashboard" class="nav-icon">
+                Applications
+            </h1>
+        </div>
+
+        <div class="align-content">
+            <div class="card-container">
+            </div>
+        </div>
+
+    </div>
+    <script>
+        let scholarshipList = [];
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            const bellBtn = document.getElementById("bell-icon");
+            await fetchScholarships();
+
+            bellBtn.addEventListener('click', function() {
+                window.location.href = 'admin-notifications.html';
+            });
+
+            document.getElementById('search-box').addEventListener('input', function (event) {
+                const searchTerm = event.target.value.toLowerCase();
+                const filteredScholarships = scholarshipList.filter(scholarship => 
+                    scholarship.application_name.toLowerCase().includes(searchTerm) ||
+                    scholarship.company.toLowerCase().includes(searchTerm) ||
+                    scholarship.category.toLowerCase().includes(searchTerm)
+                );
+                renderScholarships(filteredScholarships);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const reviewButtons = document.querySelectorAll(".review-button");
+            reviewButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    window.location.href = "admin-applications2.html";
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", async  function () {
+            const storedId = localStorage.getItem("id");
+            const avatarIcon = document.getElementById("avatar-icon");
+            const hoverProfile = document.getElementById("hover-profile");
+            const menuToggle = document.getElementById("menu-toggle");
+            const sidebar = document.getElementById("sidebar");
+            const editButton = document.getElementById("edit");
+            const backButton = document.getElementById("back-button");
+    
+            await fetchScholarships();
+    
+            avatarIcon.addEventListener("click", function (event) {
+                hoverProfile.classList.toggle("show");
+                event.stopPropagation();
+            });
+    
+            menuToggle.addEventListener("click", function () {
+                sidebar.classList.toggle("show");
+            });
+    
+            const closeBtn = document.getElementById("close1");
+            closeBtn.addEventListener("click", function () {
+                sidebar.classList.remove("show");
+            });
+    
+            edit.addEventListener("click", async function () {
+                event.preventDefault();
+                window.location.href = "manage2.html";
+            });
+    
+            document.addEventListener("click", function (event) {
+                if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
+                    hoverProfile.classList.remove("show");
+                }
+    
+                if (!sidebar.contains(event.target) && event.target !== menuToggle) {
+                    sidebar.classList.remove("show");
+                }
+            });
+        }); 
+    
+        async function fetchScholarships() {    
+                try {
+                    let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/get-unverified-scholarships", {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    });
+    
+                    let data = await response.json();
+                    console.log("Scholarships API Response:", data);
+    
+                    if (data) {
+                        scholarshipList = data;
+                        renderScholarships(data);
+                    } else {
+                        console.error("Error fetching scholarships:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                }
+            }
+    
+            function renderScholarships(scholarships) {
+                const container = document.querySelector(".card-container");
+                container.innerHTML = "";
+    
+                scholarships.forEach(scholarship => {
+                    const card = document.createElement("div");
+                    card.classList.add("scholarship-card");
+    
+                    card.innerHTML = `
+                        <img src="${scholarship.application_image}" class="scholarship-image">
+                        <div class="scholarship-info">
+                            <p class="scholarship-id" style="display: none;">${scholarship.id}</p>
+                            <div class="name-and-options-container">
+                                <p class="scholarship-name"><b>${scholarship.application_name}</b></p> 
+                                <i class="ri-more-fill" style="display: none;"></i>
+                            </div>
+                            <p class="scholarship-company">${scholarship.company}</p>
+                            <p class="category">Category: ${scholarship.category}</p>
+                            <p class="duration">Duration: ${scholarship.duration}</p>
+                            <p class="deadline">Deadline: ${scholarship.deadline || "N/A"}</p>
+                            <div class="button-container">
+                                <button class="card-button" id="edit" onclick="editScholarship(${scholarship.id}, '${scholarship.application_name.replace(/'/g, "\\'")}',
+                                    '${scholarship.company.replace(/'/g, "\\'")}', '${scholarship.application_description.replace(/'/g, "\\'")}', 
+                                    '${scholarship.duration.replace(/'/g, "\\'")}', '${scholarship.category.replace(/'/g, "\\'")}', ${scholarship.slots}, 
+                                    '${scholarship.deadline ? scholarship.deadline.replace(/'/g, "\\'") : ''}')">
+                                    Verify
+                                </button>
+                            </div>
+                        </div>
+                    `;
+    
+                    container.appendChild(card);
+                });
+            }
+    
+            // Edit button click event
+            function editScholarship(id, application_name, company, application_description, duration, category, slots, deadline) {
+                localStorage.setItem("scholarship_application_id", id);
+                localStorage.setItem("application_name", application_name);
+                localStorage.setItem("company", company);
+                localStorage.setItem("application_description", application_description);
+                localStorage.setItem("duration",duration);
+                localStorage.setItem("category", category);
+                localStorage.setItem("slots", slots);
+                localStorage.setItem("deadline", deadline);
+    
+    
+                window.location.href = "admin-applications2.html";
+            }
+    </script>
+</body>
+</html>

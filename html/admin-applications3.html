@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Review</title>
+    <link rel="stylesheet" href="../css/admin-applications3.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="admin-applications1.html" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle">☰</div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@admin</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="#">Edit Profile Picture</a></li>
+                            <li><a href="#" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/manage_icon.png" alt="Dashboard" class="nav-icon">
+                Applications
+            </h1>
+        </div>
+
+        <div class="back-button">
+            <img src="../pictures/back_btn.png" id="back-button" onclick="window.location.href='admin-applications2.html'">
+            Hawak Kamay
+        </div>
+
+        <div class="align-content">
+            <div class="back-button">
+                <i class="ri-arrow-left-circle-fill back-button" id="back-button"></i>
+            </div>
+    
+            <div class="progress-bar">
+                <div class="progress-step"></div>
+                <div class="progress-step active"></div>
+            </div>
+
+            <div class="question-container">
+                Questions
+            </div>
+    
+            <form id="question-form" class="create-form">
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-next" id="approvedBtn">Approve</button>
+                    <button type="button" class="btn-reset" id="rejectedBtn">Reject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        const bellBtn = document.getElementById("bell-icon");
+        let scholarship_application_id = localStorage.getItem("scholarship_application_id");
+        document.getElementById('back-button').addEventListener('click', function() {
+            window.location.href = 'admin-applications2.html';
+        });
+
+        bellBtn.addEventListener('click', function() {
+            window.location.href = 'admin-notifications.html';
+        });
+
+        try {
+                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/questions?scholarship_application_id=${scholarship_application_id}&ngrok-skip-browswer-warning=true`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+        
+                if (response.ok) {
+                    let data = await response.json();
+                    if (data.status === 200) {
+                        data.data.forEach(createQuestionElement);
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("Failed to fetch questions.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Check your internet connection.");
+        }
+        
+        document.getElementById('approvedBtn').addEventListener('click', async (event) => {
+            event.preventDefault();
+            try {
+                let response = await fetch(`http://localhost/ScholarZone/api/verify-scholarship`, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                    body: JSON.stringify({
+                        scholarship_application_id: localStorage.getItem("scholarship_application_id")
+                    })
+                });
+
+                let rawText = await response.text();
+                console.log("Raw API Response:", rawText);
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                    console.log("Parsed API Response:", data);
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                    return;
+                }
+
+                if (data.status === 200) {
+                    alert('Scholarship approved');
+                    window.location.href = "admin-applications1.html";
+                } else {
+                    console.error("API returned error:", data.message);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        });
+
+        document.getElementById('rejectedBtn').addEventListener('click', () => {
+            alert('Scholarship rejected');
+            window.history.back();
+        });
+    });
+</script>
+</body>
+</html>

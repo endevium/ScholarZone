@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCM Token Example</title>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging.js"></script>
+</head>
+<body>
+    <h1>Firebase Web Push Notification</h1>
+    <button onclick="requestFCMToken()">Get FCM Token</button>
+    <p>Token: <span id="fcm-token"></span></p>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBNNbX2MRKYykb1UVe_2VMM7KCtTWh8Sbg",
+            authDomain: "scholarzone-d300c.firebaseapp.com",
+            projectId: "scholarzone-d300c",
+            storageBucket: "scholarzone-d300c.appspot.com",
+            messagingSenderId: "404455938653",
+            appId: "1:404455938653:web:78edf85dae614481ba0bb4",
+            measurementId: "G-LG9252T1HT"
+        };
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+
+        async function requestFCMToken() {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === "granted") {
+                    const token = await getToken(messaging, { 
+                        vapidKey: "BAtWwgL0l54MWNof-hLXoNLaQ9oRW1x33FV_QKiUuaKERjwqMAKGm5jwxMHPMrJpbX0LiOdMGcCr1ebweBTYagY",
+                        serviceWorkerRegistration: await navigator.serviceWorker.ready 
+                    });
+                    console.log("FCM Token:", token);
+                    document.getElementById("fcm-token").innerText = token;
+                } else {
+                    console.log("Permission denied for notifications.");
+                }
+            } catch (error) {
+                console.error("Error getting FCM token:", error);
+            }
+        }
+
+        window.requestFCMToken = requestFCMToken;
+
+        onMessage(messaging, (payload) => {
+            console.log("Message received in foreground:", payload);
+            alert(`Notification: ${payload.notification.title} - ${payload.notification.body}`);
+        });
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/ScholarZone_web/firebase-messaging-sw.js")
+                .then((registration) => {
+                    console.log("Service Worker registered:", registration);
+                })
+                .catch((error) => {
+                    console.error("Service Worker registration failed:", error);
+                });
+        } else {
+            console.error("Service Worker is not supported in this browser.");
+        }
+    </script>
+</body>
+</html>

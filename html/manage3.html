@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Create</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="../css/manage3.css">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="create.html" class="nav-link">
+                <img src="../pictures/create_icon.png" alt="Create" class="nav-icon">
+                Create
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="manage.html" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Manage" class="nav-icon">
+                Manage
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="review.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Review
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle" id="menu-toggle">☰</div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="settings.html">Edit Profile Picture</a></li>
+                            <li><a href="personal-details.html">Personal Details</a></li>
+                            <li><a href="account-details.html">Account Details</a></li>
+                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/create_icon.png" alt="Dashboard" class="nav-icon">
+                Edit
+            </h1>
+        </div>
+
+        <div class="align-content">
+            <div class="back-button">
+                <i class="ri-arrow-left-circle-fill back-button" id="back-button"></i>
+            </div>
+    
+            <div class="progress-bar">
+                <div class="progress-step"></div>
+                <div class="progress-step active"></div>
+            </div>
+
+            <div class="question-container">
+                Questions
+            </div>
+    
+            <form id="question-form" class="create-form">
+                <div class="add-question-container" id="add-question-btn">
+                    <i class="ri-add-circle-line add-button" onclick=""></i>
+                    <p class="add-question-text">Add Question</p>
+                </div>
+                <br>
+                <div class="add-question-container" id="add-file-btn">
+                    <i class="ri-add-circle-line add-button" onclick=""></i>
+                    <p class="add-question-text">Add File Upload Question</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-next">Save</button>
+                    <button type="button" class="btn-reset">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const avatarIcon = document.getElementById("avatar-icon");
+            const hoverProfile = document.getElementById("hover-profile");
+            const menuToggle = document.getElementById("menu-toggle");
+            const sidebar = document.getElementById("sidebar");
+            const questionForm = document.getElementById("question-form");
+            const backButton = document.getElementById("back-button");
+            const addQuestionBtn = document.getElementById("add-question-btn");
+            const addFileQuestionBtn = document.getElementById("add-file-btn");
+            let scholarship_application_id = localStorage.getItem("scholarship_application_id");
+            let token = localStorage.getItem("token");
+            const bellBtn = document.getElementById("bell-icon");
+
+            bellBtn.addEventListener("click", function () {
+                window.location.href = "reviewer-notifications.html";
+            });
+        
+            avatarIcon.addEventListener("click", function (event) {
+                hoverProfile.classList.toggle("show");
+                event.stopPropagation();
+            });
+        
+            async function createQuestionElement(question) {
+                const formGroup = document.createElement("div");
+                formGroup.className = "form-group";
+        
+                const inputField = document.createElement("input");
+                inputField.type = "text";
+                inputField.className = "question-field";
+                inputField.value = question.question;
+        
+                const removeBtn = document.createElement("img");
+                removeBtn.src = "../pictures/remove_btn.png";
+                removeBtn.alt = "Remove";
+                removeBtn.className = "remove-btn";
+        
+                inputField.addEventListener("change", async function () {
+                    try {
+                        let updateResponse = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/question-update?id=${question.id}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`,
+                                "ngrok-skip-browser-warning": "true"
+                            },
+                            body: JSON.stringify({
+                                scholarship_application_id: scholarship_application_id,
+                                question: inputField.value
+                            })
+                        });
+        
+                        if (updateResponse.ok) {
+                            let updateData = await updateResponse.json();
+                            if (updateData.status !== 200) {
+                                alert(updateData.message);
+                            }
+                        } else {
+                            alert("Failed to update question.");
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        alert("Check your internet connection.");
+                    }
+                });
+        
+                removeBtn.addEventListener("click", async function () {
+                    const confirmDelete = confirm("Are you sure you want to delete this question?");
+                    if (!confirmDelete) return;
+        
+                    try {
+                        let deleteResponse = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/question-delete?id=${question.id}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Authorization": `Bearer ${token}`,
+                                "ngrok-skip-browser-warning": "true"
+                            },
+                            body: JSON.stringify({ scholarship_application_id })
+                        });
+        
+                        if (!deleteResponse.ok) {
+                            alert("Failed to delete the question.");
+                            return;
+                        }
+        
+                        if (deleteResponse.headers.get("content-type")?.includes("application/json")) {
+                            let deleteData = await deleteResponse.json();
+        
+                            if (deleteData.status === 200) {
+                                alert("Question deleted successfully!");
+                                formGroup.remove();
+                            } else {
+                                alert(deleteData.message);
+                            }
+                        } else {
+                            const responseText = await deleteResponse.text();
+                            console.error("Response is not JSON. Response text:", responseText);
+                            alert("Unexpected response format. Please try again later.");
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        alert("Please check your internet connection");
+                    }
+                });
+        
+                formGroup.appendChild(inputField);
+                formGroup.appendChild(removeBtn);
+        
+                questionForm.insertBefore(formGroup, addQuestionBtn);
+            }
+        
+            try {
+                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/questions?scholarship_application_id=${scholarship_application_id}&ngrok-skip-browswer-warning=true`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+        
+                if (response.ok) {
+                    let data = await response.json();
+                    if (data.status === 200) {
+                        data.data.forEach(createQuestionElement);
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("Failed to fetch questions.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Check your internet connection.");
+            }
+        
+            addQuestionBtn.addEventListener("click", async function () {
+                let question = "Enter your question here";
+                try {
+                    let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/question-create", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                            "ngrok-skip-browser-warning": "true"
+                        },
+                        body: JSON.stringify({ scholarship_application_id, question, type: "question" })
+                    });
+        
+                    if (response.ok) {
+                        let data = await response.json();
+                        if (data.status === 201) {
+                            createQuestionElement({ id: data.id, question });
+                        } else {
+                            alert(data.message);
+                        }
+                    } else {
+                        alert("Failed to create question.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("Check your internet connection.");
+                }
+            });
+
+            addFileQuestionBtn.addEventListener("click", async function () {
+                let question = "Enter your question here";
+                try {
+                    let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/question-create", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                            "ngrok-skip-browser-warning": "true"
+                        },
+                        body: JSON.stringify({ scholarship_application_id, question, type: "upload" })
+                    });
+        
+                    if (response.ok) {
+                        let data = await response.json();
+                        if (data.status === 201) {
+                            createQuestionElement({ id: data.id, question });
+                        } else {
+                            alert(data.message);
+                        }
+                    } else {
+                        alert("Failed to create question.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("Check your internet connection.");
+                }
+            });
+
+        
+            menuToggle.addEventListener("click", function () {
+                sidebar.classList.toggle("show");
+            });
+        
+            const closeBtn = document.getElementById("close1");
+            closeBtn.addEventListener("click", function () {
+                sidebar.classList.remove("show");
+            });
+        
+            backButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                window.location.href = "create.html";
+            });
+        
+            questionForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+                window.location.href = "manage.html";
+            });
+        
+            document.addEventListener("click", function (event) {
+                if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
+                    hoverProfile.classList.remove("show");
+                }
+                if (!sidebar.contains(event.target) && event.target !== menuToggle) {
+                    sidebar.classList.remove("show");
+                }
+            });
+        });
+        </script>
+</body>
+</html>

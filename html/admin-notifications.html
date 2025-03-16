@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone</title>
+    <link rel="stylesheet" href="../css/admin-notifications.css">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-applications1.html" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle">☰</div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@admin</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon" style="cursor: pointer;">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="settings.html">Edit Profile Picture</a></li>
+                            <li><a href="personal-details.html">Personal Details</a></li>
+                            <li><a href="account-details.html">Account Details</a></li>
+                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/bell-icon.png" alt="Dashboard" class="nav-icon">
+                Notifications
+            </h1>
+        </div>
+
+        <div class="feed-container">
+        <div class="align-content">
+            <div class="review-card-container">
+                <div class="review-card">
+                    <div class="user-card-profile">
+                        <div class="user-card-details">
+                            <h3>Notification Title</h3>
+                            <p>Notification Body</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="user-card-profile">
+                        <div class="user-card-details">
+                            <h3>Notification Title</h3>
+                            <p>Notification Body</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const avatarIcon = document.getElementById("avatar-icon");
+        const hoverProfile = document.getElementById("hover-profile");
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const bellBtn = document.getElementById("bell-icon");
+
+            bellBtn.addEventListener("click", function () {
+                window.location.href = "admin-notifications.html";
+            });
+
+            avatarIcon.addEventListener("click", function (event) {
+                hoverProfile.classList.toggle("show");
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
+                    hoverProfile.classList.remove("show");
+                }
+            });
+
+            fetchUnverifiedReviewers();
+        });
+
+        async function fetchUnverifiedReviewers() {
+            try {
+                let response = await fetch(`http://localhost/ScholarZone/api/admin-notifications`, {
+                    method: "GET",
+                    headers: {
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+
+                let rawText = await response.text();
+                console.log("Raw API Response:", rawText);
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                    console.log("Parsed API Response:", data);
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                    return;
+                }
+
+                if (Array.isArray(data)) {
+                    renderNotifications(data);
+                } else if (data && typeof data === "object" && data.data) {
+                    renderNotifications(data.data);
+                } else {
+                    console.error("Unexpected API response format:", data);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        }
+
+        function renderNotifications(notifications) {
+            const container = document.querySelector(".review-card-container");
+            container.innerHTML = "";
+
+            notifications.forEach(notification => {
+                const card = document.createElement("div");
+                card.classList.add("review-card");
+
+                if (notification.title === "New Reviewer Registration") {
+                    card.innerHTML = `
+                        <div class="user-card-profile">
+                            <div class="user-card-details">
+                                <h3>${notification.title}</h3>
+                                <p>${notification.body}</p>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="reviewer-button">View</button>
+                        </div>
+                    `;
+                } else if (notification.title === "New Scholarship Application") {
+                    card.innerHTML = `
+                        <div class="user-card-profile">
+                            <div class="user-card-details">
+                                <h3>${notification.title}</h3>
+                                <p>${notification.body}</p>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="application-button">View</button>
+                        </div>
+                    `;
+                }
+
+                container.appendChild(card);
+            });
+
+            const reviewerButtons = document.querySelectorAll(".reviewer-button");
+            const applicationButtons = document.querySelectorAll(".application-button");
+
+            reviewerButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    window.location.href = "admin-reviewer1.html";
+                });
+            });
+
+            applicationButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    window.location.href = "admin-applications1.html";
+                });
+            });
+        }
+        
+    </script>
+</body>
+</html>

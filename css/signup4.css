@@ -1,0 +1,698 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+* {
+    text-decoration: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* NAVIGATION BAR */
+header {
+    background-color: white;
+    width: 100%;
+    height: 100px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;
+}
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 50px; 
+    margin-top: 1%;
+}
+.open_menu{
+    display: none;
+    font-size: 20px;
+}
+.close_menu{
+    display: none;
+}
+.logo{
+    padding-left: 9%;
+}
+.logo a {
+    font-size: 30px;
+    font-weight: 600;
+    color: #2172AA;
+    display: flex;
+    align-items: center;
+}
+
+.logo a span {
+    font-weight: normal;
+    color: black;
+}
+
+.menudo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+}
+
+li a {
+    color: black;
+    font-size: 17px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.15s ease-in-out;
+}
+
+li a:hover {
+    color: #2172AA;
+    text-decoration: underline;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    margin-top: 1%;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #2172AA;
+    border-radius: 8px;
+    width: 125px;
+    text-align: center;
+}
+
+.menu-login, .menu-signup {
+    display: none;
+}
+
+.log {
+    background: #2172AA;
+}
+
+.log a {
+    color: white;
+    font-size: 17px;
+}
+.log:hover{
+    background-color: white;
+}
+.log:hover a{
+    color: black;
+}
+
+.sign {
+    background: transparent;
+}
+
+.sign a {
+    color: black;
+    font-size: 17px;
+}
+
+.sign:hover {
+    background: #2172AA;
+    color: white;
+}
+
+.sign:hover a {
+    color: white;
+}
+
+/* end of nav bar */
+
+.container {
+    display: flex;
+    width: 100%;
+    height: calc(120vh - 100px);
+}
+
+.malakingSignUp {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    height: 100%;
+    background: url('../pictures/image2.svg') no-repeat center/cover;
+    padding-left: 0;
+    padding-right: 5%;
+}
+
+
+.malakingSignUp h1 {
+    color: #2172AA;
+    font-weight: bold;
+    font-size: 40px;
+    height: 10vh;
+    margin-bottom: 5px;
+    text-align: left;
+}
+.malakingSignUp i{
+    display: flex;
+    font-size: 40px;
+    color: #2172AA;
+    cursor: pointer;
+    margin-bottom: 10px;
+    margin-right: 31rem;
+}
+
+
+.cname{
+    font-size: 18px;
+    font-weight: bold;
+}
+.add{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.rpc{
+    font-size: 18px;
+    width: 25.81rem;
+    font-weight: bold;
+}
+.bsb{
+    font-size: 18px;
+    width: 25.81rem;
+    font-weight: bold;
+}
+.input-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #2172AA;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    width: 25.81rem;
+    position: relative;
+    
+}
+.input-box input {
+    border: none;
+    background: none;
+    padding: 10px 40px 10px 40px;
+    max-width: 350px;
+    width: 100%;
+    font-size: 18px;
+    outline: none;
+}
+
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    width: 45%; 
+    height: 20%;
+    bottom: 10px;
+    
+}
+.file-upload {
+    position: relative;
+    display: inline-block;
+    width:200px;
+    height: 50px;
+    background: #f2f2f2;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #DDDDDD;
+    left: 20px;
+}
+
+.file-upload img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.file-upload span {
+    font-size: 16px;
+    color: black;
+    line-height: 50px;
+    margin-left: 50px;
+}
+
+.file-upload input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-name{
+    left: 65%;
+    position: absolute;
+}
+
+.signup-btn {
+    align-self: flex-start;
+    max-width: 413px;
+    width: 25.81rem;
+    height: 7.5vh;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #2172AA;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.signup-btn a{
+    color: white;
+    font-size: 20px;
+}
+.signup-btn:hover {
+    background: #195b8a;
+}
+.login-text {
+    font-size: 18px;
+}
+
+.login-text a{
+    font-size: 18px;
+    color: #2172AA;
+}
+
+@media only screen and (max-width: 600px) {
+
+    body {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center; 
+    }
+
+    .header {
+        width: 100vw; 
+        max-width: 100%; 
+        text-align: center;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .logo {
+        text-align: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .menudo {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: #2172AA;  
+        box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .menudo.show {
+        display: flex;
+    }
+
+    .menudo li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .menudo li a {
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        text-transform: uppercase;
+        transition: 0.15s ease-in-out
+    }
+
+    .menudo li a:hover {
+        color: black;
+    }
+
+    .menu-login, .menu-signup {
+        display: block;
+        margin-top: 20px;
+    }
+
+    #menu-toggle {
+        display: block;
+    }
+
+    .open_menu {
+        text-align: center;
+        position: relative;
+        cursor: pointer; 
+        font-size: 30px;
+        z-index: 1000;
+    }
+
+    .open_menu i{
+        font-size: 40px;
+    }
+
+    .menu-login, .menu-signup {
+        display: block;
+    }
+
+    .nav-right {
+        display: none;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .malakingSignUp {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: none !important;
+    }
+
+    .malakingSignUp h1 {
+        font-size: 35px;
+        text-align: center;
+    }
+
+    .malakingSignUp i{
+        position: absolute;
+        left: 55px; 
+        top: 85px; 
+        font-size: 30px;
+        cursor: pointer;
+    }
+    .malakingSignUp i.back-button {
+        font-size: 40px;
+        position: absolute;
+        top: 15%; 
+        left: 20%; 
+        color: #2172AA;
+        cursor: pointer;
+    }
+    .progress{
+        padding-bottom : 5px;
+    }
+
+    .signup-container {
+        display: flex; 
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+    .signup-container i{
+        padding-right: 20px;
+    }
+
+    .file-upload{
+        position: relative;
+        left: -10%;
+    }
+
+    .input-box {
+        width: 100%;
+        max-width: 350px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 10px 10px 10px 40px; 
+    }
+    .input-box input {
+        width: 100%;
+        width: 80%;
+        display: flex;
+        padding: 10px 10px 10px 40px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        left: 20px;
+    }
+    .input-box i {
+        position: absolute;
+        left: 10px; 
+        font-size: 20px;
+        color: gray;
+        padding: 10px 10px 10px 40px;
+    }
+    .signup-btn {
+        width: 80%;
+        align-self: center;
+    }
+    .login-text p{
+        font-size: 10px;
+    }
+
+    .bgImage {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    body {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        text-align: center; 
+        margin: 0;
+        padding: 20px;
+        height: 100vh;
+    }
+    .header{
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        align-content: center;
+        text-align: center;
+        padding: 20px
+    }
+    .navbar {
+        display: flex;
+        gap: 20px; 
+    }
+    .nav-left{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .logo {
+        font-size: 24px;
+        padding: 0%;
+    }
+
+    .menudo {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 40%;
+        height: calc(100vh - 80px);
+        background: #2172AA; 
+        box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        z-index: 1000;
+    }
+
+    .menudo.show {
+        display: flex;
+    }
+
+    .menudo li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .menudo li a {
+        font-size: 18px;
+        font-weight: bold;
+        color: white; 
+        text-transform: uppercase;
+        transition: 0.3s ease-in-out;
+    }
+
+    .menudo li a:hover {
+        color: black; 
+    }
+    .menu-login, .menu-signup {
+        display: block;
+        margin-top: 20px;
+    }
+    .open_menu {
+        display: block;
+        text-align: center;
+        position: absolute;
+        left: 20px;
+        top: 30px;
+        align-content: flex-start;
+        cursor: pointer; 
+        font-size: 30px;
+
+    }
+    .open_menu i{
+        font-size: 40px;
+        left: 100%;
+        position: relative;
+        top: -5px;
+    }
+
+    .menu-login, .menu-signup {
+        display: block;
+        border: #195b8a;
+    }
+    .nav-right {
+        display: none;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .malakingSignUp {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        background: none !important;
+    }
+    .malakingSignUp i{
+        position: absolute;
+        left: 40px; 
+        top: 25px; 
+        font-size: 40px; 
+        cursor: pointer;
+    }
+
+    .malakingSignUp h1 {
+        font-size: 40px;
+        margin-bottom: 10px;
+        left: 10%;
+        position: relative;
+    }
+
+    .signup-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        max-height: 70vh; /* Makes it scrollable */
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .file-upload{
+        position: relative;
+        left: -20%;
+    }
+    .signup-container i{
+        padding-right: 20px;
+    }
+
+    .input-box {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .input-box input{
+        padding: 10px 10px 10px 40px;
+        font-size: 16px;
+        text-align: center;
+        padding-left: 5%;
+        width: 100%;
+
+    }
+    .input-box i {
+        position: absolute;
+        padding-left: 13%;
+        font-size: 20px;
+        color: gray;
+        left: 0%;
+    }
+
+    .signup-btn {
+        width: 100%;
+        align-self: center;
+    }
+
+    .bgImage {
+        display: none;
+    }
+}

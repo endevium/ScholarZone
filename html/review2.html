@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Review</title>
+    <link rel="stylesheet" href="../css/review2.css">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="create.html" class="nav-link">
+                <img src="../pictures/create_icon.png" alt="Create" class="nav-icon">
+                Create
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="manage.html" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Manage" class="nav-icon">
+                Manage
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="review.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Review
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle" id="menu-toggle">☰</div>
+            <div class="search-container">
+                <img src="../pictures/search_icon.png" alt="Search" class="search-icon">
+                <input type="text" class="search-box" id="search-box" placeholder="Start typing">
+            </div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="settings.html">Edit Profile Picture</a></li>
+                            <li><a href="personal-details.html">Personal Details</a></li>
+                            <li><a href="account-details.html">Account Details</a></li>
+                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/review_icon.png" alt="Dashboard" class="nav-icon">
+                Review
+            </h1>
+        </div>
+
+        <div class="align-content">
+            <div class="back-button" id="back-button-container">
+                <img src="../pictures/backbtn-icon.png" id="back-button">
+                Hawak Kamay
+            </div>
+
+            <div class="review-card-container">
+                
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let applicantList = [];
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            await fetchApplications();
+
+            document.getElementById('search-box').addEventListener('input', function (event) {
+                const searchTerm = event.target.value.toLowerCase();
+                const filteredApplicants = applicantList.filter(application => 
+                    (application.applicant.firstname && application.applicant.firstname.toLowerCase().includes(searchTerm)) ||
+                    (application.applicant.lastname && application.applicant.lastname.toLowerCase().includes(searchTerm)) ||
+                    (application.applicant.email && application.applicant.email.toLowerCase().includes(searchTerm))
+                );
+                renderApplications(filteredApplicants);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", async  function () {
+            const storedId = localStorage.getItem("id");
+            const avatarIcon = document.getElementById("avatar-icon");
+            const hoverProfile = document.getElementById("hover-profile");
+            const menuToggle = document.getElementById("menu-toggle");
+            const sidebar = document.getElementById("sidebar");
+            const editButton = document.getElementById("edit");
+            const backButton = document.getElementById("back-button");
+            const bellBtn = document.getElementById("bell-icon");
+
+            bellBtn.addEventListener("click", function () {
+                window.location.href = "reviewer-notifications.html";
+            });
+    
+            if (!storedId || storedId == 0) {
+                console.error("No ID found in localStorage.");
+                window.location.href = "login.html";
+                return;
+            }
+            
+            try {
+                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers?id=${storedId}&ngrok-skip-browswer-warning=true`, {
+                    method: "GET",
+                    headers: {
+                        "Content-type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+            
+                let rawText = await response.text();
+                let data; 
+                try {
+                    data = JSON.parse(rawText);
+                    console.log("Parsed API Response:", data);
+                
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError)
+                    return;
+                }
+                if (data.status === 200){
+                    const user = data.data;
+                    console.log("User Data:", user);
+            
+                    const usernameElement = document.getElementById("username");
+                    if (usernameElement) {
+                        usernameElement.textContent = "@" + user.username;
+                        
+                    } else {
+                            console.error("Element with ID 'username' not found.");
+                    }
+            
+                } else {
+                    console.error("API returned error:", data.message);
+                }
+            
+            } catch (error) {
+                console.error("Fetch Request Failed:", error);
+            }
+    
+            avatarIcon.addEventListener("click", function (event) {
+                hoverProfile.classList.toggle("show");
+                event.stopPropagation();
+            });
+    
+            menuToggle.addEventListener("click", function () {
+                sidebar.classList.toggle("show");
+            });
+    
+            const closeBtn = document.getElementById("close1");
+            closeBtn.addEventListener("click", function () {
+                sidebar.classList.remove("show");
+            });
+    
+            await fetchApplications();
+    });
+
+    async function fetchApplications() {
+        const token = localStorage.getItem("token");
+        let id = localStorage.getItem("scholarship_application_id");
+
+        if (!token) {
+            console.error("Authentication error: No token found.");
+            return;
+        }
+
+        try {
+            let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/get-applications?scholarship_application_id=${id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "ngrok-skip-browser-warning": "true"
+                }
+            });
+
+            let data = await response.json();
+            console.log("Scholarships API Response:", data);
+
+            if (data.status === 200) {
+                applicantList = data.data;
+                renderApplications(data.data);
+            } else {
+                console.error("Error fetching scholarships:", data.message);
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
+    }
+
+    function renderApplications(applications) {
+        const container = document.querySelector(".review-card-container");
+        container.innerHTML = "";
+
+        applications.forEach(application => {
+            if (application.status === "Pending") {
+                const card = document.createElement("div");
+                card.classList.add("reviewer-card");
+
+                card.innerHTML = `
+                    <div class="user-card-profile">
+                        <img src="../pictures/avatar-icon.png" alt="${application.applicant.firstname} ${application.applicant.lastname}">
+                        <div class="user-card-details">
+                            <h3>${application.applicant.firstname} ${application.applicant.lastname}</h3>
+                            <p>${application.applicant.email}</p>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="review-button" data-application='${JSON.stringify(application)}'>Review</button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            }
+        });
+
+        const reviewButtons = document.querySelectorAll(".review-button");
+        reviewButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const application = JSON.parse(this.getAttribute("data-application"));
+                localStorage.setItem("application_id", application.application_id);
+                localStorage.setItem("applicant_name", `${application.applicant.firstname} ${application.applicant.lastname}`);
+                localStorage.setItem("questions", JSON.stringify(application.questions));
+
+                window.location.href = "review3.html";
+            });
+        });
+    }
+    </script>
+</body>
+</html>

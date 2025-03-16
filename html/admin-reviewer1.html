@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Review</title>
+    <link rel="stylesheet" href="../css/admin-reviewer1.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item">
+            <a href="admin-dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item active">
+            <a href="admin-reviewer1.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Reviewers
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="admin-applications1.html" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Application" class="nav-icon">
+                Applications
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle">☰</div>
+            <div class="search-container">
+                <img src="../pictures/search_icon.png" alt="Search" class="search-icon">
+                <input type="text" class="search-box" id="search-box" placeholder="Start typing">
+            </div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@admin</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="#">Edit Profile Picture</a></li>
+                            <li><a href="#" style="color: red;">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="name">
+            <h1 class="create-title">
+                <img src="../pictures/review_icon.png" alt="Dashboard" class="nav-icon">
+                Reviewers
+            </h1>
+        </div>
+
+        <div class="feed-container">
+        <div class="align-content">
+            <div class="review-card-container">
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        let reviewersList = [];
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            const bellBtn = document.getElementById("bell-icon");
+            await fetchUnverifiedReviewers();
+
+            bellBtn.addEventListener('click', function() {
+                window.location.href = 'admin-notifications.html';
+            });
+
+            document.getElementById('search-box').addEventListener('input', function (event) {
+                const searchTerm = event.target.value.toLowerCase();
+                const filteredReviewers = reviewersList.filter(reviewer => 
+                    reviewer.firstname.toLowerCase().includes(searchTerm) ||
+                    reviewer.lastname.toLowerCase().includes(searchTerm) ||
+                    reviewer.email.toLowerCase().includes(searchTerm)
+                );
+                renderReviewers(filteredReviewers);
+            });
+        });
+
+        async function fetchUnverifiedReviewers() {
+            try {
+                let response = await fetch(`http://localhost/ScholarZone/api/get-unverified-reviewers`, {
+                    method: "GET",
+                    headers: {
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+
+                let rawText = await response.text();
+                console.log("Raw API Response:", rawText);
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                    console.log("Parsed API Response:", data);
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                    return;
+                }
+
+                if (Array.isArray(data)) {
+                    reviewersList = data;
+                    renderReviewers(data);
+                } else if (data && typeof data === "object" && data.data) {
+                    reviewersList = data.data;
+                    renderReviewers(data.data);
+                } else {
+                    console.error("Unexpected API response format:", data);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        }
+
+        function renderReviewers(reviewers) {
+            const container = document.querySelector(".review-card-container");
+            container.innerHTML = "";
+
+            reviewers.forEach(reviewer => {
+                const card = document.createElement("div");
+                card.classList.add("review-card");
+
+                card.innerHTML = `
+                    <div class="user-card-profile">
+                        <img src="../pictures/avatar-icon.png" alt="${reviewer.firstname} ${reviewer.lastname}">
+                        <div class="user-card-details">
+                            <h3>${reviewer.firstname} ${reviewer.lastname}</h3>
+                            <p>${reviewer.email}</p>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="review-button" data-application='${JSON.stringify(reviewer)}'>Review</button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            const reviewButtons = document.querySelectorAll(".review-button");
+            reviewButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const reviewer = JSON.parse(this.getAttribute("data-application"));
+                    localStorage.setItem("reviewer_id", reviewer.id);
+                    localStorage.setItem("reviewer_firstname", reviewer.firstname);
+                    localStorage.setItem("reviewer_lastname", reviewer.lastname);
+                    localStorage.setItem("reviewer_email", reviewer.email);
+                    localStorage.setItem("reviewer_birthdate", reviewer.birthdate);
+                    localStorage.setItem("reviewer_gender", reviewer.gender);
+                    localStorage.setItem("reviewer_phone", reviewer.phone_number);
+                    localStorage.setItem("reviewer_company", reviewer.company);
+                    localStorage.setItem("reviewer_rpc", reviewer.rpc);
+                    localStorage.setItem("reviewer_bsb", reviewer.bsb);
+                    localStorage.setItem("reviewer_company_id", reviewer.company_id);
+                    localStorage.setItem("reviewer_certificate", reviewer.certificate);
+                    localStorage.setItem("reviewer_authorization", reviewer.authorization);
+
+                    window.location.href = "admin-reviewer2.html";
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>
