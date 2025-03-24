@@ -40,8 +40,8 @@ class DashboardViewModel(context: Context): ViewModel() {
                     val fetchedData = responseBody?.data ?: emptyList() // Prevent null crash
 
                     if (fetchedData.isNotEmpty()) {
-                        applications = fetchedData
-                        allApplications = fetchedData
+                        applications = fetchedData.reversed()
+                        allApplications = fetchedData.reversed()
                         Log.d("API", "Applications fetched: ${applications.size}")
                     } else {
                         Log.e("API", "Response is successful but data is empty!")

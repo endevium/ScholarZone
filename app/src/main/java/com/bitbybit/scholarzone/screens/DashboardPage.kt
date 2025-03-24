@@ -13,6 +13,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,8 @@ import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.objects.DashboardViewModel
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 @Composable
 fun DashboardPage(nav: NavController) {
@@ -56,6 +59,27 @@ fun DashboardPage(nav: NavController) {
             )
 
             LazyRow(Modifier.offset(x = 18.dp, y = 50.dp)) {
+                item {
+                    Button(
+                        onClick = { viewModel.loadAllApplications() },
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.height(35.dp).width(82.dp)
+                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        Text("All",
+                            fontSize = 15.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource(R.color.scholar_blue)
+                        )
+                    }
+
+                    Spacer(Modifier.width(12.dp))
+                }
+
                 item {
                     Button(
                         onClick = { viewModel.filterApplicationsByCategory("Undergraduate") },
@@ -292,90 +316,117 @@ fun DashboardPage(nav: NavController) {
             }
 
             Spacer(Modifier.height(15.dp))
-            LazyColumn(Modifier.fillMaxHeight()) {
-                items(viewModel.applications) { application ->
-                    Box(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(200.dp)
-                            .offset(x = 18.dp, y = 10.dp)
-                            .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
-                    ) {
-                        Row {
-                            Box(Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-                                .width(125.dp).fillMaxHeight()) {
-                                Image(painter = painterResource(R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)).fillMaxHeight()
-                                )
-                            }
-
-                            Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
-                                Text(
-                                    application.application_name,
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    application.company,
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Category: ${application.category}",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Duration: ${application.duration}",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Text(
-                                    "Deadline: ${application.deadline}",
-                                    fontSize = 14.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
-
-                                Spacer(Modifier.height(25.dp))
-                                Button(
-                                    onClick = { },
-                                    shape = RoundedCornerShape(15.dp),
-                                    modifier = Modifier.height(35.dp).width(110.dp)
-                                        .offset(x = 80.dp)
-                                        .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.White,
-                                    )
+            LazyColumn(Modifier.fillMaxSize()) {
+                if (viewModel.applications.isEmpty()) {
+                    item {
+                        Spacer(Modifier.height(250.dp))
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "No applications found",
+                                fontSize = 16.sp,
+                                fontFamily = InterFontFamily,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                } else {
+                    items(viewModel.applications) { application ->
+                        Box(
+                            modifier = Modifier
+                                .width(350.dp)
+                                .height(200.dp)
+                                .offset(x = 18.dp, y = 10.dp)
+                                .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
+                        ) {
+                            Row {
+                                Box(
+                                    Modifier
+                                        .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
+                                        .width(125.dp)
+                                        .fillMaxHeight()
                                 ) {
-                                    Text(
-                                        application.status,
-                                        fontSize = 12.sp,
-                                        fontFamily = InterFontFamily,
-                                        fontWeight = FontWeight.Normal,
-                                        color = colorResource(R.color.scholar_blue)
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(application.application_image?.takeIf { it.isNotBlank() } ?: "")
+                                            .crossfade(true)
+                                            .placeholder(R.drawable.scholarship)
+                                            .error(R.drawable.scholarship)
+                                            .build(),
+                                        contentDescription = "Scholarship Image",
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
                                     )
+                                }
+
+                                Column(Modifier.offset(x = 15.dp, y = 10.dp)) {
+                                    Text(
+                                        application.application_name,
+                                        fontSize = 14.sp,
+                                        fontFamily = InterFontFamily,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(bottom = 5.dp)
+                                    )
+
+                                    Text(
+                                        application.company,
+                                        fontSize = 14.sp,
+                                        fontFamily = InterFontFamily,
+                                        fontWeight = FontWeight.Light,
+                                        modifier = Modifier.padding(bottom = 5.dp)
+                                    )
+
+                                    Text(
+                                        "Category: ${application.category}",
+                                        fontSize = 14.sp,
+                                        fontFamily = InterFontFamily,
+                                        fontWeight = FontWeight.Light,
+                                        modifier = Modifier.padding(bottom = 5.dp)
+                                    )
+
+                                    Text(
+                                        "Deadline: ${application.deadline}",
+                                        fontSize = 14.sp,
+                                        fontFamily = InterFontFamily,
+                                        fontWeight = FontWeight.Light,
+                                        modifier = Modifier.padding(bottom = 5.dp)
+                                    )
+
+                                    if (application.status == "Approved") {
+                                        Text(
+                                            "Status: ${application.status}",
+                                            fontSize = 14.sp,
+                                            fontFamily = InterFontFamily,
+                                            color = Color.Green,
+                                            fontWeight = FontWeight.Light,
+                                            modifier = Modifier.padding(bottom = 5.dp)
+                                        )
+                                    } else if (application.status == "Pending") {
+                                        Text(
+                                            "Status: ${application.status}",
+                                            fontSize = 14.sp,
+                                            fontFamily = InterFontFamily,
+                                            fontWeight = FontWeight.Light,
+                                            modifier = Modifier.padding(bottom = 5.dp)
+                                        )
+                                    } else if (application.status == "Rejected") {
+                                        Text(
+                                            "Status: ${application.status}",
+                                            fontSize = 14.sp,
+                                            fontFamily = InterFontFamily,
+                                            color = Color.Red,
+                                            fontWeight = FontWeight.Light,
+                                            modifier = Modifier.padding(bottom = 5.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
+                        Spacer(Modifier.height(12.dp))
                     }
-
-                    Spacer(Modifier.height(12.dp))
                 }
 
                 item {

@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +41,10 @@ import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun ScholarshipApplicationPage(nav: NavController) {
@@ -48,10 +53,14 @@ fun ScholarshipApplicationPage(nav: NavController) {
     val application_name = backStackEntry?.arguments?.getString("application_name") ?: ""
     val company = backStackEntry?.arguments?.getString("company") ?: ""
     val application_description = backStackEntry?.arguments?.getString("application_description") ?: ""
+    val application_image = backStackEntry?.arguments?.getString("application_image")?.let {
+        URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+    } ?: ""
     val duration = backStackEntry?.arguments?.getString("duration") ?: ""
     val category = backStackEntry?.arguments?.getString("category") ?: ""
     val slots = backStackEntry?.arguments?.getString("slots")?.toInt() ?: 0
     val deadline = backStackEntry?.arguments?.getString("deadline") ?: ""
+    val imageUrl = if (application_image.isNotBlank()) application_image else null
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -61,13 +70,16 @@ fun ScholarshipApplicationPage(nav: NavController) {
             Box(Modifier
                 .fillMaxWidth()
                 .height(350.dp)) {
-                Image(
-                    painter = painterResource(R.drawable.scholarship),
-                    contentDescription = "",
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUrl)
+                        .crossfade(true)
+                        .placeholder(R.drawable.scholarship)
+                        .error(R.drawable.scholarship)
+                        .build(),
+                    contentDescription = "Scholarship Image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-
+                    modifier = Modifier.fillMaxSize()
                 )
 
                 IconButton(onClick = { nav.navigate(Routes.HomePage) {

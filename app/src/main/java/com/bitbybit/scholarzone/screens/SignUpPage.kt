@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -34,6 +35,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -60,6 +63,10 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
+    val focusRequester1 = remember { FocusRequester() }
+    val focusRequester2 = remember { FocusRequester() }
+    val focusRequester3 = remember { FocusRequester() }
+    val focusRequester4 = remember { FocusRequester() }
 
     Box(modifier = Modifier
         .background(color = Color.White)
@@ -155,7 +162,11 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
 
                     OutlinedTextField(
                         value = viewModel.username,
-                        onValueChange = { viewModel.username = it },
+                        onValueChange = { newValue ->
+                            if (newValue.all { it.isLetterOrDigit() }) {
+                                viewModel.username = newValue
+                            }
+                        },
                         placeholder = { Text("johndoe69")},
                         leadingIcon = {
                             Icon(
@@ -166,11 +177,13 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester1),
                         shape = RoundedCornerShape(15.dp),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester2.requestFocus() }
                         ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -203,12 +216,13 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester2),
                         shape = RoundedCornerShape(15.dp),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Done
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester3.requestFocus() }
                         ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -231,7 +245,7 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
                     OutlinedTextField(
                         value = viewModel.password,
                         onValueChange = { viewModel.password = it },
-                        placeholder = { Text("Create a password") },
+                        placeholder = { Text("********") },
                         leadingIcon = {
                             Icon(imageVector = Icons.Default.Lock, contentDescription = "")
                         },
@@ -256,9 +270,13 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
                             fontWeight = FontWeight.Light,
                             fontFamily = InterFontFamily
                         ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester4.requestFocus() }
+                        ),
                         maxLines = 1,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Next)
                     )
 
                     Spacer(Modifier.height(10.dp))
@@ -279,7 +297,7 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
                     OutlinedTextField(
                         value = confirmPassword,
                         onValueChange = { confirmPassword = it },
-                        placeholder = { Text("Re-enter your password") },
+                        placeholder = { Text("********") },
                         leadingIcon = {
                             Icon(imageVector = Icons.Default.Lock, contentDescription = "")
                         },
@@ -306,7 +324,8 @@ fun SignupPage(nav: NavController, viewModel: SignUpViewModel) {
                         ),
                         maxLines = 1,
                         visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done)
                     )
 
                     Spacer(Modifier.height(25.dp))

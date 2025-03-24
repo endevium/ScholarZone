@@ -13,12 +13,23 @@ class SignUpViewModel: ViewModel() {
     var lastName by mutableStateOf("")
     var gender by mutableStateOf("")
     var birthdate by mutableStateOf("")
-    var phoneNumber by mutableStateOf(0)
+    var phoneNumber by mutableStateOf("")
     var school by mutableStateOf("")
     var program by mutableStateOf("")
     var fullAddress by mutableStateOf("")
     var rpc by mutableStateOf("")
     var bsb by mutableStateOf("")
+
+    fun clearData() {
+        username = ""
+        email = ""
+        password = ""
+        firstName = ""
+        lastName = ""
+        gender = ""
+        birthdate = ""
+        phoneNumber = ""
+    }
 }
 
 

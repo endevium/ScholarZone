@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,11 +56,19 @@ import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bitbybit.scholarzone.objects.SearchViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun SearchPage(nav: NavController, viewModel: SearchViewModel = viewModel()) {
     var search by remember { mutableStateOf("") }
     val searchResults = viewModel.searchResults
+
+    LaunchedEffect(search) {
+        if (search.isNotBlank()) {
+            delay(100L)
+            viewModel.searchScholarships(search)
+        }
+    }
 
     Box(Modifier.background(Color.White).fillMaxSize()) {
         Column {
@@ -72,27 +81,23 @@ fun SearchPage(nav: NavController, viewModel: SearchViewModel = viewModel()) {
                     Image(
                         painter = painterResource(R.drawable.back_button_one),
                         contentDescription = "",
-                        modifier = Modifier
-                            .size(50.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 }
 
                 Box {
                     OutlinedTextField(
                         value = search,
-                        onValueChange = { search = it },
+                        onValueChange = { search = it }, // Search triggers on typing
                         placeholder = {
-                            Text(
-                                "Start typing...",
-                                fontSize = 15.sp
-                            )
+                            Text("Start typing...", fontSize = 15.sp)
                         },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = "",
                                 modifier = Modifier.size(20.dp),
-                                tint = colorResource(id = R.color.scholar_black) // Ensure icon color is set
+                                tint = colorResource(id = R.color.scholar_black)
                             )
                         },
                         modifier = Modifier
@@ -115,7 +120,7 @@ fun SearchPage(nav: NavController, viewModel: SearchViewModel = viewModel()) {
                 }
 
                 TextButton(onClick = {
-                    viewModel.searchScholarships(search)
+                    viewModel.searchScholarships(search) // Manual search when button is pressed
                 }) {
                     Text(
                         "Search",
@@ -149,6 +154,7 @@ fun SearchPage(nav: NavController, viewModel: SearchViewModel = viewModel()) {
         }
     }
 }
+
 
 
 

@@ -14,7 +14,7 @@ object Routes {
     val NotificationPage = "NotificationPage"
     val ProfilePage = "ProfilePage"
 
-    const val ScholarshipApplicationPage = "scholarshipApplicationPage/{id}/{application_name}/{company}/{application_description}/{duration}/{category}/{slots}/{deadline}"
+    const val ScholarshipApplicationPage = "scholarshipApplicationPage/{id}/{application_name}/{company}/{application_description}/{application_image}/{duration}/{category}/{slots}/{deadline}"
     val ApplicationFormPage = "applicationFormPage/{scholarship_application_id}/{application_name}/{company}/{application_description}/{duration}/{category}/{slots}/{deadline}"
     val SearchPage = "SearchPage"
 

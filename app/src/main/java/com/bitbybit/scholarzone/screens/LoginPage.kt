@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -34,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -73,6 +76,8 @@ fun LoginPage(nav: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val focusRequester1 = remember { FocusRequester() }
+    val focusRequester2 = remember { FocusRequester() }
     val context = LocalContext.current
 
     Box {
@@ -168,11 +173,14 @@ fun LoginPage(nav: NavController) {
                                 contentDescription = ""
                             )
                         },
-                        modifier = Modifier.width(310.dp).height(55.dp),
+                        modifier = Modifier.width(310.dp).height(55.dp).focusRequester(focusRequester1),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardActions = KeyboardActions(
+                            onNext ={ focusRequester2.requestFocus() }
+                        ),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Done
+                            imeAction = ImeAction.Next
                         ),
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -209,11 +217,11 @@ fun LoginPage(nav: NavController) {
                                 Image(painter = visibilityIcon, contentDescription = "Toggle password visibility")
                             }
                         },
-                        modifier = Modifier.width(310.dp).height(55.dp),
+                        modifier = Modifier.width(310.dp).height(55.dp).focusRequester(focusRequester2),
                         shape = RoundedCornerShape(15.dp),
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done)
                     )
 
                     TextButton(onClick = { nav.navigate(Routes.ForgotPassword)}) {
@@ -260,12 +268,12 @@ fun LoginPage(nav: NavController) {
                                         }
                                         nav.navigate(Routes.MainPage)
                                     } else {
-                                        Toast.makeText(context, "An error occured", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Incorrect email or password", Toast.LENGTH_SHORT).show()
                                     }
                                 }
 
                                 override fun onFailure(call: Call<ApplicantResponse>, t: Throwable) {
-                                    Toast.makeText(context, "An error occured", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
                                 }
                             })
                         }

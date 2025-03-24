@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +16,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -28,12 +38,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +68,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
 
@@ -63,6 +77,14 @@ fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
     var fullAddress by remember { mutableStateOf("") }
     var rpc by remember { mutableStateOf("") }
     var bsb by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    val programs = listOf("Information Technology", "Computer Science", "Engineering",
+        "Business Administration", "Nursing", "Medical Technology", "Criminology",
+        "Education", "Political Science")
+    var selectedProgram by remember { mutableStateOf(program) }
+    val focusRequester1 = remember { FocusRequester() }
+    val focusRequester2 = remember { FocusRequester() }
+    val focusRequester3 = remember { FocusRequester() }
 
     Box(modifier = Modifier
         .background(color = Color.White)
@@ -145,12 +167,17 @@ fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
                     OutlinedTextField(
                         value = school,
                         onValueChange = { school = it },
-                        placeholder = { Text("ex: PHINMA - University of Pangasinan")},
+                        placeholder = { Text("PHINMA - University of Pangasinan")},
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester1),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester2.requestFocus() }
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -170,20 +197,51 @@ fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
                             .padding(start = 10.dp)
                     )
 
-                    OutlinedTextField(
-                        value = program,
-                        onValueChange = { program = it },
-                        placeholder = { Text("ex: Information Technology")},
-                        modifier = Modifier
-                            .width(330.dp)
-                            .height(55.dp)
-                            .padding(start = 10.dp),
-                        shape = RoundedCornerShape(15.dp),
-                        maxLines = 1,
-                        textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
-                    )
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = !expanded }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedProgram,
+                            onValueChange = {},
+                            readOnly = true, // Make it a dropdown
+                            placeholder = { Text("Select a program") },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .width(330.dp)
+                                .height(55.dp)
+                                .padding(start = 10.dp),
+                            shape = RoundedCornerShape(15.dp),
+                            textStyle = TextStyle(
+                                color = colorResource(id = R.color.scholar_black),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Light,
+                                fontFamily = InterFontFamily
+                            ),
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "Dropdown Icon",
+                                    modifier = Modifier.clickable { expanded = !expanded }
+                                )
+                            }
+                        )
 
-                    Spacer(Modifier.height(10.dp))
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            programs.forEach { programName ->
+                                DropdownMenuItem(
+                                    text = { Text(programName) },
+                                    onClick = {
+                                        selectedProgram = programName
+                                        expanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
 
                 item {
@@ -201,12 +259,17 @@ fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
                     OutlinedTextField(
                         value = rpc,
                         onValueChange = { rpc = it },
-                        placeholder = { Text("Enter your region, province, city")},
+                        placeholder = { Text("Region I, Pangasinan, Dagupan City")},
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester2),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester3.requestFocus() }
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -229,12 +292,16 @@ fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
                     OutlinedTextField(
                         value = bsb,
                         onValueChange = { bsb = it },
-                        placeholder = { Text("Enter barangay, street, building")},
+                        placeholder = { Text("Barangay I, Narcisso Street, New Building")},
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester3),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -243,7 +310,7 @@ fun SignUpPageThree(nav: NavController, viewModel: SignUpViewModel) {
                 }
             }
 
-            SubmitBar(nav, school, program, fullAddress, rpc, bsb, viewModel)
+            SubmitBar(nav, school, selectedProgram, fullAddress, rpc, bsb, viewModel)
         }
     }
 }
@@ -259,15 +326,7 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
             .fillMaxWidth()
             .background(Color.White)) {
         Column {
-            TextButton(onClick = { nav.navigate(Routes.LoginPage) }) {
-                Text(text = "Already have an account? Log in instead",
-                    fontWeight = FontWeight.Light,
-                    fontFamily = InterFontFamily,
-                    fontSize = 14.sp,
-                    modifier = Modifier.width(299.dp),
-                    color = colorResource(id = R.color.scholar_blue)
-                )
-            }
+
 
             Button(onClick = {
                 when {
@@ -283,6 +342,7 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                     bsb.isEmpty() -> {
                         Toast.makeText(context, "Barangay, street, building are required", Toast.LENGTH_SHORT).show()
                     }
+
                     else -> {
                         val applicant = Applicant(
                             username = viewModel.username,
@@ -323,22 +383,23 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                                         }
 
                                         Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
+                                        viewModel.clearData()
                                         nav.navigate(Routes.MainPage)
-                                    } else {
-                                        val errorBody = response.errorBody()?.string()
-                                        Toast.makeText(context, "Error: $errorBody", Toast.LENGTH_LONG).show()
+                                        } else {
+                                            try {
+                                                val errorBody = response.errorBody()?.string()
+                                                val errorResponse = gson.fromJson(errorBody, ApplicantResponse::class.java)
+                                                Toast.makeText(context, errorResponse.message, Toast.LENGTH_LONG).show()
+                                            } catch (e: Exception) {
+                                                Toast.makeText(context, "An error occurred.", Toast.LENGTH_LONG).show()
+                                            }
+                                        }
                                     }
-                                }
 
-                                override fun onFailure(
-                                    call: Call<ApplicantResponse>,
-                                    t: Throwable
-                                ) {
-                                    Toast.makeText(context, "An unknown error occured", Toast.LENGTH_SHORT).show()
+                                override fun onFailure(call: Call<ApplicantResponse>, t: Throwable) {
+                                    Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                                 }
-
                             })
-
                     }
                 }
             },

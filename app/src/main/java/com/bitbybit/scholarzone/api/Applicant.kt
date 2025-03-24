@@ -8,7 +8,7 @@ data class Applicant(
     val lastname: String,
     val gender: String,
     val birthdate: String,
-    val phone_number: Int,
+    val phone_number: String,
     val school: String,
     val program: String,
     val rpc: String,

@@ -1,7 +1,12 @@
 package com.bitbybit.scholarzone.screens
 
+import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -54,9 +60,15 @@ import com.bitbybit.scholarzone.api.APIService
 import com.bitbybit.scholarzone.api.Answer
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.api.SubmitApplication
+import com.bitbybit.scholarzone.api.SubmitApplicationResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel = viewModel()) {
@@ -65,6 +77,9 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
     val id = backStackEntry?.arguments?.getString("scholarship_application_id")?.toInt() ?: 0
     val application_name = backStackEntry?.arguments?.getString("application_name") ?: ""
     val company = backStackEntry?.arguments?.getString("company") ?: ""
+    val application_image = backStackEntry?.arguments?.getString("application_image")?.let {
+        URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+    } ?: ""
     val application_description = backStackEntry?.arguments?.getString("application_description") ?: ""
     val duration = backStackEntry?.arguments?.getString("duration") ?: ""
     val category = backStackEntry?.arguments?.getString("category") ?: ""
@@ -85,7 +100,10 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
                 .offset(x = 15.dp, y = 15.dp)
         ) {
             Box {
-                IconButton(onClick = { nav.navigate("scholarshipApplicationPage/$id/$application_name/$company/$application_description/$duration/$category/$slots/$deadline") }) {
+                IconButton(
+                    onClick = {
+                        val encodedImageUrl = URLEncoder.encode(application_image, StandardCharsets.UTF_8.toString())
+                        nav.navigate("scholarshipApplicationPage/$id/$application_name/$company/$application_description/$encodedImageUrl/$duration/$category/$slots/$deadline") }) {
                     Image(
                         painter = painterResource(R.drawable.back_button_one),
                         contentDescription = "",
@@ -132,6 +150,20 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
             } else {
                 LazyColumn(Modifier.height(500.dp)) {
                     items(viewModel.questions) { question ->
+                        Log.d("QuestionType", "Question ID: ${question.id}, Type: ${question.type}")
+                        val launcher = rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.GetContent()
+                        ) { uri: Uri? ->
+                            uri?.let {
+                                val filePath = getFileFromUri(context, it)
+                                if (filePath != null) {
+                                    viewModel.updateAnswer(question.id, File(filePath))
+                                } else {
+                                    Log.e("Error", "Failed to get file path")
+                                }
+                            }
+                        }
+
                         Text(
                             text = question.question,
                             fontSize = 16.sp,
@@ -143,29 +175,59 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
                                 .padding(start = 10.dp)
                         )
 
-                        val answer = answers[question.id] ?: ""
-                        OutlinedTextField(
-                            value = answer,
-                            onValueChange = { newAnswer ->
-                                viewModel.updateAnswer(
-                                    question.id,
-                                    newAnswer
+                        if (question.type == "upload") {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp)
+                            ) {
+                                val fileAnswer = answers[question.id] as? File
+
+                                if (fileAnswer != null) {
+                                    Text("Uploaded file: ${fileAnswer.name}", color = Color.Gray)
+                                    Spacer(Modifier.height(5.dp))
+                                    Button(
+                                        onClick = { launcher.launch("*/*") },
+                                        modifier = Modifier.width(330.dp).height(55.dp),
+                                        shape = RoundedCornerShape(15.dp)
+                                    ) {
+                                        Text("Change File", fontSize = 16.sp)
+                                    }
+                                } else {
+                                    Button(
+                                        onClick = { launcher.launch("*/*") },
+                                        modifier = Modifier.width(330.dp).height(55.dp),
+                                        shape = RoundedCornerShape(15.dp)
+                                    ) {
+                                        Text("Upload File", fontSize = 16.sp)
+                                    }
+                                }
+                            }
+                        } else {
+                            val answer = answers[question.id] as? String ?: ""
+                            OutlinedTextField(
+                                value = answer,
+                                onValueChange = { newAnswer ->
+                                    viewModel.updateAnswer(
+                                        question.id,
+                                        newAnswer
+                                    )
+                                },
+                                placeholder = { Text("Enter your answer here") },
+                                modifier = Modifier
+                                    .width(330.dp)
+                                    .height(55.dp)
+                                    .padding(start = 10.dp),
+                                shape = RoundedCornerShape(15.dp),
+                                maxLines = 1,
+                                textStyle = TextStyle(
+                                    color = colorResource(id = R.color.scholar_black),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Light,
+                                    fontFamily = InterFontFamily
                                 )
-                            },
-                            placeholder = { Text("Enter your answer here") },
-                            modifier = Modifier
-                                .width(330.dp)
-                                .height(55.dp)
-                                .padding(start = 10.dp),
-                            shape = RoundedCornerShape(15.dp),
-                            maxLines = 1,
-                            textStyle = TextStyle(
-                                color = colorResource(id = R.color.scholar_black),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Light,
-                                fontFamily = InterFontFamily
                             )
-                        )
+                        }
 
                         Spacer(Modifier.height(5.dp))
                     }
@@ -175,50 +237,39 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
 
         Button(
             onClick = {
+                if (!viewModel.areAllQuestionsAnswered()) {
+                    Toast.makeText(context, "Please answer all questions before submitting.", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
                 val apiService = RetrofitClient.create(APIService::class.java)
                 val submitApplication = SubmitApplication(
                     scholarship_application_id = id
                 )
 
-                val submitAllAnswers = {
-                    answers.forEach { (questionId, answer) ->
-                        val answer = Answer(
-                            question_id = questionId,
-                            answer = answer
-                        )
+                viewModel.submitAllAnswers()
 
-                        apiService.submitAnswer(answer).enqueue(object: Callback<Void> {
-                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                if (response.isSuccessful) {
-                                    Log.d("Success", "Answer submitted successfully")
-                                } else {
-                                    Toast.makeText(context, "Failed to submit answer for question $questionId.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-
-                            override fun onFailure(call: Call<Void>, t: Throwable) {
-                                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        })
-                    }
-                }
-
-                submitAllAnswers()
-
-                apiService.submitApplication(submitApplication).enqueue(object: Callback<Void> {
-                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                        if (response.isSuccessful) {
-                            Toast.makeText(context, "Application successfully submitted!", Toast.LENGTH_SHORT).show()
-                            nav.navigate("scholarshipApplicationPage/$id/$application_name/$company/$application_description/$duration/$category/$slots/$deadline")
+                apiService.submitApplication(submitApplication).enqueue(object: Callback<SubmitApplicationResponse> {
+                    override fun onResponse(call: Call<SubmitApplicationResponse>, response: Response<SubmitApplicationResponse>) {
+                        if (response.isSuccessful && response.body() != null) {
+                            val responseBody = response.body()!!
+                            val encodedImageUrl = URLEncoder.encode(application_image, StandardCharsets.UTF_8.toString())
+                            Toast.makeText(context, responseBody.message, Toast.LENGTH_SHORT).show()
+                            nav.navigate("scholarshipApplicationPage/$id/$application_name/$company/$application_description/$encodedImageUrl/$duration/$category/$slots/$deadline")
                         } else {
-                            Toast.makeText(context, "Failed to submit application.", Toast.LENGTH_SHORT).show()
+                            try {
+                                val errorBody = response.errorBody()?.string()
+                                val errorResponse = Gson().fromJson(errorBody, SubmitApplicationResponse::class.java)
+                                Toast.makeText(context, errorResponse.message, Toast.LENGTH_SHORT).show()
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Failed to submit application.", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
 
-                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                    override fun onFailure(call: Call<SubmitApplicationResponse>, t: Throwable) {
                         Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
-
                 })
 
                       },
@@ -242,6 +293,41 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
         }
     }
 }
+
+fun getFileFromUri(context: Context, uri: Uri): String? {
+    val contentResolver = context.contentResolver
+    var fileName: String? = null
+
+    contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                fileName = cursor.getString(nameIndex)
+            }
+        }
+    }
+
+    if (fileName == null) {
+        Log.e("File Error", "Could not retrieve file name")
+        return null
+    }
+
+    val file = File(context.cacheDir, fileName)
+
+    try {
+        contentResolver.openInputStream(uri)?.use { inputStream ->
+            file.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+        return file.absolutePath
+    } catch (e: Exception) {
+        Log.e("File Error", "Failed to copy file: ${e.message}")
+    }
+    return null
+}
+
+
 
 @Composable
 @Preview(showBackground = true)

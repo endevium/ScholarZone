@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,6 +36,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -59,6 +62,9 @@ import java.util.Locale
 
 @Composable
 fun SignUpPageTwo(nav: NavController, viewModel: SignUpViewModel) {
+    val focusRequester1 = remember { FocusRequester() }
+    val focusRequester2 = remember { FocusRequester() }
+    val focusRequester3 = remember { FocusRequester() }
 
     Box(modifier = Modifier
         .background(color = Color.White)
@@ -156,8 +162,13 @@ fun SignUpPageTwo(nav: NavController, viewModel: SignUpViewModel) {
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester1),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester2.requestFocus() }
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -184,8 +195,13 @@ fun SignUpPageTwo(nav: NavController, viewModel: SignUpViewModel) {
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester2),
                         shape = RoundedCornerShape(15.dp),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester3.requestFocus() }
+                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         maxLines = 1,
                         textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
                     )
@@ -240,15 +256,19 @@ fun SignUpPageTwo(nav: NavController, viewModel: SignUpViewModel) {
                     )
 
                     OutlinedTextField(
-                        value = viewModel.phoneNumber.toString(),
+                        value = viewModel.phoneNumber,
                         onValueChange = {
-                            newValue -> viewModel.phoneNumber = newValue.toIntOrNull() ?: 0
+                                newValue ->
+                            if (newValue.all { it.isDigit() } && newValue.length <= 11) {
+                                viewModel.phoneNumber = newValue
+                            }
                         },
                         placeholder = { Text("+63")},
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
-                            .padding(start = 10.dp),
+                            .padding(start = 10.dp)
+                            .focusRequester(focusRequester3),
                         shape = RoundedCornerShape(15.dp),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone,
@@ -267,7 +287,7 @@ fun SignUpPageTwo(nav: NavController, viewModel: SignUpViewModel) {
 }
 
 @Composable
-fun NextBarTwo(nav: NavController, firstName: String, lastName: String, gender: String, birthdate: String, phoneNumber: Int) {
+fun NextBarTwo(nav: NavController, firstName: String, lastName: String, gender: String, birthdate: String, phoneNumber: String) {
     val context = LocalContext.current
 
     Box(
@@ -276,15 +296,7 @@ fun NextBarTwo(nav: NavController, firstName: String, lastName: String, gender: 
             .fillMaxWidth()
             .background(Color.White)) {
         Column {
-            TextButton(onClick = { nav.navigate(Routes.LoginPage) }) {
-                Text(text = "Already have an account? Log in instead",
-                    fontWeight = FontWeight.Light,
-                    fontFamily = InterFontFamily,
-                    fontSize = 14.sp,
-                    modifier = Modifier.width(299.dp),
-                    color = colorResource(id = R.color.scholar_blue)
-                )
-            }
+            Spacer(Modifier.height(25.dp))
 
             Button(onClick = {
                 when {
@@ -300,7 +312,7 @@ fun NextBarTwo(nav: NavController, firstName: String, lastName: String, gender: 
                     birthdate.isEmpty() -> {
                         Toast.makeText(context, "Birthdate is required", Toast.LENGTH_SHORT).show()
                     }
-                    phoneNumber == 0 -> {
+                    phoneNumber.isEmpty() -> {
                         Toast.makeText(context, "Phone number is required", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
@@ -404,32 +416,37 @@ fun BirthdatePicker(birthdate: String, onDateSelected: (String) -> Unit) {
         calendar.get(Calendar.DAY_OF_MONTH)
     )
 
-    OutlinedTextField(
-        value = birthdate,
-        onValueChange = {},
-        placeholder = { Text("Select birthdate") },
-        shape = RoundedCornerShape(15.dp),
-        textStyle = TextStyle(
-            color = colorResource(id = R.color.scholar_black),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Light,
-            fontFamily = InterFontFamily
-        ),
-        trailingIcon = {
-            IconButton(onClick = { datePickerDialog.show() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.calendar),
-                    contentDescription = ""
-                )
-            }
-        },
+    Box(
         modifier = Modifier
             .width(330.dp)
             .height(55.dp)
             .padding(start = 10.dp)
-            .clickable { datePickerDialog.show() },
-        readOnly = true
-    )
+            .clickable { datePickerDialog.show() } // Opens the date picker on click
+    ) {
+        OutlinedTextField(
+            value = birthdate,
+            onValueChange = {},
+            placeholder = { Text("Select birthdate") },
+            shape = RoundedCornerShape(15.dp),
+            textStyle = TextStyle(
+                color = colorResource(id = R.color.scholar_black),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Light,
+                fontFamily = InterFontFamily
+            ),
+            trailingIcon = {
+                IconButton(onClick = { datePickerDialog.show() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.calendar),
+                        contentDescription = ""
+                    )
+                }
+            },
+            modifier = Modifier
+                .fillMaxSize(), // Make the TextField fill the Box
+            readOnly = true
+        )
+    }
 }
 
 @Preview(showBackground = true)

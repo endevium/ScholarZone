@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +52,10 @@ import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.ScholarshipApplication
 import com.bitbybit.scholarzone.objects.ScholarshipApplicationViewModel
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun HomePage(
@@ -62,52 +67,40 @@ fun HomePage(
 
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Column {
-            Text("Home",
-                fontSize = 20.sp,
-                modifier = Modifier.offset(x = 18.dp, y = 24.dp),
-                fontFamily = InterFontFamily,
-                fontWeight = FontWeight.Bold
-            )
+            Row(Modifier.fillMaxWidth()) {
+                Text("Home",
+                    fontSize = 20.sp,
+                    modifier = Modifier.offset(x = 18.dp, y = 24.dp),
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Bold
+                )
 
-            OutlinedTextField(
-                value = search,
-                onValueChange = { search = it },
-                placeholder = { Text("Start typing...") },
-                leadingIcon = {
+                Spacer(Modifier.weight(1f))
+
+                IconButton(
+                    onClick = { nav.navigate("searchPage") }, // Navigate when clicked
+                    modifier = Modifier.offset(y = 15.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = ""
+                        contentDescription = "Search",
+                        tint = Color.Black
                     )
-                },
-                modifier = Modifier
-                    .width(350.dp)
-                    .height(60.dp)
-                    .offset(x = 18.dp, y = 35.dp),
-                shape = RoundedCornerShape(20.dp),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        nav.navigate("searchPage")
-                    }
-                ),
-                maxLines = 1,
-                textStyle = TextStyle(color = colorResource(id = R.color.scholar_black), fontSize = 16.sp, fontWeight = FontWeight.Light, fontFamily = InterFontFamily)
-            )
+                }
+            }
 
             LazyColumn(Modifier.fillMaxHeight()) {
                 item {
                     Text("Featured Scholarships",
                         fontSize = 20.sp,
-                        modifier = Modifier.offset(x = 18.dp, y = 50.dp),
+                        modifier = Modifier.offset(x = 18.dp, y = 20.dp),
                         fontFamily = InterFontFamily,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
                 item {
-                    LazyRow(Modifier.offset(y = 65.dp),
+                    LazyRow(Modifier.offset(y = 35.dp),
                         horizontalArrangement = Arrangement.Center,
                         contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
@@ -121,22 +114,32 @@ fun HomePage(
                             ) {
 
                                 Image(
-                                    painter = painterResource(id = R.drawable.scholarship),
+                                    painter = painterResource(id = R.drawable.hk_banner),
                                     contentDescription = "",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .clip(RoundedCornerShape(20.dp))
                                 )
-                                Text(
-                                    text = "Hawak Kamay Scholarship",
-                                    fontSize = 18.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
+                            }
+                        }
+
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .width(350.dp)
+                                    .height(200.dp)
+                                    .border(1.dp, Color.Black, RoundedCornerShape(20.dp))
+                            ) {
+                                val shape: Shape = RoundedCornerShape(20.dp)
+                                Image(
+                                    painter = painterResource(id = R.drawable.guanzon_banner),
+                                    contentDescription = "",
+                                    contentScale = ContentScale.Crop,
                                     modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .offset(y = 50.dp),
-                                    color = Color.White
+                                        .fillMaxSize()
+                                        .clip(shape)
                                 )
                             }
                         }
@@ -151,52 +154,12 @@ fun HomePage(
                             ) {
                                 val shape: Shape = RoundedCornerShape(20.dp)
                                 Image(
-                                    painter = painterResource(id = R.drawable.scholarship),
+                                    painter = painterResource(id = R.drawable.sm_banner),
                                     contentDescription = "",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .clip(shape)
-                                )
-                                Text(
-                                    text = "Guanzon Grant",
-                                    fontSize = 18.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .offset(y = 50.dp),
-                                    color = Color.White
-                                )
-                            }
-                        }
-
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .width(350.dp)
-                                    .height(200.dp)
-                                    .border(1.dp, Color.Black, RoundedCornerShape(20.dp))
-                            ) {
-                                val shape: Shape = RoundedCornerShape(20.dp)
-                                Image(
-                                    painter = painterResource(id = R.drawable.scholarship),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .clip(shape)
-                                )
-                                Text(
-                                    text = "SM Scholarship",
-                                    fontSize = 18.sp,
-                                    fontFamily = InterFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .offset(y = 50.dp),
-                                    color = Color.White
                                 )
                             }
                         }
@@ -206,14 +169,35 @@ fun HomePage(
                 item {
                     Text("Available Scholarships",
                         fontSize = 20.sp,
-                        modifier = Modifier.offset(x = 18.dp, y = 80.dp),
+                        modifier = Modifier.offset(x = 18.dp, y = 50.dp),
                         fontFamily = InterFontFamily,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
                 item {
-                    LazyRow(Modifier.offset(x = 18.dp, y = 100.dp)) {
+                    LazyRow(Modifier.offset(x = 18.dp, y = 70.dp)) {
+                        item {
+                            Button(
+                                onClick = { viewModel.loadAllScholarships() },
+                                shape = RoundedCornerShape(15.dp),
+                                modifier = Modifier.height(35.dp).width(72.dp)
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                )
+                            ) {
+                                Text("All",
+                                    fontSize = 15.sp,
+                                    fontFamily = InterFontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colorResource(R.color.scholar_blue)
+                                )
+                            }
+
+                            Spacer(Modifier.width(12.dp))
+                        }
+
                         item {
                             Button(
                                 onClick = { viewModel.filterScholarshipsByCategory("Undergraduate") },
@@ -385,7 +369,7 @@ fun HomePage(
                 }
 
                 items(scholarships) { scholarship ->
-                    Box(Modifier.offset(y = 100.dp)) {
+                    Box(Modifier.offset(y = 80.dp)) {
                         ScholarshipCard(nav, scholarship)
                     }
                     Spacer(Modifier.height(12.dp))
@@ -416,9 +400,14 @@ fun ScholarshipCard(nav: NavController, scholarship: ScholarshipApplication) {
                     .width(125.dp)
                     .fillMaxHeight()
             ) {
-                Image(
-                    painter = painterResource(R.drawable.scholarship),
-                    contentDescription = "",
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(scholarship.application_image.takeIf { !it.isNullOrBlank() }) // Only load if not null/empty
+                        .crossfade(true)
+                        .placeholder(R.drawable.scholarship) // Correct way to use placeholder
+                        .error(R.drawable.scholarship) // Correct way to use error image
+                        .build(),
+                    contentDescription = "Scholarship Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -467,8 +456,11 @@ fun ScholarshipCard(nav: NavController, scholarship: ScholarshipApplication) {
 
                 Spacer(Modifier.height(10.dp))
                 Button(
-                    onClick = { nav.navigate(
-                        "scholarshipApplicationPage/${scholarship.id}/${scholarship.application_name}/${scholarship.company}/${scholarship.application_description}/${scholarship.duration}/${scholarship.category}/${scholarship.slots}/${scholarship.deadline}"
+                    onClick = {
+                        val encodedImageUrl = URLEncoder.encode(scholarship.application_image, StandardCharsets.UTF_8.toString())
+
+                        nav.navigate(
+                        "scholarshipApplicationPage/${scholarship.id}/${scholarship.application_name}/${scholarship.company}/${scholarship.application_description}/$encodedImageUrl/${scholarship.duration}/${scholarship.category}/${scholarship.slots}/${scholarship.deadline}"
                     ) },
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier

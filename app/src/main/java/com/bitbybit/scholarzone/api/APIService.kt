@@ -1,6 +1,7 @@
 package com.bitbybit.scholarzone.api
 
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -45,11 +46,18 @@ interface APIService {
         @Body answer: Answer
     ): Call<Void>
 
+    @Multipart
+    @POST("api/submit-answer")
+    fun submitFile(
+        @Part("question_id") questionId: RequestBody,
+        @Part file: MultipartBody.Part
+    ): Call<Void>
+
     @Headers("Content-type: application/json")
     @POST("api/submit-application")
     fun submitApplication(
         @Body submitApplication: SubmitApplication
-    ): Call<Void>
+    ): Call<SubmitApplicationResponse>
 
     @GET("api/applicant-applications")
     fun getApplications(

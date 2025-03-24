@@ -41,8 +41,8 @@ class NotificationViewModel(context: Context): ViewModel() {
                     val fetchedData = responseBody?.data ?: emptyList()
 
                     if (fetchedData.isNotEmpty()) {
-                        notifications = fetchedData
-                        allNotifications = fetchedData
+                        notifications = fetchedData.reversed()
+                        allNotifications = fetchedData.reversed()
                     } else {
                         notifications = emptyList()
                     }
