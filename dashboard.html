@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarZone Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
+            <span class="logo-text">
+                <span class="logo-scholar">Scholar</span><span class="logo-zone">Zone</span>
+            </span>
+        </div>
+        <div class="nav-item active">
+            <a href="dashboard.html" class="nav-link">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="create.html" class="nav-link">
+                <img src="../pictures/create_icon.png" alt="Create" class="nav-icon">
+                Create
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="manage.html" class="nav-link">
+                <img src="../pictures/manage_icon.png" alt="Manage" class="nav-icon">
+                Manage
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="review.html" class="nav-link">
+                <img src="../pictures/review_icon.png" alt="Review" class="nav-icon">
+                Review
+            </a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <div class="menu-toggle" id="menuToggle">☰</div>
+            <div class="user-profile">
+                <div class="username-container">
+                    <span id="username">@janedoe69</span>
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
+                    <div class="hover-profile" id="hover-profile">
+                        <ul>
+                            <li><a href="settings.html">Edit Profile Picture</a></li>
+                            <li><a href="personal-details.html">Personal Details</a></li>
+                            <li><a href="account-details.html">Account Details</a></li>
+                            <li><a href="landing.html" style="color: red;" onclick="logOut()">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="name">
+            <h1 class="overview-title">
+                <img src="../pictures/dashboard_icon.png" alt="Dashboard" class="nav-icon">
+                Overview
+            </h1>
+            </div>
+
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-number">
+                    <img src="../pictures/tao_icon.png" alt="User" class="user-icon">
+                    <span id="total-respondents">0</span>
+                </div>
+                <div class="stat-label">Total respondents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="../pictures/black_icon.png" alt="User" class="user-icon">
+                    <span id="pending-reviews">0</span>
+                </div>
+                <div class="stat-label">Pending reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <img src="../pictures/form_icon.png" alt="User" class="user-icon">
+                    <span id="total-applications">0</span>
+                </div>
+                <div class="stat-label">Total scholarship applications</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">Applications Reviewed Over Time</div>
+                <div class="bar-chart-container">
+                    <canvas id="timeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        const DashboardModel = {
+            data: {
+                totalRespondents: 0,
+                pendingReviews: 0,
+                totalScholarship: 0,
+                user: { username: "Loading..." },
+                chartData: []
+            },
+
+            async fetchDashboardData(reviewerId) {
+                try {
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-dashboard?reviewer_id=${reviewerId}&ngrok-skip-browser-warning=true`, {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    });
+                    let rawText = await response.text();
+                    let data = JSON.parse(rawText);
+
+                    if (data.status === 200) {
+                        this.data.totalRespondents = data.data.total_respondents;
+                        this.data.pendingReviews = data.data.pending_reviews;
+                        this.data.totalScholarship = data.data.total_scholarship_applications;
+                    } else {
+                        console.error("API Error:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Error:", error);
+                }
+            },
+
+            async fetchUserData(reviewerId) {
+                try {
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers?id=${reviewerId}&ngrok-skip-browser-warning=true`, {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    });
+                    let rawText = await response.text();
+                    let data = JSON.parse(rawText);
+
+                    if (data.status === 200) {
+                        this.data.user = data.data;
+                    } else {
+                        console.error("API Error:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Error:", error);
+                }
+            },
+            
+            async fetchChartData(reviewerId) {
+                try {
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-reviewed?reviewer_id=${reviewerId}&ngrok-skip-browser-warning=true`, {
+                        method: "GET",
+                        headers: { "ngrok-skip-browser-warning": "true" }
+                    });
+
+                    let rawText = await response.text();
+                    let chartData;
+
+                    try {
+                        chartData = JSON.parse(rawText);
+                        console.log("Parsed Chart API Response:", chartData);
+                    } catch (jsonError) {
+                        console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                        return;
+                    }
+
+                    if (chartData.status === 200) {
+                        this.data.chartData = chartData.data;
+                    } else {
+                        console.error("API returned error:", chartData.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Request Failed:", error);
+                }
+            }
+        };
+
+        const DashboardViewModel = {
+            elements: {
+                totalRespondents: document.getElementById("total-respondents"),
+                pendingReviews: document.getElementById("pending-reviews"),
+                totalScholarship: document.getElementById("total-applications"),
+                username: document.getElementById("username"),
+                timeCtx: document.getElementById("timeChart").getContext("2d")
+            },
+
+            async init() {
+                const reviewerId = localStorage.getItem("id");
+                if (!reviewerId) {
+                    console.error("No ID found in localStorage.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                await DashboardModel.fetchDashboardData(reviewerId);
+                await DashboardModel.fetchUserData(reviewerId);
+                await DashboardModel.fetchChartData(reviewerId);
+
+                this.updateView();
+                this.renderChart();
+            },
+
+            updateView() {
+                this.elements.totalRespondents.textContent = DashboardModel.data.totalRespondents;
+                this.elements.pendingReviews.textContent = DashboardModel.data.pendingReviews;
+                this.elements.totalScholarship.textContent = DashboardModel.data.totalScholarship;
+                this.elements.username.textContent = "@" + DashboardModel.data.user.username;
+            },
+
+            renderChart() {
+                const chartDataArray = DashboardModel.data.chartData;
+                const labels = chartDataArray.map(item => item.review_date);
+                const dataPoints = chartDataArray.map(item => item.total_reviewed);
+
+                new Chart(this.elements.timeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Application Status Breakdown',
+                            data: dataPoints,
+                            backgroundColor: '#2172AA',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 },
+                                grid: { color: '#e5e7eb' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            DashboardViewModel.init();
+        });
+    </script>
+</body> 
+</html> 
