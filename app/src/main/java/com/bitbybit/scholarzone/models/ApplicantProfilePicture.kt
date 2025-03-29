@@ -1,6 +1,6 @@
-package com.bitbybit.scholarzone.api
+package com.bitbybit.scholarzone.models
 
-data class Applicant(
+data class ApplicantProfilePicture(
     val username: String,
     val email: String,
     val password: String,
@@ -9,6 +9,7 @@ data class Applicant(
     val gender: String,
     val birthdate: String,
     val phone_number: String,
+    val profile_picture: String?,
     val school: String,
     val program: String,
     val rpc: String,

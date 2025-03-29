@@ -263,7 +263,7 @@ fun SignUpPageTwo(nav: NavController, viewModel: SignUpViewModel) {
                                 viewModel.phoneNumber = newValue
                             }
                         },
-                        placeholder = { Text("+63")},
+                        placeholder = { Text("09123456789")},
                         modifier = Modifier
                             .width(330.dp)
                             .height(55.dp)
@@ -403,6 +403,10 @@ fun BirthdatePicker(birthdate: String, onDateSelected: (String) -> Unit) {
     val calendar = Calendar.getInstance()
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
+    val eighteenYearsAgo = Calendar.getInstance().apply {
+        add(Calendar.YEAR, -18)
+    }
+
     val context = LocalContext.current
     val datePickerDialog = DatePickerDialog(
         context,
@@ -414,14 +418,16 @@ fun BirthdatePicker(birthdate: String, onDateSelected: (String) -> Unit) {
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
         calendar.get(Calendar.DAY_OF_MONTH)
-    )
+    ).apply {
+        datePicker.maxDate = eighteenYearsAgo.timeInMillis
+    }
 
     Box(
         modifier = Modifier
             .width(330.dp)
             .height(55.dp)
             .padding(start = 10.dp)
-            .clickable { datePickerDialog.show() } // Opens the date picker on click
+            .clickable { datePickerDialog.show() }
     ) {
         OutlinedTextField(
             value = birthdate,
@@ -443,7 +449,7 @@ fun BirthdatePicker(birthdate: String, onDateSelected: (String) -> Unit) {
                 }
             },
             modifier = Modifier
-                .fillMaxSize(), // Make the TextField fill the Box
+                .fillMaxSize(),
             readOnly = true
         )
     }

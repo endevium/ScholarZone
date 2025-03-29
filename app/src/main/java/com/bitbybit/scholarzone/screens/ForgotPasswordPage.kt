@@ -44,10 +44,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.api.APIService
+import com.bitbybit.scholarzone.models.ForgotPasswordResponse
+import com.bitbybit.scholarzone.api.OTP
+import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.objects.ForgotPasswordViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import com.bitbybit.scholarzone.ui.theme.PoppinsFontFamily
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun ForgotPassword(nav: NavController, viewModel: ForgotPasswordViewModel) {
@@ -146,7 +154,46 @@ fun ForgotPassword(nav: NavController, viewModel: ForgotPasswordViewModel) {
 
             Button(onClick = {
                 if (viewModel.email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(viewModel.email).matches()) {
-                    nav.navigate(Routes.ForgotPasswordTwo)
+                    val apiService = RetrofitClient.create(APIService::class.java)
+                    val otp = OTP(
+                        email = viewModel.email,
+                    )
+
+                    apiService.generateOTP(otp).enqueue(object: Callback<com.bitbybit.scholarzone.models.ForgotPasswordResponse> {
+                        override fun onResponse(
+                            call: Call<com.bitbybit.scholarzone.models.ForgotPasswordResponse>,
+                            response: Response<com.bitbybit.scholarzone.models.ForgotPasswordResponse>
+                        ) {
+                            if (response.isSuccessful && response.body() != null) {
+                                Toast.makeText(context, "Your OTP has been sent. Please check your e-mail.", Toast.LENGTH_SHORT).show()
+                                nav.navigate(Routes.ForgotPasswordTwo)
+                            } else {
+                                try {
+                                    val errorBody = response.errorBody()?.string()
+                                    val errorResponse = Gson().fromJson(
+                                        errorBody,
+                                        com.bitbybit.scholarzone.models.ForgotPasswordResponse::class.java
+                                    )
+                                    Toast.makeText(
+                                        context,
+                                        errorResponse.message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        context,
+                                        "Failed to change password",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<com.bitbybit.scholarzone.models.ForgotPasswordResponse>, t: Throwable) {
+                            Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
+                        }
+
+                    })
                 } else {
                     Toast.makeText(context, "Enter a valid email address", Toast.LENGTH_SHORT).show()
                 }

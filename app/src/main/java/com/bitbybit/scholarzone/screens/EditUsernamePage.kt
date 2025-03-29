@@ -37,8 +37,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.AccountDetails
-import com.bitbybit.scholarzone.api.PersonalDetails
+import com.bitbybit.scholarzone.models.AccountDetails
+import com.bitbybit.scholarzone.models.PersonalDetails
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
@@ -111,7 +111,7 @@ fun EditUsernamePage(nav: NavController) {
         Button(
             onClick = {
                 if (inputField.isNotEmpty()) {
-                    val username = AccountDetails.Username(
+                    val username = com.bitbybit.scholarzone.models.AccountDetails.Username(
                         username = inputField
                     )
 

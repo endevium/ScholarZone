@@ -5,17 +5,17 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.bitbybit.scholarzone.api.APIService
 import com.bitbybit.scholarzone.api.RetrofitClient
-import com.bitbybit.scholarzone.api.ScholarshipApplication
-import com.bitbybit.scholarzone.api.ScholarshipResponse
+import com.bitbybit.scholarzone.models.ScholarshipApplication
+import com.bitbybit.scholarzone.models.ScholarshipResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ScholarshipApplicationViewModel: ViewModel() {
-    var scholarships = mutableStateListOf<ScholarshipApplication>()
+    var scholarships = mutableStateListOf<com.bitbybit.scholarzone.models.ScholarshipApplication>()
         private set
 
-    private var allScholarships = listOf<ScholarshipApplication>()
+    private var allScholarships = listOf<com.bitbybit.scholarzone.models.ScholarshipApplication>()
 
     init {
         fetchScholarships()
@@ -23,10 +23,10 @@ class ScholarshipApplicationViewModel: ViewModel() {
 
     private fun fetchScholarships() {
         val apiService = RetrofitClient.create(APIService::class.java)
-        apiService.getScholarships().enqueue(object : Callback<ScholarshipResponse> {
+        apiService.getScholarships().enqueue(object : Callback<com.bitbybit.scholarzone.models.ScholarshipResponse> {
             override fun onResponse(
-                call: Call<ScholarshipResponse>,
-                response: Response<ScholarshipResponse>
+                call: Call<com.bitbybit.scholarzone.models.ScholarshipResponse>,
+                response: Response<com.bitbybit.scholarzone.models.ScholarshipResponse>
             ) {
                 if (response.isSuccessful) {
                     scholarships.clear()
@@ -40,7 +40,7 @@ class ScholarshipApplicationViewModel: ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<ScholarshipResponse>, t: Throwable) {
+            override fun onFailure(call: Call<com.bitbybit.scholarzone.models.ScholarshipResponse>, t: Throwable) {
                 println("Error fetching scholarships: ${t.message}")
                 Log.d("Failure", "${t.message}")
             }

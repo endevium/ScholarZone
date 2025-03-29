@@ -59,7 +59,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.ApplicantResponse
+import com.bitbybit.scholarzone.models.ApplicantResponse
 import com.bitbybit.scholarzone.api.Login
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.api.saveId
@@ -246,10 +246,10 @@ fun LoginPage(nav: NavController) {
 
                             val apiService = RetrofitClient.create(APIService::class.java)
                             apiService.login(login).enqueue(object:
-                                Callback<ApplicantResponse> {
+                                Callback<com.bitbybit.scholarzone.models.ApplicantResponse> {
                                 override fun onResponse(
-                                    call: Call<ApplicantResponse>,
-                                    response: Response<ApplicantResponse>
+                                    call: Call<com.bitbybit.scholarzone.models.ApplicantResponse>,
+                                    response: Response<com.bitbybit.scholarzone.models.ApplicantResponse>
                                 ) {
                                     if (response.isSuccessful) {
                                         Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
@@ -272,7 +272,7 @@ fun LoginPage(nav: NavController) {
                                     }
                                 }
 
-                                override fun onFailure(call: Call<ApplicantResponse>, t: Throwable) {
+                                override fun onFailure(call: Call<com.bitbybit.scholarzone.models.ApplicantResponse>, t: Throwable) {
                                     Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
                                 }
                             })

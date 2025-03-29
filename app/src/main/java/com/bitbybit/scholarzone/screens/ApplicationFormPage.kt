@@ -57,10 +57,10 @@ import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import com.bitbybit.scholarzone.ui.theme.PoppinsFontFamily
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.Answer
+import com.bitbybit.scholarzone.models.Answer
 import com.bitbybit.scholarzone.api.RetrofitClient
-import com.bitbybit.scholarzone.api.SubmitApplication
-import com.bitbybit.scholarzone.api.SubmitApplicationResponse
+import com.bitbybit.scholarzone.models.SubmitApplication
+import com.bitbybit.scholarzone.models.SubmitApplicationResponse
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -187,7 +187,7 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
                                     Text("Uploaded file: ${fileAnswer.name}", color = Color.Gray)
                                     Spacer(Modifier.height(5.dp))
                                     Button(
-                                        onClick = { launcher.launch("*/*") },
+                                        onClick = { launcher.launch("image/*") },
                                         modifier = Modifier.width(330.dp).height(55.dp),
                                         shape = RoundedCornerShape(15.dp)
                                     ) {
@@ -195,7 +195,7 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
                                     }
                                 } else {
                                     Button(
-                                        onClick = { launcher.launch("*/*") },
+                                        onClick = { launcher.launch("image/*") },
                                         modifier = Modifier.width(330.dp).height(55.dp),
                                         shape = RoundedCornerShape(15.dp)
                                     ) {
@@ -243,23 +243,23 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
                 }
 
                 val apiService = RetrofitClient.create(APIService::class.java)
-                val submitApplication = SubmitApplication(
+                val submitApplication = com.bitbybit.scholarzone.models.SubmitApplication(
                     scholarship_application_id = id
                 )
 
                 viewModel.submitAllAnswers()
 
-                apiService.submitApplication(submitApplication).enqueue(object: Callback<SubmitApplicationResponse> {
-                    override fun onResponse(call: Call<SubmitApplicationResponse>, response: Response<SubmitApplicationResponse>) {
+                apiService.submitApplication(submitApplication).enqueue(object: Callback<com.bitbybit.scholarzone.models.SubmitApplicationResponse> {
+                    override fun onResponse(call: Call<com.bitbybit.scholarzone.models.SubmitApplicationResponse>, response: Response<com.bitbybit.scholarzone.models.SubmitApplicationResponse>) {
                         if (response.isSuccessful && response.body() != null) {
                             val responseBody = response.body()!!
-                            val encodedImageUrl = URLEncoder.encode(application_image, StandardCharsets.UTF_8.toString())
                             Toast.makeText(context, responseBody.message, Toast.LENGTH_SHORT).show()
+                            val encodedImageUrl = URLEncoder.encode(application_image, StandardCharsets.UTF_8.toString())
                             nav.navigate("scholarshipApplicationPage/$id/$application_name/$company/$application_description/$encodedImageUrl/$duration/$category/$slots/$deadline")
                         } else {
                             try {
                                 val errorBody = response.errorBody()?.string()
-                                val errorResponse = Gson().fromJson(errorBody, SubmitApplicationResponse::class.java)
+                                val errorResponse = Gson().fromJson(errorBody, com.bitbybit.scholarzone.models.SubmitApplicationResponse::class.java)
                                 Toast.makeText(context, errorResponse.message, Toast.LENGTH_SHORT).show()
                             } catch (e: Exception) {
                                 Toast.makeText(context, "Failed to submit application.", Toast.LENGTH_SHORT).show()
@@ -267,7 +267,7 @@ fun ApplicationFormPage(nav: NavController, viewModel: ApplicationFormViewModel 
                         }
                     }
 
-                    override fun onFailure(call: Call<SubmitApplicationResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<com.bitbybit.scholarzone.models.SubmitApplicationResponse>, t: Throwable) {
                         Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })

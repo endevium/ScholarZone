@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.Application
-import com.bitbybit.scholarzone.api.Notification
-import com.bitbybit.scholarzone.api.NotificationResponse
+import com.bitbybit.scholarzone.models.Application
+import com.bitbybit.scholarzone.models.Notification
+import com.bitbybit.scholarzone.models.NotificationResponse
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.api.getId
 import retrofit2.Call
@@ -17,12 +17,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class NotificationViewModel(context: Context): ViewModel() {
-    var notifications by mutableStateOf(listOf<Notification>())
+    var notifications by mutableStateOf(listOf<com.bitbybit.scholarzone.models.Notification>())
         private set
 
     private val id: Int = getId(context)
 
-    private var allNotifications = listOf<Notification>()
+    private var allNotifications = listOf<com.bitbybit.scholarzone.models.Notification>()
 
     init {
         fetchNotifications()
@@ -31,10 +31,10 @@ class NotificationViewModel(context: Context): ViewModel() {
     private fun fetchNotifications() {
         val apiService = RetrofitClient.create(APIService::class.java)
 
-        apiService.getNotifications(id).enqueue(object : Callback<NotificationResponse> {
+        apiService.getNotifications(id).enqueue(object : Callback<com.bitbybit.scholarzone.models.NotificationResponse> {
             override fun onResponse(
-                call: Call<NotificationResponse>,
-                response: Response<NotificationResponse>
+                call: Call<com.bitbybit.scholarzone.models.NotificationResponse>,
+                response: Response<com.bitbybit.scholarzone.models.NotificationResponse>
             ) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
@@ -52,7 +52,7 @@ class NotificationViewModel(context: Context): ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<NotificationResponse>, t: Throwable) {
+            override fun onFailure(call: Call<com.bitbybit.scholarzone.models.NotificationResponse>, t: Throwable) {
                 Log.e("Failure", "Error fetching notifications: ${t.message}")
             }
 

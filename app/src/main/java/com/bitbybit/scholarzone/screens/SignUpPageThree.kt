@@ -54,8 +54,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.Applicant
-import com.bitbybit.scholarzone.api.ApplicantResponse
+import com.bitbybit.scholarzone.models.Applicant
+import com.bitbybit.scholarzone.models.ApplicantResponse
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.api.saveId
 import com.bitbybit.scholarzone.api.saveToken
@@ -344,7 +344,7 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                     }
 
                     else -> {
-                        val applicant = Applicant(
+                        val applicant = com.bitbybit.scholarzone.models.Applicant(
                             username = viewModel.username,
                             email = viewModel.email,
                             password = viewModel.password,
@@ -362,10 +362,10 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                         val gson = Gson()
                         Log.d("REQUEST_BODY", gson.toJson(applicant))
 
-                        apiService.register(applicant).enqueue(object: Callback<ApplicantResponse> {
+                        apiService.register(applicant).enqueue(object: Callback<com.bitbybit.scholarzone.models.ApplicantResponse> {
                                 override fun onResponse(
-                                    call: Call<ApplicantResponse>,
-                                    response: Response<ApplicantResponse>
+                                    call: Call<com.bitbybit.scholarzone.models.ApplicantResponse>,
+                                    response: Response<com.bitbybit.scholarzone.models.ApplicantResponse>
                                 ) {
                                     if (response.isSuccessful) {
                                         val signUpResponse = response.body()
@@ -382,13 +382,13 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                                             saveId(context, id)
                                         }
 
-                                        Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Account created successfully. Please log in to continue", Toast.LENGTH_SHORT).show()
                                         viewModel.clearData()
-                                        nav.navigate(Routes.MainPage)
+                                        nav.navigate(Routes.LoginPage)
                                         } else {
                                             try {
                                                 val errorBody = response.errorBody()?.string()
-                                                val errorResponse = gson.fromJson(errorBody, ApplicantResponse::class.java)
+                                                val errorResponse = gson.fromJson(errorBody, com.bitbybit.scholarzone.models.ApplicantResponse::class.java)
                                                 Toast.makeText(context, errorResponse.message, Toast.LENGTH_LONG).show()
                                             } catch (e: Exception) {
                                                 Toast.makeText(context, "An error occurred.", Toast.LENGTH_LONG).show()
@@ -396,7 +396,7 @@ fun SubmitBar(nav: NavController, school: String, program: String, fullAddress: 
                                         }
                                     }
 
-                                override fun onFailure(call: Call<ApplicantResponse>, t: Throwable) {
+                                override fun onFailure(call: Call<com.bitbybit.scholarzone.models.ApplicantResponse>, t: Throwable) {
                                     Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                                 }
                             })

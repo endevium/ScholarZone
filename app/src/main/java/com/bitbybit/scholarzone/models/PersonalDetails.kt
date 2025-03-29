@@ -1,4 +1,4 @@
-package com.bitbybit.scholarzone.api
+package com.bitbybit.scholarzone.models
 
 class PersonalDetails {
     data class FirstName(

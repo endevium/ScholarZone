@@ -1,4 +1,4 @@
-package com.bitbybit.scholarzone.api
+package com.bitbybit.scholarzone.models
 
 data class Application(
     val application_id: Int,
@@ -12,6 +12,6 @@ data class Application(
     val application_image: String,
     val slots: Int,
     val deadline: String,
-    val applicant: Applicant,
-    val questions: List<Question>
+    val applicant: com.bitbybit.scholarzone.models.Applicant,
+    val questions: List<com.bitbybit.scholarzone.models.Question>
 )

@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
-import com.bitbybit.scholarzone.api.ScholarshipApplication
+import com.bitbybit.scholarzone.models.ScholarshipApplication
 import com.bitbybit.scholarzone.objects.ScholarshipApplicationViewModel
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import coil.compose.AsyncImage
@@ -110,7 +110,7 @@ fun HomePage(
                                     .fillMaxWidth()
                                     .width(350.dp)
                                     .height(200.dp)
-                                    .border(1.dp, Color.Black, RoundedCornerShape(20.dp))
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
                             ) {
 
                                 Image(
@@ -130,7 +130,7 @@ fun HomePage(
                                     .fillMaxWidth()
                                     .width(350.dp)
                                     .height(200.dp)
-                                    .border(1.dp, Color.Black, RoundedCornerShape(20.dp))
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
                             ) {
                                 val shape: Shape = RoundedCornerShape(20.dp)
                                 Image(
@@ -150,11 +150,11 @@ fun HomePage(
                                     .fillMaxWidth()
                                     .width(350.dp)
                                     .height(200.dp)
-                                    .border(1.dp, Color.Black, RoundedCornerShape(20.dp))
+                                    .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(20.dp))
                             ) {
                                 val shape: Shape = RoundedCornerShape(20.dp)
                                 Image(
-                                    painter = painterResource(id = R.drawable.sm_banner),
+                                    painter = painterResource(id = R.drawable.sm_banner2),
                                     contentDescription = "",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
@@ -385,7 +385,7 @@ fun HomePage(
 }
 
 @Composable
-fun ScholarshipCard(nav: NavController, scholarship: ScholarshipApplication) {
+fun ScholarshipCard(nav: NavController, scholarship: com.bitbybit.scholarzone.models.ScholarshipApplication) {
     Box(
         modifier = Modifier
             .width(350.dp)
@@ -402,10 +402,10 @@ fun ScholarshipCard(nav: NavController, scholarship: ScholarshipApplication) {
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(scholarship.application_image.takeIf { !it.isNullOrBlank() }) // Only load if not null/empty
+                        .data(scholarship.application_image.takeIf { !it.isNullOrBlank() })
                         .crossfade(true)
-                        .placeholder(R.drawable.scholarship) // Correct way to use placeholder
-                        .error(R.drawable.scholarship) // Correct way to use error image
+                        .placeholder(R.drawable.scholarship)
+                        .error(R.drawable.scholarship)
                         .build(),
                     contentDescription = "Scholarship Image",
                     contentScale = ContentScale.Crop,
