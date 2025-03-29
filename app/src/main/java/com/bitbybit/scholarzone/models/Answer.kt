@@ -1,4 +1,4 @@
-package com.bitbybit.scholarzone.api
+package com.bitbybit.scholarzone.models
 
 data class Answer(
     val question_id: Int,

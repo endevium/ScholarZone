@@ -44,6 +44,7 @@ import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import java.net.URLDecoder
+import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
@@ -192,7 +193,9 @@ fun ScholarshipApplicationPage(nav: NavController) {
                     )
 
                     Button(
-                        onClick = { nav.navigate("applicationFormPage/$id/$application_name/$company/$application_description/$duration/$category/$slots/$deadline") },
+                        onClick = {
+                            val encodedImageUrl = URLEncoder.encode(application_image, StandardCharsets.UTF_8.toString())
+                            nav.navigate("applicationFormPage/$id/$application_name/$company/$application_description/$encodedImageUrl/$duration/$category/$slots/$deadline") },
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.height(35.dp).width(95.dp)
                             .offset(x = 85.dp)

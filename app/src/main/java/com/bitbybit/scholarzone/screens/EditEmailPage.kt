@@ -43,8 +43,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.AccountDetails
-import com.bitbybit.scholarzone.api.PersonalDetails
+import com.bitbybit.scholarzone.models.AccountDetails
+import com.bitbybit.scholarzone.models.PersonalDetails
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
@@ -127,7 +127,7 @@ fun EditEmailPage(nav: NavController) {
         Button(
             onClick = {
                 if (inputField.isNotEmpty()) {
-                    val email = AccountDetails.Email(
+                    val email = com.bitbybit.scholarzone.models.AccountDetails.Email(
                         email = inputField
                     )
 

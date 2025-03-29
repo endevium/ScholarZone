@@ -44,7 +44,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.AccountDetails
+import com.bitbybit.scholarzone.models.AccountDetails
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
@@ -244,7 +244,7 @@ fun EditPasswordPage(nav: NavController) {
                         Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        val password = AccountDetails.Password(
+                        val password = com.bitbybit.scholarzone.models.AccountDetails.Password(
                             oldPassword = oldPassword,
                             newPassword = newPassword,
                         )

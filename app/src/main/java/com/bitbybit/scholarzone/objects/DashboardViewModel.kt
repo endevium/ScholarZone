@@ -8,8 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.Application
-import com.bitbybit.scholarzone.api.ApplicationResponse
+import com.bitbybit.scholarzone.models.Application
+import com.bitbybit.scholarzone.models.ApplicationResponse
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.api.getId
 import retrofit2.Call
@@ -17,12 +17,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DashboardViewModel(context: Context): ViewModel() {
-    var applications by mutableStateOf(listOf<Application>())
+    var applications by mutableStateOf(listOf<com.bitbybit.scholarzone.models.Application>())
         private set
 
     private val id: Int = getId(context)
 
-    private var allApplications = listOf<Application>()
+    private var allApplications = listOf<com.bitbybit.scholarzone.models.Application>()
 
     init {
         fetchApplications()
@@ -31,8 +31,8 @@ class DashboardViewModel(context: Context): ViewModel() {
     private fun fetchApplications() {
         val apiService = RetrofitClient.create(APIService::class.java)
 
-        apiService.getApplications(id).enqueue(object : Callback<ApplicationResponse> {
-            override fun onResponse(call: Call<ApplicationResponse>, response: Response<ApplicationResponse>) {
+        apiService.getApplications(id).enqueue(object : Callback<com.bitbybit.scholarzone.models.ApplicationResponse> {
+            override fun onResponse(call: Call<com.bitbybit.scholarzone.models.ApplicationResponse>, response: Response<com.bitbybit.scholarzone.models.ApplicationResponse>) {
                 Log.d("API", "Response received: ${response.code()} - Body: ${response.body()}")
 
                 if (response.isSuccessful) {
@@ -53,7 +53,7 @@ class DashboardViewModel(context: Context): ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<ApplicationResponse>, t: Throwable) {
+            override fun onFailure(call: Call<com.bitbybit.scholarzone.models.ApplicationResponse>, t: Throwable) {
                 Log.e("Failure", "Error fetching applications: ${t.message}") // Prevent UI from breaking due to previous data
             }
         })

@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.Answer
-import com.bitbybit.scholarzone.api.Question
-import com.bitbybit.scholarzone.api.QuestionResponse
+import com.bitbybit.scholarzone.models.Answer
+import com.bitbybit.scholarzone.models.Question
+import com.bitbybit.scholarzone.models.QuestionResponse
 import com.bitbybit.scholarzone.api.RetrofitClient
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -21,7 +21,7 @@ import retrofit2.Response
 import java.io.File
 
 class ApplicationFormViewModel : ViewModel() {
-    var questions = mutableStateListOf<Question>()
+    var questions = mutableStateListOf<com.bitbybit.scholarzone.models.Question>()
         private set
 
     private val _answers = mutableStateOf<Map<Int, Any>>(emptyMap())
@@ -29,15 +29,15 @@ class ApplicationFormViewModel : ViewModel() {
 
     fun fetchQuestions(id: Int) {
         val apiService = RetrofitClient.create(APIService::class.java)
-        apiService.getQuestions(id).enqueue(object : Callback<QuestionResponse> {
-            override fun onResponse(call: Call<QuestionResponse>, response: Response<QuestionResponse>) {
+        apiService.getQuestions(id).enqueue(object : Callback<com.bitbybit.scholarzone.models.QuestionResponse> {
+            override fun onResponse(call: Call<com.bitbybit.scholarzone.models.QuestionResponse>, response: Response<com.bitbybit.scholarzone.models.QuestionResponse>) {
                 if (response.isSuccessful) {
                     questions.clear()
                     questions.addAll(response.body()?.data ?: emptyList())
                 }
             }
 
-            override fun onFailure(call: Call<QuestionResponse>, t: Throwable) {
+            override fun onFailure(call: Call<com.bitbybit.scholarzone.models.QuestionResponse>, t: Throwable) {
                 println("Error fetching questions: ${t.message}")
             }
         })
@@ -70,7 +70,10 @@ class ApplicationFormViewModel : ViewModel() {
                     }
                 })
             } else if (answer is String) {
-                val answerObj = Answer(question_id = questionId, answer = answer)
+                val answerObj = com.bitbybit.scholarzone.models.Answer(
+                    question_id = questionId,
+                    answer = answer
+                )
                 apiService.submitAnswer(answerObj).enqueue(object : Callback<Void> {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         if (response.isSuccessful) {

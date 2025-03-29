@@ -12,38 +12,38 @@ interface APIService {
     @POST("api/applicant-login")
     fun login(
         @Body login: Login
-    ): Call<ApplicantResponse>
+    ): Call<com.bitbybit.scholarzone.models.ApplicantResponse>
 
     // Applicants Signup
     @Headers("Content-type: application/json")
     @POST("api/applicants")
     fun register(
-        @Body applicant: Applicant
-    ): Call<ApplicantResponse>
+        @Body applicant: com.bitbybit.scholarzone.models.Applicant
+    ): Call<com.bitbybit.scholarzone.models.ApplicantResponse>
 
     // Applicant Info
     @GET("api/applicants")
     fun getApplicant(
         @Query("id") id: Int
-    ): Call<AccountResponse>
+    ): Call<com.bitbybit.scholarzone.models.AccountResponse>
 
     @GET("api/scholarships")
-    fun getScholarships(): Call<ScholarshipResponse>
+    fun getScholarships(): Call<com.bitbybit.scholarzone.models.ScholarshipResponse>
 
     @GET("api/search-scholarships")
     fun searchScholarship(
         @Query("search") search: String
-    ): Call<SearchResponse>
+    ): Call<com.bitbybit.scholarzone.models.SearchResponse>
 
     @GET("api/questions")
     fun getQuestions(
         @Query("scholarship_application_id") scholarship_application_id: Int
-    ): Call<QuestionResponse>
+    ): Call<com.bitbybit.scholarzone.models.QuestionResponse>
 
     @Headers("Content-type: application/json")
     @POST("api/submit-answer")
     fun submitAnswer(
-        @Body answer: Answer
+        @Body answer: com.bitbybit.scholarzone.models.Answer
     ): Call<Void>
 
     @Multipart
@@ -56,17 +56,32 @@ interface APIService {
     @Headers("Content-type: application/json")
     @POST("api/submit-application")
     fun submitApplication(
-        @Body submitApplication: SubmitApplication
-    ): Call<SubmitApplicationResponse>
+        @Body submitApplication: com.bitbybit.scholarzone.models.SubmitApplication
+    ): Call<com.bitbybit.scholarzone.models.SubmitApplicationResponse>
 
     @GET("api/applicant-applications")
     fun getApplications(
         @Query("applicant_id") id: Int
-    ): Call<ApplicationResponse>
+    ): Call<com.bitbybit.scholarzone.models.ApplicationResponse>
 
     @GET("api/notifications")
     fun getNotifications(
         @Query("applicant_id") id: Int
-    ): Call<NotificationResponse>
+    ): Call<com.bitbybit.scholarzone.models.NotificationResponse>
 
+    @POST("api/applicant-otp")
+    fun generateOTP(
+        @Body otp: OTP
+    ): Call<com.bitbybit.scholarzone.models.ForgotPasswordResponse>
+
+    @POST("api/applicant-forgot-password")
+    fun forgotPassword(
+        @Body forgotPassword: com.bitbybit.scholarzone.models.ForgotPassword
+    ): Call<com.bitbybit.scholarzone.models.ForgotPasswordResponse>
+
+    @Multipart
+    @POST("api/applicant-profile-picture")
+    fun changeProfile(
+        @Part profile_picture: MultipartBody.Part
+    ): Call<Void>
 }

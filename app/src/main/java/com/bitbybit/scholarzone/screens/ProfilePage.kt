@@ -1,6 +1,9 @@
 package com.bitbybit.scholarzone.screens
 
 import android.graphics.drawable.Icon
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,10 +28,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -39,17 +47,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.clearToken
 import com.bitbybit.scholarzone.objects.ProfileViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import androidx.compose.material3.AlertDialog
 
 @Composable
 fun ProfilePage(nav: NavController, rootNav: NavController) {
     val context = LocalContext.current
     val viewModel: ProfileViewModel = remember { ProfileViewModel(context) }
     val applicant = viewModel.applicant.value
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    // File picker launcher
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri = uri
+        uri?.let {
+            // Trigger upload immediately after selecting a file
+            viewModel.uploadProfilePicture(it, context)
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Column(
@@ -66,17 +91,37 @@ fun ProfilePage(nav: NavController, rootNav: NavController) {
                 textAlign = TextAlign.Center
             )
 
-            Image(
-                painter = painterResource(R.drawable.profile_circle),
-                contentDescription = "",
-                modifier = Modifier
-                    .width(200.dp)
-                    .height(200.dp)
-            )
+            if (selectedImageUri != null) {
+                Image(
+                    painter = rememberAsyncImagePainter(selectedImageUri),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(100.dp))
+                )
+            } else {
+                applicant?.let {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(it.profile_picture.takeIf { profilePicture -> !profilePicture.isNullOrBlank() })
+                            .crossfade(true)
+                            .placeholder(R.drawable.profile_circle)
+                            .error(R.drawable.profile_circle)
+                            .build(),
+                        contentDescription = "Profile Picture",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clip(RoundedCornerShape(100.dp))
+                    )
+                }
+            }
 
-            Spacer(Modifier.height(5.dp))
+            Spacer(Modifier.height(20.dp))
+
             Button(
-                onClick = { },
+                onClick = { launcher.launch("image/*") },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.height(35.dp).width(135.dp)
                     .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
@@ -186,10 +231,7 @@ fun ProfilePage(nav: NavController, rootNav: NavController) {
 
             Button(
                 onClick = {
-                    rootNav.navigate(Routes.LandingPage) {
-                        popUpTo(Routes.LandingPage) { inclusive = true } // Clears back stack
-                    }
-                    clearToken(context)
+                    showDialog = true
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -222,6 +264,45 @@ fun ProfilePage(nav: NavController, rootNav: NavController) {
                 }
             }
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = {
+                Text(
+                    text = "Confirm Logout",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+            },
+            text = {
+                Text(
+                    text = "Are you sure you want to log out?",
+                    fontSize = 16.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                        rootNav.navigate(Routes.LandingPage) {
+                            popUpTo(Routes.LandingPage) { inclusive = true }
+                        }
+                        clearToken(context)
+                    },
+                ) {
+                    Text("Yes")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDialog = false }
+                ) {
+                    Text("No")
+                }
+            }
+        )
     }
 }
 

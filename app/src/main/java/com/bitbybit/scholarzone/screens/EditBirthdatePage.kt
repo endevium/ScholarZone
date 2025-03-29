@@ -41,7 +41,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.PersonalDetails
+import com.bitbybit.scholarzone.models.PersonalDetails
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
@@ -106,7 +106,7 @@ fun EditBirthdatePage(nav: NavController) {
         Button(
             onClick = {
                 if (inputField.isNotEmpty()) {
-                    val birthdate = PersonalDetails.Birthdate(
+                    val birthdate = com.bitbybit.scholarzone.models.PersonalDetails.Birthdate(
                         birthdate = inputField
                     )
 

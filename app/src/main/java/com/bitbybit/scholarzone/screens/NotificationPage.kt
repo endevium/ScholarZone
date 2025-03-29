@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
-import com.bitbybit.scholarzone.api.Notification
+import com.bitbybit.scholarzone.models.Notification
 import com.bitbybit.scholarzone.objects.DashboardViewModel
 import com.bitbybit.scholarzone.objects.NotificationViewModel
 import com.bitbybit.scholarzone.objects.Routes
@@ -87,13 +87,23 @@ fun NotificationPage(nav: NavController) {
                                 .padding(bottom = 10.dp)
                         )
 
+                        Text(
+                            notification.date,
+                            fontSize = 14.sp,
+                            fontFamily = InterFontFamily,
+                            fontWeight = FontWeight.Light,
+                            modifier = Modifier
+                                .offset(x = 18.dp, y = 10.dp)
+                                .padding(bottom = 10.dp)
+                        )
+
                         Button(
                             onClick = {
                                 nav.navigate(Routes.DashboardPage)
                             },
                             shape = RoundedCornerShape(15.dp),
                             modifier = Modifier.height(35.dp).width(110.dp)
-                                .offset(x = 265.dp, y = 55.dp)
+                                .offset(x = 265.dp, y = 25.dp)
                                 .border(1.dp, colorResource(R.color.scholar_blue), RoundedCornerShape(15.dp)),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.White,

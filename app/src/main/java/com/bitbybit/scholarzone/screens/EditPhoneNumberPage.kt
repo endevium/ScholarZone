@@ -38,7 +38,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
 import com.bitbybit.scholarzone.api.APIService
-import com.bitbybit.scholarzone.api.PersonalDetails
+import com.bitbybit.scholarzone.models.PersonalDetails
 import com.bitbybit.scholarzone.api.RetrofitClient
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
@@ -113,7 +113,7 @@ fun EditPhoneNumberPage(nav: NavController) {
         Button(
             onClick = {
                 if (inputField != 0) {
-                    val phone_number = PersonalDetails.PhoneNumber(
+                    val phone_number = com.bitbybit.scholarzone.models.PersonalDetails.PhoneNumber(
                         phone_number = inputField
                     )
 

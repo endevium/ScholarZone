@@ -24,6 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,13 +46,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitbybit.scholarzone.R
+import com.bitbybit.scholarzone.api.APIService
+import com.bitbybit.scholarzone.models.ForgotPassword
+import com.bitbybit.scholarzone.models.ForgotPasswordResponse
+import com.bitbybit.scholarzone.api.RetrofitClient
+import com.bitbybit.scholarzone.models.SubmitApplicationResponse
 import com.bitbybit.scholarzone.objects.ForgotPasswordViewModel
 import com.bitbybit.scholarzone.objects.Routes
 import com.bitbybit.scholarzone.ui.theme.InterFontFamily
 import com.bitbybit.scholarzone.ui.theme.PoppinsFontFamily
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun ForgotPasswordTwo(nav: NavController, viewModel: ForgotPasswordViewModel) {
+    var otp by remember { mutableIntStateOf(0) }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPassword by remember { mutableStateOf("") }
@@ -112,6 +123,43 @@ fun ForgotPasswordTwo(nav: NavController, viewModel: ForgotPasswordViewModel) {
             )
 
             Spacer(Modifier.height(15.dp))
+
+            Text(
+                text = "One-Time PIN",
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.scholar_black),
+                fontWeight = FontWeight.Medium,
+                fontFamily = InterFontFamily,
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .padding(start = 10.dp)
+            )
+
+            OutlinedTextField(
+                value = if (otp == 0) "" else otp.toString(), // Convert Int to String for display
+                onValueChange = { newValue ->
+                    val intValue = newValue.toIntOrNull() // Convert String to Int safely
+                    if (intValue != null && newValue.length <= 6) {
+                        otp = intValue
+                    }
+                },
+                placeholder = { Text("123456") },
+                modifier = Modifier
+                    .width(330.dp)
+                    .height(55.dp)
+                    .padding(start = 10.dp),
+                shape = RoundedCornerShape(15.dp),
+                textStyle = TextStyle(
+                    color = colorResource(id = R.color.scholar_black),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Light,
+                    fontFamily = InterFontFamily
+                ),
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+            )
+
+            Spacer(Modifier.height(10.dp))
 
             Text(
                 text = "Password",
@@ -202,11 +250,45 @@ fun ForgotPasswordTwo(nav: NavController, viewModel: ForgotPasswordViewModel) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
 
-            Spacer(Modifier.height(360.dp))
+            Spacer(Modifier.height(275.dp))
 
             Button(onClick = {
                 if (password.isNotEmpty() && confirmPassword.isNotEmpty()) {
                     if (confirmPassword == password) {
+                        val apiService = RetrofitClient.create(APIService::class.java)
+                        val forgotPassword = com.bitbybit.scholarzone.models.ForgotPassword(
+                            email = viewModel.email,
+                            new_password = password,
+                            otp = otp
+                        )
+
+                        apiService.forgotPassword(forgotPassword).enqueue(object: Callback<com.bitbybit.scholarzone.models.ForgotPasswordResponse> {
+                            override fun onResponse(
+                                call: Call<com.bitbybit.scholarzone.models.ForgotPasswordResponse>,
+                                response: Response<com.bitbybit.scholarzone.models.ForgotPasswordResponse>
+                            ) {
+                                if (response.isSuccessful && response.body() != null) {
+                                    Toast.makeText(context, "Changed password successfully", Toast.LENGTH_SHORT).show()
+                                    nav.navigate(Routes.LoginPage)
+                                } else {
+                                    try {
+                                        val errorBody = response.errorBody()?.string()
+                                        val errorResponse = Gson().fromJson(errorBody, com.bitbybit.scholarzone.models.ForgotPasswordResponse::class.java)
+                                        Toast.makeText(context, errorResponse.message, Toast.LENGTH_SHORT).show()
+                                    } catch (e: Exception) {
+                                        Toast.makeText(context, "Failed to change password", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(
+                                call: Call<com.bitbybit.scholarzone.models.ForgotPasswordResponse>,
+                                t: Throwable
+                            ) {
+                                Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
+                            }
+
+                        })
                         Toast.makeText(context, "Placeholder Text for successful", Toast.LENGTH_SHORT).show()
                     }
                      else {

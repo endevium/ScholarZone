@@ -100,7 +100,7 @@ fun MainPage(nestedNav: NavHostController, rootNav: NavController) {
         bottomBar = {
             if (shouldShowBottomNav) {
                 NavigationBar(
-                    Modifier.clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                    Modifier.clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)),
                 ) {
                     items.forEachIndexed { index, item ->
                         NavigationBarItem(
