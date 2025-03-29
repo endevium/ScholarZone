@@ -57,7 +57,7 @@
                             <li><a href="settings.html">Edit Profile Picture</a></li>
                             <li><a href="personal-details.html">Personal Details</a></li>
                             <li><a href="account-details.html">Account Details</a></li>
-                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                            <li><a href="landing.html" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -74,7 +74,6 @@
         <div class="align-content">
             <div class="back-button" id="back-button-container">
                 <img src="../pictures/backbtn-icon.png" id="back-button">
-                Hawak Kamay
             </div>
 
             <div class="review-card-container">
@@ -99,6 +98,10 @@
                 );
                 renderApplications(filteredApplicants);
             });
+
+            document.querySelectorAll('.review-card').forEach((card, index) => {
+                card.style.animation = `fadeInUp 0.5s ease-in-out ${index * 0.25}s both`;
+            });
         });
 
         document.addEventListener("DOMContentLoaded", async  function () {
@@ -114,11 +117,29 @@
             bellBtn.addEventListener("click", function () {
                 window.location.href = "reviewer-notifications.html";
             });
+
+            backButton.addEventListener("click", function () {
+                window.location.href = "review.html";
+            });
     
             if (!storedId || storedId == 0) {
                 console.error("No ID found in localStorage.");
                 window.location.href = "login.html";
                 return;
+            }
+
+            const logOutLink = document.querySelector('a[onclick="logOut()"]');
+            if (logOutLink) {
+                logOutLink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out link not found.");
             }
             
             try {
@@ -145,11 +166,18 @@
                     console.log("User Data:", user);
             
                     const usernameElement = document.getElementById("username");
+                    const profileIcon = document.getElementById("avatar-icon");
+                    
+                    if (user.is_verified === "rejected") {
+                            alert("Your account has been rejected. Please contact support.");
+                            window.location.href = "login.html";
+                            return;
+                        }
                     if (usernameElement) {
                         usernameElement.textContent = "@" + user.username;
-                        
+                        avatarIcon.src = user.profile_picture || "../pictures/avatar-icon.png";
                     } else {
-                            console.error("Element with ID 'username' not found.");
+                        console.error("Element with ID 'username' not found.");
                     }
             
                 } else {
@@ -173,8 +201,10 @@
             closeBtn.addEventListener("click", function () {
                 sidebar.classList.remove("show");
             });
-    
+            
+            
             await fetchApplications();
+            
     });
 
     async function fetchApplications() {
@@ -222,8 +252,13 @@
                     <div class="user-card-profile">
                         <img src="../pictures/avatar-icon.png" alt="${application.applicant.firstname} ${application.applicant.lastname}">
                         <div class="user-card-details">
-                            <h3>${application.applicant.firstname} ${application.applicant.lastname}</h3>
-                            <p>${application.applicant.email}</p>
+                            <h3>Full Name: ${application.applicant.firstname} ${application.applicant.lastname}</h3>
+                            <p>Email: ${application.applicant.email}</p>
+                            <p>Birthdate: ${application.applicant.birthdate}</p>
+                            <p>Gender: ${application.applicant.gender}</p>
+                            <p>School: ${application.applicant.school}</p>
+                            <p>Program: ${application.applicant.program}</p>
+                            <p>Address: ${application.applicant.rpc}, ${application.applicant.bsb}</p>
                         </div>
                     </div>
                     <div class="card-actions">

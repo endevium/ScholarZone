@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/admin-dashboard.css">
 </head>
 <body>
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="logo">
             <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
             <span class="logo-text">
@@ -36,7 +36,7 @@
     
     <div class="main-content">
         <div class="header">
-            <div class="menu-toggle">☰</div>
+            <div class="menu-toggle" id="menuToggle">☰</div>
             <div class="user-profile">
                 <div class="username-container">
                     <span id="username">@admin</span>
@@ -44,7 +44,7 @@
                     <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon" style="cursor: pointer;">
                     <div class="hover-profile" id="hover-profile">
                         <ul>
-                            <li><a href="#" style="color: red;">Log Out</a></li>
+                            <li><a href="#" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -93,125 +93,227 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
-        const timeCtx = document.getElementById('timeChart').getContext('2d');
-        const totalUsers = document.getElementById("total-users");
-        const pendingReviewers = document.getElementById("pending-reviewers");
-        const pendingApplications = document.getElementById("pending-applications");
+        const AdminDashboardModel = {
+            data: {
+                totalUsers: 0,
+                pendingReviewers: 0,
+                pendingApplications: 0,
+                chartData: [],
+                isSidebarVisible: false
+            },
 
-        document.addEventListener("DOMContentLoaded", async function () {
-            const bellBtn = document.getElementById('bell-icon');
-            const hoverProfile = document.getElementById('hover-profile');
+            toggleSidebar() {
+                this.data.isSidebarVisible = !this.data.isSidebarVisible;
+                document.getElementById("sidebar").style.display = this.data.isSidebarVisible ? "block" : "none";
+            },
 
-            bellBtn.addEventListener('click', function() {
-                window.location.href = 'admin-notifications.html';
-            });
+            closeSidebar() {
+                this.data.isSidebarVisible = false;
+                document.getElementById("sidebar").style.display = "none";
+            },
 
-            try {
-                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/admin-dashboard`, {
-                    method: "GET",
-                    headers: {
-                        "ngrok-skip-browser-warning": "true"
-                    }
-                });
+            logOut() {
+                localStorage.clear();
+                window.location.href = "admin-login.html";
+            },
 
-                let rawText = await response.text();
-
-                let data;
+            async fetchDashboardData() {
                 try {
-                    data = JSON.parse(rawText); 
-                    console.log("Parsed API Response:", data);
-                } catch (jsonError) {
-                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
-                    return;
-                }
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/admin-dashboard`, {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    });
+                    let rawText = await response.text();
+                    let data = JSON.parse(rawText);
 
-                if (data.status === 200) {
-                    const dashboard = data.data;
-                    let totalUsersData = dashboard.total_users;
-                    let pendingReviewersData = dashboard.pending_reviewers;
-                    let pendingApplicationsData = dashboard.pending_applications;
-
-                    totalUsers.textContent = totalUsersData;
-                    pendingReviewers.textContent = pendingReviewersData;
-                    pendingApplications.textContent = pendingApplicationsData;
-                } else {
-                    console.error("API returned error:", data.message);
+                    if (data.status === 200) {
+                        this.data.totalUsers = data.data.total_users;
+                        this.data.pendingReviewers = data.data.pending_reviewers;
+                        this.data.pendingApplications = data.data.pending_applications;
+                    } else {
+                        console.error("API Error:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Error:", error);
                 }
-                
-            } catch (error) {
-                console.error("Fetch Request Failed:", error);
+            },
+            
+            async fetchChartData() {
+                try {
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/monthly-signups`, {
+                        method: "GET",
+                        headers: { "ngrok-skip-browser-warning": "true" }
+                    });
+
+                    let rawText = await response.text();
+                    let chartData;
+
+                    try {
+                        chartData = JSON.parse(rawText);
+                        console.log("Parsed Chart API Response:", chartData);
+                    } catch (jsonError) {
+                        console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                        return;
+                    }
+
+                    if (chartData.status === 200) {
+                        this.data.chartData = chartData.data;
+                    } else {
+                        console.error("API returned error:", chartData.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Request Failed:", error);
+                }
             }
+        };
 
-            try {
-                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/monthly-signups`, {
-                    method: "GET",
-                    headers: {
-                        "ngrok-skip-browser-warning": "true"
-                    }
-                });
+        const AdminDashboardViewModel = {
+            elements: {
+                totalUsers: document.getElementById("total-users"),
+                pendingReviewers: document.getElementById("pending-reviewers"),
+                pendingApplications: document.getElementById("pending-applications"),
+                timeCtx: document.getElementById("timeChart").getContext("2d"),
+                sidebar: document.getElementById("sidebar"),
+                menuToggle: document.getElementById("menuToggle"),
+                closeBtn: document.getElementById("close1"),
+                hoverProfile: document.getElementById("hover-profile"),
+                avatarIcon: document.getElementById("avatar-icon"),
+                bellIcon: document.getElementById("bell-icon")
+            },
 
-                let rawText = await response.text();
-
-                let chartData;
-                try {
-                    chartData = JSON.parse(rawText); 
-                    console.log("Parsed Chart API Response:", chartData);
-                } catch (jsonError) {
-                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+            async init() {
+                const adminId = localStorage.getItem("adminId");
+                if (!adminId) {
+                    console.error("No ID found in localStorage.");
+                    window.location.href = "admin-login.html";
                     return;
                 }
 
-                if (chartData.status === 200) {
-                    const chartDataArray = chartData.data;
-                    const labels = chartDataArray.map(item => item.month);
-                    const dataPoints = chartDataArray.map(item => item.total_signups);
+                await AdminDashboardModel.fetchDashboardData();
+                await AdminDashboardModel.fetchChartData();
 
-                    // Bar Chart
-                    new Chart(timeCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Application Status Breakdown',
-                                data: dataPoints,
-                                backgroundColor: '#2172AA',
-                                borderRadius: 4
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 1
-                                    },
-                                    grid: {
-                                        color: '#e5e7eb'
-                                    }
-                                },
-                                x: {
-                                    grid: {
-                                        display: false
-                                    }
-                                }
+                this.updateView();
+                this.renderChart();
+                this.bindEvents();
+            },
+
+            updateView() {
+                this.elements.totalUsers.textContent = AdminDashboardModel.data.totalUsers;
+                this.elements.pendingReviewers.textContent = AdminDashboardModel.data.pendingReviewers;
+                this.elements.pendingApplications.textContent = AdminDashboardModel.data.pendingApplications;
+                
+                if (AdminDashboardModel.data.isSidebarVisible) {
+                    this.elements.sidebar.classList.add("show");
+                } else {
+                    this.elements.sidebar.classList.remove("show");
+                }
+            },
+
+            renderChart() {
+                const chartDataArray = AdminDashboardModel.data.chartData;
+                const labels = chartDataArray.map(item => item.month);
+                const dataPoints = chartDataArray.map(item => item.total_signups);
+                const ctx = this.elements.timeCtx;
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, "rgba(33,114,170,1)"); 
+                gradient.addColorStop(1, "rgba(81,160,214,1)");
+
+                new Chart(this.elements.timeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Application Status Breakdown',
+                            data: dataPoints,
+                            backgroundColor: gradient,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 },
+                                grid: { color: '#e5e7eb' }
                             },
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
+                            x: {
+                                grid: { display: false }
                             }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            },
+
+            bindEvents() {
+                if (this.elements.menuToggle) {
+                    this.elements.menuToggle.addEventListener("click", () => {
+                        AdminDashboardModel.toggleSidebar();
+                        this.updateView();
+                    });
+                } else {
+                    console.error("Element with ID 'menuToggle' not found.");
+                }
+
+                if (this.elements.closeBtn) {
+                    this.elements.closeBtn.addEventListener("click", () => {
+                        AdminDashboardModel.closeSidebar();
+                        this.updateView();
+                    });
+                } else {
+                    console.error("Element with ID 'close1' not found.");
+                }
+
+                const logOutLink = document.querySelector('a[onclick="logOut()"]');
+                if (logOutLink) {
+                    logOutLink.addEventListener("click", (event) => {
+                        event.preventDefault();
+                        const confirmLogOut = confirm("Are you sure you want to log out?");
+                        if (confirmLogOut) {
+                            AdminDashboardModel.logOut();
                         }
                     });
                 } else {
-                    console.error("API returned error:", chartData.message);
+                    console.error("Log Out link not found.");
                 }
-            } catch (error) {
-                console.error("Fetch Request Failed:", error);
+
+                if (this.elements.avatarIcon && this.elements.hoverProfile) {
+                    this.elements.avatarIcon.addEventListener("click", (event) => {
+                        this.elements.hoverProfile.classList.toggle("show");
+                        event.stopPropagation();
+                    });
+
+                    document.addEventListener("click", (event) => {
+                        if (
+                            !this.elements.hoverProfile.contains(event.target) &&
+                            event.target !== this.elements.avatarIcon
+                        ) {
+                            this.elements.hoverProfile.classList.remove("show");
+                        }
+                    });
+                } else {
+                    console.error("Avatar icon or hover profile element not found.");
+                }
+
+                if (this.elements.bellIcon) {
+                    this.elements.bellIcon.addEventListener("click", () => {
+                        window.location.href = 'admin-notifications.html';
+                    });
+                } else {
+                    console.error("Bell icon element not found.");
+                }
             }
+    };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            AdminDashboardViewModel.init();
         });
-        
     </script>
 </body> 
 </html> 

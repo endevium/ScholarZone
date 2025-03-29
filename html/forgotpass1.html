@@ -56,8 +56,33 @@
     </div>
 
     <script>
-        function goToLogin() {
-            window.location.href = "forgotpass2.html";
+        async function goToLogin() {
+            event.preventDefault();
+
+            let email = document.getElementById("email").value;
+            let errorMessage = document.getElementById("errorMessage");
+
+            try {
+                let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-otp", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                let data = await response.json();
+
+                if (data.status === 200) {
+                    alert("OTP has been sent to your email address");
+                    localStorage.setItem("forgot-email", email);
+                    window.location.href = "forgotpass2.html";
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert("Please check your internet connection");
+            }
         }
     
         document.getElementById("menu-toggle").addEventListener("click", function () {

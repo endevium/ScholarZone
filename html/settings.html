@@ -47,14 +47,14 @@
             <div class="user-profile">
                 <div class="username-container">
                     <span id="username">@janedoe69</span>
-                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon">
                     <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
                     <div class="hover-profile" id="hover-profile">
                         <ul>
                             <li><a href="settings.html">Edit Profile Picture</a></li>
                             <li><a href="personal-details.html">Personal Details</a></li>
                             <li><a href="account-details.html">Account Details</a></li>
-                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                            <li><a href="landing.html" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -69,28 +69,34 @@
         </div> 
         <div class="profile-container">
             <div class="profile-pic">
-                <img src="../pictures/avatar-icon.png" alt="Pfp" class="avatar-big">
+                <img src="../pictures/avatar-icon.png" alt="Pfp" class="avatar-big" id="profile-picture">
             </div>
             <div class="main-name">
-                <h1 id="firstname">Xavier <span id="lastname">Gomez</span></h1>
+                <h1 id="firstname">Xavier Gomez</h1>
                 <p id="email">xvaier099@gmail.com</p>
             </div>
         </div>
 
         <br>
+        <br>
+        <br>
 
         <div>
-            <button class="btn-editpfp">Edit Picture</button>
+            <label class="btn-editpfp" for="uploadProfilePicture">Edit Profile Picture</label>
+            <input class="btn-editpfp" type="file" id="uploadProfilePicture" accept="image/" style="display: none;"> 
         </div>
+
+
+
         <div>
-            <button class="btn-accdet">
+            <button class="btn-accdet" id="account-details">
                 <img src="../pictures/black_icon.png" alt="icon" class="person">
                 Account Details
             </button>
         </div>
         
         <div>
-            <button class="btn-persdet">
+            <button class="btn-persdet" id="personal-details">
                 <img src="../pictures/black_icon.png" alt="tao" class="tao">
                 Personal Details
             </button>
@@ -107,15 +113,54 @@
         document.addEventListener("DOMContentLoaded", async function () {
             const storedId = localStorage.getItem("id");
             const bellBtn = document.getElementById("bell-icon");
+            const avatarIcon = document.getElementById("avatar-icon");
+            const accountDetailsBtn = document.getElementById("account-details");
+            const personalDetailsBtn = document.getElementById("personal-details");
 
             bellBtn.addEventListener("click", function () {
                 window.location.href = "reviewer-notifications.html";
+            });
+
+            accountDetailsBtn.addEventListener("click", function () {
+                window.location.href = "account-details.html";
+            });
+
+            personalDetailsBtn.addEventListener("click", function () {
+                window.location.href = "personal-details.html";
             });
 
             if (!storedId || storedId == 0) {
                 console.error("No ID found in localStorage.");
                 window.location.href = "login.html";
                 return;
+            }
+
+            const logOutLink = document.querySelector('a[onclick="logOut()"]');
+            if (logOutLink) {
+                logOutLink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out link not found.");
+            }
+
+            const logOutButton = document.querySelector(".btn-logout");
+            if (logOutButton) {
+                logOutButton.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out button not found.");
             }
 
             try {
@@ -144,15 +189,22 @@
 
                 const usernameElement = document.getElementById("username");
                 const firstName = document.getElementById("firstname");
-                const lastname = document.getElementById("lastname");
                 const email = document.getElementById("email")
+                const profilePicture = document.getElementById("profile-picture");
+                const profileIcon = document.getElementById("avatar-icon");
 
+                if (user.is_verified === "rejected") {
+                            alert("Your account has been rejected. Please contact support.");
+                            window.location.href = "login.html";
+                            return;
+                        }
 
                 if (usernameElement) {
                     usernameElement.textContent = "@" + user.username;
-                    firstName.textContent = user.firstname;
-                    lastname.textContent = user.lastname;
+                    firstName.textContent = user.firstname + " " + user.lastname;
                     email.textContent = user.email;
+                    profilePicture.src = user.profile_picture || "../pictures/avatar-icon.png";
+                    avatarIcon.src = user.profile_picture || "../pictures/avatar-icon.png";
 
                 } else {
                     console.error("Element with ID 'username' not found.");
@@ -165,7 +217,6 @@
                 console.error("Fetch Request Failed:", error);
             }
 
-            const avatarIcon = document.getElementById("avatar-icon");
             const hoverProfile = document.getElementById("hover-profile");
             const menuToggle = document.getElementById("menu-toggle");
             const sidebar = document.getElementById("sidebar");
@@ -194,6 +245,91 @@
                 }
             });
         }); 
+
+        document.getElementById('uploadProfilePicture').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('avatar-icon').src = e.target.result;
+                    document.querySelector('.avatar-big').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                uploadProfilePicture(file);
+            }
+        });
+
+    async function uploadProfilePicture(profile_picture) {
+        const storedId = localStorage.getItem('id');
+        if (!storedId || !profile_picture) {
+            alert('Missing reviewer ID or profile picture.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('reviewer_id', storedId);
+        formData.append('profile_picture', profile_picture);
+
+        try {
+            const response = await fetch('https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-profile-picture', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: formData,
+            });
+
+            const result = await response.json();
+            console.log('Server Response:', result);
+
+            if (result.status === 201) {
+                alert(result.message);
+                console.log('Updating Image Path:', result.file_path);
+                const baseUrl = 'https://active-fox-exactly.ngrok-free.app/ScholarZone/public/';
+                const newImagePath = `${baseUrl}${result.file_path}?t=${new Date().getTime()}`;
+                console.log('Full Image Path:', newImagePath); 
+                const avatarIcon = document.getElementById('avatar-icon');
+                const profilePicture = document.querySelector('.avatar-big');
+
+                if (avatarIcon && profilePicture) {
+                    avatarIcon.src = newImagePath;
+                    profilePicture.src = newImagePath;
+                    console.log('Profile picture updated successfully.');
+                } else {
+                    console.error('Profile picture elements not found.');
+                }
+
+                localStorage.setItem('profile_picture', newImagePath);
+            } else {
+                console.error(result.message);
+            }
+        } catch (error) {
+            console.error('Error uploading profile picture:', error);
+            alert('An error occurred while uploading the profile picture.');
+        }
+    }
+
+    window.onload = function () {
+        const savedProfilePic = localStorage.getItem('profile_picture');
+        const avatarIcon = document.getElementById('avatar-icon');
+        const profilePicture = document.querySelector('.avatar-big');
+
+        if (savedProfilePic) {
+            if (avatarIcon && profilePicture) {
+                avatarIcon.src = savedProfilePic;
+                profilePicture.src = savedProfilePic;
+                console.log('Restored profile picture from localStorage.');
+            } else {
+                console.error('Profile picture elements not found during restoration.');
+            }
+        } else {
+            console.log('No profile picture found in localStorage.');
+        }
+    };
+
+
+
     </script>
 </body>
 </html>

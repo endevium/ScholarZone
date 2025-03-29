@@ -43,6 +43,13 @@
 
             <form action="#" method="POST">
                 <div class="input-container">
+                    <label for="otp"><b>One-Time PIN</b></label>
+                    <div class="input-box">
+                        <input type="number" id="otp" name="otp" placeholder="123456" max="999999" required>
+                    </div>
+                </div>
+
+                <div class="input-container">
                     <label for="new-password"><b>New Password</b></label>
                     <div class="input-box">
                         <i class="ri-lock-password-line"></i>
@@ -60,13 +67,52 @@
                     </div>
                 </div>
 
-                <button type="submit" class="next-btn">Change Password</button>
+                <button type="submit" class="next-btn" onclick="changePassword()">Change Password</button>
             </form>
         </div>
 
     </div>
 
     <script>
+        async function changePassword() {
+            event.preventDefault();
+
+            let otp = document.getElementById("otp").value;
+            let email = localStorage.getItem("forgot-email");
+            let newPassword = document.getElementById("new-password").value;
+            let confirmPassword = document.getElementById("confirm-password").value;
+            let errorMessage = document.getElementById("errorMessage");
+
+            if (newPassword !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match";
+                errorMessage.style.display = "block";
+                return;
+            } else {
+                try {
+                    let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-forgot-password", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email, new_password: newPassword, otp })
+                    });
+
+                    let data = await response.json();
+
+                    if (data.status === 201) {
+                        alert("Password changed successfully. Please log in again.");
+                        localStorage.removeItem("forgot-email");
+                        window.location.href = "login.html";
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.log(error);
+                    alert("Please check your internet connection");
+                }
+            }
+        }
+
         document.getElementById("menu-toggle").addEventListener("click", function () {
             document.getElementById("menu").classList.toggle("show");
         });

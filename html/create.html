@@ -53,7 +53,7 @@
                             <li><a href="settings.html">Edit Profile Picture</a></li>
                             <li><a href="personal-details.html">Personal Details</a></li>
                             <li><a href="account-details.html">Account Details</a></li>
-                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                            <li><a href="landing.html" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
     </div>
     
                 <div class="form-actions">
-                    <button type="submit" class="btn-next">Next</button>
+                    <button type="submit" class="btn-next">Create</button>
                     <button type="reset" class="btn-reset">Reset</button>
                 </div>
             </form>
@@ -148,6 +148,7 @@
             const applicationForm = document.getElementById("scholarship-application-form");
             deadline.min = new Date().toISOString().split("T")[0];
             const bellBtn = document.getElementById("bell-icon");
+            let company;
 
             bellBtn.addEventListener("click", function () {
                 window.location.href = "reviewer-notifications.html";
@@ -157,6 +158,20 @@
                 console.error("No ID found in localStorage.");
                 window.location.href = "login.html";
                 return;
+            }
+
+            const logOutLink = document.querySelector('a[onclick="logOut()"]');
+            if (logOutLink) {
+                logOutLink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out link not found.");
             }
 
             try {
@@ -184,8 +199,17 @@
                 console.log("User Data:", user);
 
                 const usernameElement = document.getElementById("username");
+                const profileIcon = document.getElementById("avatar-icon");
+
+                if (user.is_verified === "rejected") {
+                    alert("Your account has been rejected. Please contact support.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
                 if (usernameElement) {
                     usernameElement.textContent = "@" + user.username;
+                    avatarIcon.src = user.profile_picture || "../pictures/avatar-icon.png";
                 } else {
                     console.error("Element with ID 'username' not found.");
                 }
@@ -222,7 +246,6 @@
                 }
 
                 let application_name = document.getElementById("formName").value;
-                let company = localStorage.getItem("company");
                 let application_description = document.getElementById("formDescription").value;
                 let duration = document.getElementById("formDuration").value;
                 let category = document.getElementById("category").value;
@@ -239,7 +262,6 @@
                 formData.append("slots", slots);
                 formData.append("deadline", deadline);
                 formData.append("application_image", application_image);
-
 
                 try {
                     let response = await fetch("https://active-fox-exactly.ngrok-free.app/ScholarZone/api/scholarship-create", {

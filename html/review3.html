@@ -53,7 +53,7 @@
                             <li><a href="settings.html">Edit Profile Picture</a></li>
                             <li><a href="personal-details.html">Personal Details</a></li>
                             <li><a href="account-details.html">Account Details</a></li>
-                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                            <li><a href="landing.html" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="align-content">
-            <div class="back-button" >
+            <div class="back-button">
                 <img src="../pictures/backbtn-icon.png" id="back-button">
                 <span id="back-button-text">Joe Mama's Application</span>
             </div>
@@ -96,11 +96,29 @@
             bellBtn.addEventListener("click", function () {
                 window.location.href = "reviewer-notifications.html";
             });
+
+            backButton.addEventListener("click", function () {
+                window.location.href = "review2.html";
+            });
     
             if (!storedId || storedId == 0) {
                 console.error("No ID found in localStorage.");
                 window.location.href = "login.html";
                 return;
+            }
+
+            const logOutLink = document.querySelector('a[onclick="logOut()"]');
+            if (logOutLink) {
+                logOutLink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out link not found.");
             }
             
             try {
@@ -127,11 +145,19 @@
                     console.log("User Data:", user);
             
                     const usernameElement = document.getElementById("username");
+                    const profileIcon = document.getElementById("avatar-icon");
+
+                    if (user.is_verified === "rejected") {
+                            alert("Your account has been rejected. Please contact support.");
+                            window.location.href = "login.html";
+                            return;
+                        }
+
                     if (usernameElement) {
                         usernameElement.textContent = "@" + user.username;
-                        
+                        avatarIcon.src = user.profile_picture || "../pictures/avatar-icon.png";
                     } else {
-                            console.error("Element with ID 'username' not found.");
+                        console.error("Element with ID 'username' not found.");
                     }
             
                 } else {
@@ -180,13 +206,30 @@
                 label.setAttribute("for", `question${index}`);
                 label.textContent = question.question;
 
-                const input = document.createElement("input");
-                input.type = "text";
-                input.id = `question${index}`;
-                input.name = `question${index}`;
-                input.placeholder = "Type your answer here";
-                input.value = question.answer || "";
-                input.readOnly = true;
+                let input;
+
+                if (question.type === "upload") {
+                    input = document.createElement("input");
+                    input.type = "text";
+                    input.id = `question${index}`;
+                    input.name = `question${index}`;
+                    input.placeholder = "Type your answer here";
+                    input.value = "Open File";
+                    input.style = "color: blue;";
+                    input.style.cursor = "pointer";
+                    input.readOnly = true;
+                    input.onclick = function () {
+                        window.open(question.answer, '_blank');
+                    }
+                } else if (question.type === "question") {
+                    input = document.createElement("input");
+                    input.type = "text";
+                    input.id = `question${index}`;
+                    input.name = `question${index}`;
+                    input.placeholder = "Type your answer here";
+                    input.value = question.answer || "";
+                    input.readOnly = true;
+                }
 
                 questionGroup.appendChild(label);
                 questionGroup.appendChild(input);

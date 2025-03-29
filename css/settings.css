@@ -82,10 +82,16 @@ body {
 }
 
 .avatar-big {
-    position: absolute;
+    position: relative;
     top: 10px;
     left: 200px;
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+    display: block;
+    border-radius: 70%;
 }
+
 
 .logo {
     display: flex;
@@ -146,8 +152,8 @@ body {
 }
 
 .nav-item.active {
-    background-color: #f1f5f9;
-    color: #111827;
+    background-color: #e9f4ff;
+    color: #0c4368;
     font-weight: 700;
 }
 

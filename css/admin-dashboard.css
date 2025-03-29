@@ -30,7 +30,7 @@
 }
 
 body {
-    background-color: #f8fafc;
+    background-color: #ffffff;
     overflow-x: hidden;
 }
 
@@ -63,7 +63,9 @@ body {
 }
 
 .logo-scholar {
-    color: #2172AA;
+    background: linear-gradient(90deg, rgba(33,114,170,1) 0%, rgba(81,160,214,1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
 }
@@ -103,8 +105,8 @@ body {
 }
 
 .nav-item.active {
-    background-color: #f1f5f9;
-    color: #111827;
+    background-color: #e9f4ff;
+    color: #0c4368;
     font-weight: 700;
 }
 
@@ -114,7 +116,6 @@ body {
 
 .main-content {
     margin-left: 250px;
-
 }
 
 .header {
@@ -217,13 +218,26 @@ body {
 }
 
 .stat-card {
-    background: white;
+    background: #f1faff;
     border-radius: 12px;
     padding: 24px;
+    animation: fadeInUp 0.5s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .stat-card.primary {
-    background: #2172AA;
+    background: rgb(33,114,170);
+    background: linear-gradient(90deg, rgba(33,114,170,1) 0%, rgba(81,160,214,1) 100%);
     color: white;
 }
 
@@ -256,9 +270,10 @@ body {
 }
 
 .chart-card {
-    background: white;
+    background: #f1faff;
     border-radius: 12px;
     padding: 24px;
+    animation: fadeInUp 0.5s ease-in-out;
 }
 
 .chart-title {
@@ -315,114 +330,63 @@ body {
     display: none;
 }   
 
-@media (max-width: 600px) {
-    .sidebar {
-        width: 200px;
-        transform: translateX(-100%);
-        position: fixed;
-        height: 100%;
-        transition: transform 0.3s ease-in-out;
+@media (max-width: 1024px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
     }
 
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    .menu-toggle {
+    .close1{
         display: block;
-        position: fixed;
-        top: 25px;
-        left: 10px;
-        z-index: 300;
-        padding: 8px 12px;
-        font-size: 30px;
-        cursor: pointer;
     }
+}
 
-    .main-content {
-        margin-left: 0;
-        padding: 10px;
-    }
-
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: start;
-        gap: 10px;
-        margin-right: 0;
-        width: 100%;
-        box-shadow: none;
-    }
-
-    .user-profile {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin-left: 65%;
-    }
-
-    .username-container {
-        margin-right: 0;
-        gap: 10px;
-        font-size: 12px;
-    }
-
+@media (max-width: 768px) {
+    
     .stats-grid {
         grid-template-columns: 1fr;
-        gap: 15px;
-        margin-left: 0;
     }
-
-    .stat-card {
-        width: 100%;
-        height: auto;
-        padding: 20px;
+    
+    .sidebar {
+        transform: translateX(-100%);
     }
-
-    .overview-title {
-        text-align: center;
+    
+    .main-content {
         margin-left: 0;
     }
 }
 
-@media only screen and (min-width: 600px) and (max-width: 1024px) {
-    body {
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        height: 100vh;
-        margin: 0;
-        padding: 0; 
+@media (max-width: 768px) {
+    .close1{
+        display: block;
     }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
     .main-content {
         margin-left: 0;
-        width: 100%;
-        padding: 10px;
-        text-align: center;
     }
+
+    .align-content {
+        margin-left: 5%;
+    }
+
     .menu-toggle {
         display: block;
-        position: fixed;
-        top: 35px;
-        left: 15px;
-        z-index: 300;
-        padding: 8px 12px;
-        font-size: 30px;
+        padding-right: 20px;
         cursor: pointer;
-    }
-    header{
-        width: 100%;
-        max-width: 100%;
-        text-align: center;
-        box-shadow: none;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px;
-        box-shadow: none;
     }
 }
 

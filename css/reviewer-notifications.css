@@ -104,8 +104,8 @@ body {
 }
 
 .nav-item.active {
-    background-color: #f1f5f9;
-    color: #111827;
+    background-color: #e9f4ff;
+    color: #0c4368;
     font-weight: 700;
 }
 
@@ -357,29 +357,28 @@ body {
 
 @media only screen and (max-width: 600px) {
     body {
-        overflow: hidden;
+        overflow-x: hidden;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center; 
     }
+
     .sidebar {
-        width: 200px;
-        transform: translateX(-100%);
+        z-index: 1000;
+        transform: translateX(-110%);
         position: fixed;
         height: 100%;
         transition: transform 0.3s ease-in-out;
     }
 
-    .sidebar.active {
+    .sidebar.show {
         transform: translateX(0);
     }
 
     .main-content {
         margin-left: 0;
         width: 100%;
-        padding: 10px;
     }
 
     .menu-toggle {
@@ -394,16 +393,9 @@ body {
     }
 
     .header {
-        width: 70%;
+        width: 100%;
         text-align: center;
         position: relative;
-        top: 9px;
-        left: 11%;
-        padding: 10px 0;
-    }
-
-    .header img {
-        display: none;
     }
 
     .search-box {
@@ -412,48 +404,13 @@ body {
         justify-content: center;
         margin: 0 auto;
     }
-    .header1 {
-        display: flex;
-        align-items: center;
-        padding: 0 10px;
-        width: 100%;
-    }
-
-    .header1 img {
-        position: absolute;
-        width: 25px;
-        height: 40px;
-        margin: 0; 
-        padding: 0; 
-    }
-
-    .header1 h1 {
-        position: absolute;
-        left: 15%;
-        font-size: 18px;
-        font-weight: 100;
-        color: #2172B4;
-        font-family: 'Inter', sans-serif;
-        text-align: left;
-        margin: 0; 
-        padding: 0; 
-    }
     
-    .feed-container {
-        width: 90%; 
-        max-width: 400px; 
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-    }
 
     .review-card-container {
         position: relative;
-        width: 85%; 
+        width: 100%; 
         display: flex;
+        flex-direction: column;
         justify-content: center;
     }
 
@@ -482,40 +439,19 @@ body {
 
     .main-content {
         margin-left: 200px; 
-        padding: 20px;
     }
 
    
     .header {
         width: 100%;
         text-align: center;
-        padding: 15px 0;
     }
 
-    .menu-toggle {
-        display: block;
-        position: absolute;
-        top: 15px;
-        left: 10px;
-        z-index: 300;
-        padding: 8px 12px;
-        font-size: 30px;
-        cursor: pointer;
-    }
-
-    
-    .feed-container {
-        width: 80%; 
-        max-width: 600px; 
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
 
     .review-card-container {
-        width: 90%;
+        width: 100%;
         display: flex;
+        flex-direction: column;
         justify-content: center;
     }
 

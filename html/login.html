@@ -87,7 +87,6 @@
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("id", data.id);
 
-                // Redirect to dashboard
                 window.location.href = "dashboard.html";
             } else {
                 alert(data.message);
@@ -97,7 +96,6 @@
         }
     });
 
-    // Toggle Password Visibility
     document.getElementById("togglePassword").addEventListener("click", function () {
         let passwordField = document.getElementById("password");
         passwordField.type = passwordField.type === "password" ? "text" : "password";

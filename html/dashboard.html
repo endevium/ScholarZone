@@ -46,14 +46,14 @@
             <div class="user-profile">
                 <div class="username-container">
                     <span id="username">@janedoe69</span>
-                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon" onclick="">
+                    <img src="../pictures/avatar-icon.png" alt="User" id="avatar-icon" class="avatar-icon">
                     <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
                     <div class="hover-profile" id="hover-profile">
                         <ul>
                             <li><a href="settings.html">Edit Profile Picture</a></li>
                             <li><a href="personal-details.html">Personal Details</a></li>
                             <li><a href="account-details.html">Account Details</a></li>
-                            <li><a href="landing.html" style="color: red;" onclick="logOut()">Log Out</a></li>
+                            <li><a href="#" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -103,223 +103,266 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
-        const sidebar = document.getElementById("sidebar");
-        const storedId = localStorage.getItem("id");
-        const closeBtn = document.getElementById("close1");
-        const menuToggle = document.getElementById("menuToggle");
-        const usernameElement = document.getElementById("username");
-        const avatarIcon = document.getElementById("avatar-icon");
-        const hoverProfile = document.getElementById("hover-profile");
-        const timeCtx = document.getElementById('timeChart').getContext('2d');
-        const totalRespondents = document.getElementById("total-respondents");
-        const pendingReviews = document.getElementById("pending-reviews");
-        const totalScholarship = document.getElementById("total-applications");
+        const DashboardModel = {
+            data: {
+                totalRespondents: 0,
+                pendingReviews: 0,
+                totalScholarship: 0,
+                user: { username: "Loading..." },
+                profilePicture: "../pictures/avatar-icon.png",
+                chartData: [],
+                isSidebarVisible: false
+            },
 
-        // counter
-        window.addEventListener('load', () => {
-            animateCount(document.getElementById('respondentsCount'), 147);
-            animateCount(document.getElementById('pendingCount'), 91);
-            animateCount(document.getElementById('formsCount'), 300);
-        });
+            toggleSidebar() {
+                this.data.isSidebarVisible = !this.data.isSidebarVisible;
+                document.getElementById("sidebar").style.display = this.data.isSidebarVisible ? "block" : "none";
+            },
 
-        // Mobile menu toggle pag binuksan sa mobile may lalabas na menu
-        avatarIcon.addEventListener("click", function (event) {
-            hoverProfile.classList.toggle("show");
-            event.stopPropagation();
-        });
+            closeSidebar() {
+                this.data.isSidebarVisible = false;
+                document.getElementById("sidebar").style.display = "none";
+            },
 
-        document.addEventListener("click", function (event) {
-            if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
-                hoverProfile.classList.remove("show");
-            }
-        });
-
-        function logOut() {
-            localStorage.clear();
-            window.location.href = "login.html";
-        }
-
-        document.addEventListener("DOMContentLoaded", async function () {
-            const bellBtn = document.getElementById("bell-icon");
-
-            bellBtn.addEventListener("click", function () {
-                window.location.href = "reviewer-notifications.html";
-            });
-
-            if (menuToggle) {
-                menuToggle.addEventListener("click", function () {
-                    sidebar.classList.toggle("show");
-                });
-            } else {
-                console.error("Element with ID 'menuToggle' not found.");
-            }
-
-            if (closeBtn) {
-                closeBtn.addEventListener("click", function () {
-                    sidebar.classList.remove("show");
-                });
-            } else {
-                console.error("Element with ID 'close' not found.");
-            }
-
-            console.log("Stored ID:", storedId);
-
-            if (!storedId || storedId == 0) {
-                console.error("No ID found in localStorage.");
+            logOut() {
+                localStorage.clear();
                 window.location.href = "login.html";
-                return;
-            }
+            },
 
-            try {
-                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-dashboard?reviewer_id=${storedId}&ngrok-skip-browser-warning=true`, {
-                    method: "GET",
-                    headers: {
-                        "ngrok-skip-browser-warning": "true"
-                    }
-                });
-
-                let rawText = await response.text();
-
-                let data;
+            async fetchDashboardData(reviewerId) {
                 try {
-                    data = JSON.parse(rawText); 
-                    console.log("Parsed API Response:", data);
-                } catch (jsonError) {
-                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-dashboard?reviewer_id=${reviewerId}&ngrok-skip-browser-warning=true`, {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    });
+                    let rawText = await response.text();
+                    let data = JSON.parse(rawText);
+
+                    if (data.status === 200) {
+                        this.data.totalRespondents = data.data.total_respondents;
+                        this.data.pendingReviews = data.data.pending_reviews;
+                        this.data.totalScholarship = data.data.total_scholarship_applications;
+                    } else {
+                        console.error("API Error:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Error:", error);
+                }
+            },
+
+            async fetchUserData(reviewerId) {
+                try {
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers?id=${reviewerId}&ngrok-skip-browser-warning=true`, {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true"
+                        }
+                    });
+
+                    let rawText = await response.text();
+                    let data = JSON.parse(rawText);
+
+                    if (data.status === 200) {
+                        const user = data.data;
+                        console.log("User Data:", user);
+
+                        if (user.is_verified === "rejected") {
+                            alert("Your account has been rejected. Please contact support.");
+                            window.location.href = "login.html";
+                            return;
+                        }
+
+                        this.data.user = user;
+                        this.data.profilePicture = user.profile_picture || "../pictures/avatar-icon.png";
+                    } else {
+                        console.error("API Error:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Error:", error);
+                }
+            },
+            
+            async fetchChartData(reviewerId) {
+                try {
+                    let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-reviewed?reviewer_id=${reviewerId}&ngrok-skip-browser-warning=true`, {
+                        method: "GET",
+                        headers: { "ngrok-skip-browser-warning": "true" }
+                    });
+
+                    let rawText = await response.text();
+                    let chartData;
+
+                    try {
+                        chartData = JSON.parse(rawText);
+                        console.log("Parsed Chart API Response:", chartData);
+                    } catch (jsonError) {
+                        console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                        return;
+                    }
+
+                    if (chartData.status === 200) {
+                        this.data.chartData = chartData.data;
+                    } else {
+                        console.error("API returned error:", chartData.message);
+                    }
+                } catch (error) {
+                    console.error("Fetch Request Failed:", error);
+                }
+            }
+        };
+
+        const DashboardViewModel = {
+            elements: {
+                totalRespondents: document.getElementById("total-respondents"),
+                pendingReviews: document.getElementById("pending-reviews"),
+                totalScholarship: document.getElementById("total-applications"),
+                username: document.getElementById("username"),
+                profilePicture: document.getElementById("avatar-icon"),
+                timeCtx: document.getElementById("timeChart").getContext("2d"),
+                sidebar: document.getElementById("sidebar"),
+                menuToggle: document.getElementById("menuToggle"),
+                closeBtn: document.getElementById("close1"),
+                hoverProfile: document.getElementById("hover-profile"),
+                avatarIcon: document.getElementById("avatar-icon"),
+                bellIcon: document.getElementById("bell-icon")
+            },
+
+            async init() {
+                const reviewerId = localStorage.getItem("id");
+                if (!reviewerId) {
+                    console.error("No ID found in localStorage.");
+                    window.location.href = "login.html";
                     return;
                 }
 
-                if (data.status === 200) {
-                    const dashboard = data.data;
-                    let totalApplicationsData = dashboard.total_scholarship_applications;
-                    let pendingReviewsData = dashboard.pending_reviews;
-                    let totalRespondentsData = dashboard.total_respondents;
+                await DashboardModel.fetchDashboardData(reviewerId);
+                await DashboardModel.fetchUserData(reviewerId);
+                await DashboardModel.fetchChartData(reviewerId);
 
-                    totalScholarship.textContent = totalApplicationsData;
-                    pendingReviews.textContent = pendingReviewsData;
-                    totalRespondents.textContent = totalRespondentsData;
+                this.updateView();
+                this.renderChart();
+                this.bindEvents();
+            },
+
+            updateView() {
+                this.elements.totalRespondents.textContent = DashboardModel.data.totalRespondents;
+                this.elements.pendingReviews.textContent = DashboardModel.data.pendingReviews;
+                this.elements.totalScholarship.textContent = DashboardModel.data.totalScholarship;
+                this.elements.username.textContent = "@" + DashboardModel.data.user.username;
+                
+                if (this.elements.profilePicture) {
+                    this.elements.profilePicture.src = DashboardModel.data.profilePicture + `?t=${new Date().getTime()}`;
                 } else {
-                    console.error("API returned error:", data.message);
+                    console.error("Profile picture element not found.");
                 }
                 
-            } catch (error) {
-                console.error("Fetch Request Failed:", error);
-            }
-
-            try {
-                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers?id=${storedId}&ngrok-skip-browser-warning=true`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "true"
-                    }
-                });
-
-                let rawText = await response.text();
-
-                let data;
-                try {
-                    data = JSON.parse(rawText); 
-                    console.log("Parsed API Response:", data);
-                } catch (jsonError) {
-                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
-                    return;
-                }
-
-                if (data.status === 200) {
-                    const user = data.data;
-                    console.log("User Data:", user);
-
-                    if (usernameElement) {
-                        usernameElement.textContent = "@" + user.username;
-                    } else {
-                        console.error("Element with ID 'username' not found.");
-                    }
-
-                    if (status === "no") {
-                        alert("Please wait for verification.");
-                        window.location.href = "login.html";
-                    } else {
-                        console.log("User is verified");
-                    }
+                if (DashboardModel.data.isSidebarVisible) {
+                    this.elements.sidebar.classList.add("show");
                 } else {
-                    console.error("API returned error:", data.message);
+                    this.elements.sidebar.classList.remove("show");
                 }
-                
-            } catch (error) {
-                console.error("Fetch Request Failed:", error);
-            }
+            },
 
-            // Bar Chart
-            try {
-                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewer-reviewed?reviewer_id=${storedId}&ngrok-skip-browser-warning=true`, {
-                    method: "GET",
-                    headers: {
-                        "ngrok-skip-browser-warning": "true"
-                    }
-                });
+            renderChart() {
+                const chartDataArray = DashboardModel.data.chartData;
+                const labels = chartDataArray.map(item => item.review_date);
+                const dataPoints = chartDataArray.map(item => item.total_reviewed);
 
-                let rawText = await response.text();
-
-                let chartData;
-                try {
-                    chartData = JSON.parse(rawText); 
-                    console.log("Parsed Chart API Response:", chartData);
-                } catch (jsonError) {
-                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
-                    return;
-                }
-
-                if (chartData.status === 200) {
-                    const chartDataArray = chartData.data;
-                    const labels = chartDataArray.map(item => item.review_date);
-                    const dataPoints = chartDataArray.map(item => item.total_reviewed);
-
-                    // Bar Chart
-                    new Chart(timeCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Application Status Breakdown',
-                                data: dataPoints,
-                                backgroundColor: '#2172AA',
-                                borderRadius: 4
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 1
-                                    },
-                                    grid: {
-                                        color: '#e5e7eb'
-                                    }
-                                },
-                                x: {
-                                    grid: {
-                                        display: false
-                                    }
-                                }
+                new Chart(this.elements.timeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Application Status Breakdown',
+                            data: dataPoints,
+                            backgroundColor: '#2172AA',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 },
+                                grid: { color: '#e5e7eb' }
                             },
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
+                            x: {
+                                grid: { display: false }
                             }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            },
+
+            bindEvents() {
+                if (this.elements.menuToggle) {
+                    this.elements.menuToggle.addEventListener("click", () => {
+                        DashboardModel.toggleSidebar();
+                        this.updateView();
+                    });
+                } else {
+                    console.error("Element with ID 'menuToggle' not found.");
+                }
+
+                if (this.elements.closeBtn) {
+                    this.elements.closeBtn.addEventListener("click", () => {
+                        DashboardModel.closeSidebar();
+                        this.updateView();
+                    });
+                } else {
+                    console.error("Element with ID 'close1' not found.");
+                }
+
+                const logOutLink = document.querySelector('a[onclick="logOut()"]');
+                if (logOutLink) {
+                    logOutLink.addEventListener("click", (event) => {
+                        event.preventDefault();
+                        const confirmLogOut = confirm("Are you sure you want to log out?");
+                        if (confirmLogOut) {
+                            DashboardModel.logOut();
                         }
                     });
                 } else {
-                    console.error("API returned error:", chartData.message);
+                    console.error("Log Out link not found.");
                 }
-                
-            } catch (error) {
-                console.error("Fetch Request Failed:", error);
+
+                if (this.elements.avatarIcon && this.elements.hoverProfile) {
+                    this.elements.avatarIcon.addEventListener("click", (event) => {
+                        this.elements.hoverProfile.classList.toggle("show");
+                        event.stopPropagation();
+                    });
+
+                    document.addEventListener("click", (event) => {
+                        if (
+                            !this.elements.hoverProfile.contains(event.target) &&
+                            event.target !== this.elements.avatarIcon
+                        ) {
+                            this.elements.hoverProfile.classList.remove("show");
+                        }
+                    });
+                } else {
+                    console.error("Avatar icon or hover profile element not found.");
+                }
+
+                if (this.elements.bellIcon) {
+                    this.elements.bellIcon.addEventListener("click", () => {
+                        window.location.href = 'admin-notifications.html';
+                    });
+                } else {
+                    console.error("Bell icon element not found.");
+                }
             }
+    };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            DashboardViewModel.init();
         });
     </script>
 </body> 

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/admin-applications2.css">
 </head>
 <body>
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="logo">
             <img src="../pictures/scholarzone-logo.png" class="close1" id="close1">
             <span class="logo-text">
@@ -36,7 +36,7 @@
 
     <div class="main-content">
         <div class="header">
-            <div class="menu-toggle">☰</div>
+            <div class="menu-toggle" id="menu-toggle">☰</div>
             <div class="user-profile">
                 <div class="username-container">
                     <span id="username">@admin</span>
@@ -44,8 +44,7 @@
                     <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
                     <div class="hover-profile" id="hover-profile">
                         <ul>
-                            <li><a href="#">Edit Profile Picture</a></li>
-                            <li><a href="#" style="color: red;">Log Out</a></li>
+                            <li><a href="#" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -126,8 +125,8 @@
     </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn-next" onclick="validateForm()">Next</button>
-                    <button type="reset" class="btn-reset">Reset</button>
+                    <button type="button" id="approvedBtn" class="btn-next">Approve</button>
+                    <button type="reset" id="rejectedBtn" class="btn-reset">Reject</button>
                 </div>
             </form>
         </div>
@@ -145,6 +144,10 @@
         const deadline = localStorage.getItem("deadline");
         const uploadbox = document.getElementById("uploadbox");
         const bellBtn = document.getElementById("bell-icon");
+        const avatarIcon = document.getElementById("avatar-icon");
+        const hoverProfile = document.getElementById("hover-profile");
+        const menuToggle = document.getElementById("menu-toggle");
+        const sidebar = document.getElementById("sidebar");
         const applicationImage = localStorage.getItem("application_image");
         if (applicationImage) {
                 uploadbox.style.backgroundImage = `url(${applicationImage})`;
@@ -159,19 +162,122 @@
         if (availSlot) document.getElementById("availSlot").value = availSlot;
         if (deadline) document.getElementById("deadline").value = deadline;
 
+        const adminId = localStorage.getItem("adminId");
+        if (!adminId) {
+            console.error("No ID found in localStorage.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        avatarIcon.addEventListener("click", function (event) {
+            hoverProfile.classList.toggle("show");
+            event.stopPropagation();
+        });
+
+        menuToggle.addEventListener("click", function () {
+            sidebar.classList.toggle("show");
+        });
+
+        const closeBtn = document.getElementById("close1");
+        closeBtn.addEventListener("click", function () {
+            sidebar.classList.remove("show");
+        });
+
         bellBtn.addEventListener('click', function() {
                 window.location.href = 'admin-notifications.html';
-            });
+        });
+
+        const logOutLink = document.querySelector('a[onclick="logOut()"]');
+            if (logOutLink) {
+                logOutLink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "admin-login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out link not found.");
+            }
+
+        document.getElementById('approvedBtn').addEventListener('click', async (event) => {
+            event.preventDefault();
+            try {
+                let response = await fetch(`http://localhost/ScholarZone/api/verify-scholarship`, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                    body: JSON.stringify({
+                        scholarship_application_id: localStorage.getItem("scholarship_application_id")
+                    })
+                });
+
+                let rawText = await response.text();
+                console.log("Raw API Response:", rawText);
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                    console.log("Parsed API Response:", data);
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                    return;
+                }
+
+                if (data.status === 200) {
+                    alert('Scholarship approved');
+                    window.location.href = "admin-applications1.html";
+                } else {
+                    console.error("API returned error:", data.message);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        });
+
+        document.getElementById('rejectedBtn').addEventListener('click', async () => {
+            const confirmDialog = confirm('Are you sure you want to reject this scholarship?');
+            if (confirmDialog) {
+              try {
+                let response = await fetch(`http://localhost/ScholarZone/api/reject-scholarship`, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    },
+                    body: JSON.stringify({
+                        scholarship_application_id: localStorage.getItem('scholarship_application_id')
+                    })
+                });
+
+                let rawText = await response.text();
+                console.log("Raw API Response:", rawText);
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                    console.log("Parsed API Response:", data);
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                    return;
+                }
+
+                if (data.status === 200) {
+                    alert('Scholarship rejected');
+                    window.location.href = "admin-applications1.html";
+                } else {
+                    console.error("API returned error:", data.message);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+          }
+        });
     });
 
-    function validateForm() {
-        const form = document.getElementById('scholarship-application-form');
-        if (form.checkValidity()) {
-            window.location.href = 'admin-applications3.html';
-        } else {
-            form.reportValidity();
-        }
-    }
 </script>
 </body>
 </html>

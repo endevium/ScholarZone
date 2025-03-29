@@ -42,7 +42,7 @@
 
     <div class="main-content">
         <div class="header">
-            <div class="menu-toggle">☰</div>
+            <div class="menu-toggle" id="menu-toggle">☰</div>
             <div class="user-profile">
                 <div class="username-container">
                     <span id="username">@janedoe69</span>
@@ -53,7 +53,7 @@
                             <li><a href="settings.html">Edit Profile Picture</a></li>
                             <li><a href="personal-details.html">Personal Details</a></li>
                             <li><a href="account-details.html">Account Details</a></li>
-                            <li><a href="landing.html" style="color: red;">Log Out</a></li>
+                            <li><a href="landing.html" style="color: red;" onclick="logOut()">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -99,9 +99,11 @@
     <script>
         const avatarIcon = document.getElementById("avatar-icon");
         const hoverProfile = document.getElementById("hover-profile");
+        const menuToggle = document.getElementById("menu-toggle");
+        const sidebar = document.getElementById("sidebar");
         let id = localStorage.getItem("id");
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", async function () {
             const bellBtn = document.getElementById("bell-icon");
 
             bellBtn.addEventListener("click", function () {
@@ -113,11 +115,97 @@
                 event.stopPropagation();
             });
 
+            menuToggle.addEventListener("click", function () {
+                sidebar.classList.toggle("show");
+            });
+    
+            const closeBtn = document.getElementById("close1");
+            closeBtn.addEventListener("click", function () {
+                sidebar.classList.remove("show");
+            });
+    
+            document.addEventListener("click", function (event) {
+                if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
+                    hoverProfile.classList.remove("show");
+                }
+    
+                if (!sidebar.contains(event.target) && event.target !== menuToggle) {
+                    sidebar.classList.remove("show");
+                }
+            });
+
             document.addEventListener("click", function (event) {
                 if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
                     hoverProfile.classList.remove("show");
                 }
             });
+
+            const logOutLink = document.querySelector('a[onclick="logOut()"]');
+            if (logOutLink) {
+                logOutLink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out link not found.");
+            }
+
+            document.addEventListener("click", function (event) {
+                if (!hoverProfile.contains(event.target) && event.target !== avatarIcon) {
+                    hoverProfile.classList.remove("show");
+                }
+            });
+
+            try {
+                let response = await fetch(`https://active-fox-exactly.ngrok-free.app/ScholarZone/api/reviewers?id=${id}&ngrok-skip-browswer-warning=true`, {
+                    method: "GET",
+                    headers: {
+                        "Content-type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                });
+            
+                let rawText = await response.text();
+                let data; 
+                try {
+                    data = JSON.parse(rawText);
+                    console.log("Parsed API Response:", data);
+                
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError)
+                    return;
+                }
+                if (data.status === 200){
+                    const user = data.data;
+                    console.log("User Data:", user);
+            
+                    const usernameElement = document.getElementById("username");
+                    const profileIcon = document.getElementById("avatar-icon");
+
+                    if (user.is_verified === "rejected") {
+                            alert("Your account has been rejected. Please contact support.");
+                            window.location.href = "login.html";
+                            return;
+                        }
+
+                    if (usernameElement) {
+                        usernameElement.textContent = "@" + user.username;
+                        avatarIcon.src = user.profile_picture || "../pictures/avatar-icon.png";
+                    } else {
+                        console.error("Element with ID 'username' not found.");
+                    }
+            
+                } else {
+                    console.error("API returned error:", data.message);
+                }
+            
+            } catch (error) {
+                console.error("Fetch Request Failed:", error);
+            }
 
             fetchUnverifiedReviewers();
         });
@@ -163,24 +251,26 @@
                 const card = document.createElement("div");
                 card.classList.add("review-card");
 
-                if (notification.title === "Verification") {
+                if (notification.title === "Verification" || notification.title === "Rejected") {
                     card.innerHTML = `
                         <div class="user-card-profile">
                             <div class="user-card-details">
                                 <h3>${notification.title}</h3>
                                 <p>${notification.body}</p>
+                                <p>${notification.date}</p>
                             </div>
                         </div>
                         <div class="card-actions">
                             <button class="reviewer-button">View</button>
                         </div>
                     `;
-                } else if (notification.title === "Scholarship Verification") {
+                } else if (notification.title === "Scholarship Verification" || notification.title === "Scholarship Rejected") {
                     card.innerHTML = `
                         <div class="user-card-profile">
                             <div class="user-card-details">
                                 <h3>${notification.title}</h3>
                                 <p>${notification.body}</p>
+                                <p>${notification.date}</p>
                             </div>
                         </div>
                         <div class="card-actions">

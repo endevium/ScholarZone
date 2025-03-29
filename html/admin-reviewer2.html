@@ -37,8 +37,10 @@
     <div class="main-content">
         <div class="header">
           <div class="menu-toggle">☰</div>
-            <img src="../pictures/search_icon.png" alt="Search" class="searchocon">
-            <input type="text" class="search-box" placeholder="Start typing">
+              <div class="search-container">
+                <img src="../pictures/search_icon.png" alt="Search" class="search-icon">
+                <input type="text" class="search-box" id="search-box" placeholder="Start typing">
+              </div>
             <div class="user-profile">
                 <div class="username-container">
                   <span id="username">@admin</span>
@@ -46,8 +48,7 @@
                   <img src="../pictures/bell-icon.png" alt="Bell" id="bell-icon" class="bell-icon">
                   <div class="hover-profile" id="hover-profile">
                       <ul>
-                          <li><a href="#">Edit Profile Picture</a></li>
-                          <li><a href="#" style="color: red;">Log Out</a></li>
+                          <li><a href="#" style="color: red;" onclick="logOut()">Log Out</a></li>
                       </ul>
                   </div>
                 </div>
@@ -184,6 +185,12 @@
           const authorizationInput = document.getElementById('authorization');
           const bellBtn = document.getElementById('bell-icon');
           let token = localStorage.getItem('token');
+          const adminId = localStorage.getItem("adminId");
+            if (!adminId) {
+                console.error("No ID found in localStorage.");
+                window.location.href = "admin-login.html";
+                return;
+            }
           
           bellBtn.addEventListener('click', function() {
                 window.location.href = 'admin-notifications.html';
@@ -198,10 +205,62 @@
               window.history.back();
           });
 
+          const logOutLink = document.querySelector('a[onclick="logOut()"]');
+            if (logOutLink) {
+                logOutLink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const confirmLogOut = confirm("Are you sure you want to log out?");
+                    if (confirmLogOut) {
+                        localStorage.clear();
+                        window.location.href = "admin-login.html";
+                    }
+                });
+            } else {
+                console.error("Log Out link not found.");
+            }
+
           approvedBtn.addEventListener('click', async () => {
-            console.log(localStorage.getItem('reviewer_id'));
             try {
-                let response = await fetch(`http://localhost/ScholarZone/api/verify-reviewer`, {
+              let response = await fetch(`http://localhost/ScholarZone/api/verify-reviewer`, {
+                  method: "POST",
+                  headers: {
+                      "Content-type": "application/json",
+                      "Authorization": `Bearer ${token}`,
+                      "ngrok-skip-browser-warning": "true"
+                  },
+                  body: JSON.stringify({
+                      reviewer_id: localStorage.getItem('reviewer_id')
+                  })
+              });
+
+              let rawText = await response.text();
+              console.log("Raw API Response:", rawText);
+
+              let data;
+              try {
+                  data = JSON.parse(rawText);
+                  console.log("Parsed API Response:", data);
+              } catch (jsonError) {
+                  console.error("JSON Parsing Error. API returned HTML or invalid JSON:", jsonError);
+                  return;
+              }
+
+              if (data.status === 200) {
+                  alert('Reviewer approved');
+                  window.location.href = "admin-reviewer1.html";
+              } else {
+                  console.error("API returned error:", data.message);
+              }
+          } catch (error) {
+              console.error("Fetch error:", error);
+          }
+          });
+
+          rejectedBtn.addEventListener('click', async () => {
+            const confirmDialog = confirm('Are you sure you want to reject this reviewer?');
+            if (confirmDialog) {
+              try {
+                let response = await fetch(`http://localhost/ScholarZone/api/reject-reviewer`, {
                     method: "POST",
                     headers: {
                         "Content-type": "application/json",
@@ -226,7 +285,7 @@
                 }
 
                 if (data.status === 200) {
-                    alert('Reviewer approved');
+                    alert('Reviewer rejected');
                     window.location.href = "admin-reviewer1.html";
                 } else {
                     console.error("API returned error:", data.message);
@@ -234,12 +293,9 @@
             } catch (error) {
                 console.error("Fetch error:", error);
             }
-          });
-
-          rejectedBtn.addEventListener('click', () => {
-              alert('Reviewer rejected');
-              window.history.back();
-          });
+          }
+        });
+            
 
           let firstname = localStorage.getItem('reviewer_firstname');
           let lastname = localStorage.getItem('reviewer_lastname');
